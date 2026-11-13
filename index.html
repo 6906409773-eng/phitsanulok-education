@@ -818,6 +818,21 @@ function saveBase64FileToDrive(base64DataUrl, fileName, mimeType) {
   };
 }
 
+function saveBase64ImageToDrive(base64DataUrl, fileName, mimeType) {
+  if (!base64DataUrl || base64DataUrl.indexOf('base64,') === -1) return null;
+  const parts = base64DataUrl.split('base64,');
+  const detectedMime = mimeType || parts[0].replace('data:', '').replace(';', '') || 'image/jpeg';
+  const bytes = Utilities.base64Decode(parts[1]);
+  const blob = Utilities.newBlob(bytes, detectedMime, fileName || 'news_cover.jpg');
+  const folder = getOrCreateDriveFolder();
+  const file = folder.createFile(blob);
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return {
+    fileId: file.getId(),
+    imageUrl: 'https://drive.google.com/thumbnail?id=' + file.getId() + '&sz=w1200'
+  };
+}
+
 function setupDatabaseSheets() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const schemas = [
@@ -827,7 +842,7 @@ function setupDatabaseSheets() {
     },
     {
       name: SHEET_NAMES.NEWS,
-      headers: ['id', 'category', 'categoryLabel', 'badgeColor', 'date', 'refNo', 'title', 'summary', 'content', 'pdfName', 'fileSize', 'fileMimeType', 'fileUrl']
+      headers: ['id', 'category', 'categoryLabel', 'badgeColor', 'date', 'refNo', 'title', 'summary', 'content', 'pdfName', 'fileSize', 'fileMimeType', 'fileUrl', 'imageUrl']
     },
     {
       name: SHEET_NAMES.ADMISSIONS,
@@ -1028,20 +1043,32 @@ function doPost(e) {
 
     if (action === 'SYNC_NEWS_AND_SCHOOLS') {
       let uploadedDriveResult = null;
+      let uploadedImageResult = null;
+
       if (body.uploadFile && body.uploadFile.dataUrl) {
         uploadedDriveResult = saveBase64FileToDrive(
           body.uploadFile.dataUrl,
           body.uploadFile.name,
           body.uploadFile.mimeType
         );
-        if (uploadedDriveResult && body.news && body.targetNewsId) {
-          body.news = body.news.map(n => {
-            if (n.id === body.targetNewsId) {
-              n.fileUrl = uploadedDriveResult.fileUrl;
-            }
-            return n;
-          });
-        }
+      }
+
+      if (body.uploadImage && body.uploadImage.dataUrl) {
+        uploadedImageResult = saveBase64ImageToDrive(
+          body.uploadImage.dataUrl,
+          body.uploadImage.name,
+          body.uploadImage.mimeType
+        );
+      }
+
+      if (body.news && body.targetNewsId) {
+        body.news = body.news.map(n => {
+          if (n.id === body.targetNewsId) {
+            if (uploadedDriveResult) n.fileUrl = uploadedDriveResult.fileUrl;
+            if (uploadedImageResult) n.imageUrl = uploadedImageResult.imageUrl;
+          }
+          return n;
+        });
       }
 
       if (body.schools) {
@@ -1054,13 +1081,13 @@ function doPost(e) {
       if (body.news) {
         replaceSheetData(
           SHEET_NAMES.NEWS,
-          ['id', 'category', 'categoryLabel', 'badgeColor', 'date', 'refNo', 'title', 'summary', 'content', 'pdfName', 'fileSize', 'fileMimeType', 'fileUrl'],
+          ['id', 'category', 'categoryLabel', 'badgeColor', 'date', 'refNo', 'title', 'summary', 'content', 'pdfName', 'fileSize', 'fileMimeType', 'fileUrl', 'imageUrl'],
           body.news
         );
       }
       buildSummaryDashboard();
-      appendAuditRow('Staff CMS', 'Officer', 'SYNC_NEWS_AND_SCHOOLS', 'อัปเดตข่าว เอกสาร Google Drive และข้อมูล EMIS', '200 OK');
-      return jsonResponse({ ok: true, uploadedFile: uploadedDriveResult });
+      appendAuditRow('Staff CMS', 'Officer', 'SYNC_NEWS_AND_SCHOOLS', 'อัปเดตข่าว ภาพประกอบ เอกสาร Google Drive และข้อมูล EMIS', '200 OK');
+      return jsonResponse({ ok: true, uploadedFile: uploadedDriveResult, uploadedImage: uploadedImageResult });
     }
 
     if (action === 'SYNC_STAFF_RBAC') {
@@ -1090,10 +1117,12 @@ function doPost(e) {
       activeNewsFilter: 'activities',
       activeSchoolFilter: 'all',
       googleSheetUrl: '',
+      hasConfiguredUrl: false,
       isSheetConnected: false,
       isLoadingInitialData: true,
       lastSheetSyncTime: '-',
       pendingUploadedDoc: null,
+      pendingUploadedImage: null,
       roleCatalog: {
         superadmin: {
           key: 'superadmin',
@@ -1292,7 +1321,9 @@ function doPost(e) {
                 NEWS_DATA.push({
                   ...n,
                   fileUrl: n.fileUrl || '',
-                  fileDataUrl: null
+                  imageUrl: n.imageUrl || '',
+                  fileDataUrl: null,
+                  imageDataUrl: null
                 });
               });
             }
@@ -1308,9 +1339,13 @@ function doPost(e) {
             BackendState.auditLogs = Array.isArray(json.auditLogs) ? json.auditLogs.slice().reverse() : [];
 
             BackendState.isSheetConnected = true;
+            BackendState.hasConfiguredUrl = true;
             BackendState.isLoadingInitialData = false;
             BackendState.lastSheetSyncTime = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.';
-            localStorage.setItem('phsmun_edu_sheet_url', BackendState.googleSheetUrl);
+            try {
+              localStorage.setItem('phsmun_edu_sheet_url', BackendState.googleSheetUrl);
+              localStorage.setItem('phsmun_edu_sheet_configured', 'true');
+            } catch (e) {}
             this.updateConnectionBadge();
             this.syncFrontendAll();
 
@@ -1388,7 +1423,9 @@ function doPost(e) {
           fileSize: payload.fileSize || '-',
           fileMimeType: payload.fileMimeType || 'application/pdf',
           fileUrl: '',
-          fileDataUrl: payload.fileDataUrl || null
+          fileDataUrl: payload.fileDataUrl || null,
+          imageUrl: payload.imageUrl || '',
+          imageDataUrl: payload.imageDataUrl || null
         };
         NEWS_DATA.unshift(newItem);
         this.logAudit('POST /api/v1/news', `เพิ่มรายการ: ${newItem.title.slice(0, 45)}... (ไฟล์: ${newItem.pdfName})`, '201 Created');
@@ -1398,11 +1435,13 @@ function doPost(e) {
           action: 'SYNC_NEWS_AND_SCHOOLS',
           targetNewsId: newItem.id,
           uploadFile: payload.fileDataUrl ? { name: newItem.pdfName, mimeType: newItem.fileMimeType, dataUrl: payload.fileDataUrl } : null,
-          news: NEWS_DATA.map(({ fileDataUrl, ...rest }) => rest),
+          uploadImage: payload.imageDataUrl ? { name: payload.imageFileName || 'cover.jpg', mimeType: payload.imageMimeType || 'image/jpeg', dataUrl: payload.imageDataUrl } : null,
+          news: NEWS_DATA.map(({ fileDataUrl, imageDataUrl, ...rest }) => rest),
           schools: SCHOOLS_DATA
         });
-        if (res && res.uploadedFile && res.uploadedFile.fileUrl) {
-          newItem.fileUrl = res.uploadedFile.fileUrl;
+        if (res) {
+          if (res.uploadedFile && res.uploadedFile.fileUrl) newItem.fileUrl = res.uploadedFile.fileUrl;
+          if (res.uploadedImage && res.uploadedImage.imageUrl) newItem.imageUrl = res.uploadedImage.imageUrl;
           this.syncFrontendAll();
           if (BackendState.activeBoTab === 'news') renderBackofficeModule('news');
         }
@@ -1438,11 +1477,13 @@ function doPost(e) {
           action: 'SYNC_NEWS_AND_SCHOOLS',
           targetNewsId: id,
           uploadFile: payload.fileDataUrl ? { name: NEWS_DATA[idx].pdfName, mimeType: NEWS_DATA[idx].fileMimeType, dataUrl: payload.fileDataUrl } : null,
-          news: NEWS_DATA.map(({ fileDataUrl, ...rest }) => rest),
+          uploadImage: payload.imageDataUrl ? { name: payload.imageFileName || 'cover.jpg', mimeType: payload.imageMimeType || 'image/jpeg', dataUrl: payload.imageDataUrl } : null,
+          news: NEWS_DATA.map(({ fileDataUrl, imageDataUrl, ...rest }) => rest),
           schools: SCHOOLS_DATA
         });
-        if (res && res.uploadedFile && res.uploadedFile.fileUrl) {
-          NEWS_DATA[idx].fileUrl = res.uploadedFile.fileUrl;
+        if (res) {
+          if (res.uploadedFile && res.uploadedFile.fileUrl) NEWS_DATA[idx].fileUrl = res.uploadedFile.fileUrl;
+          if (res.uploadedImage && res.uploadedImage.imageUrl) NEWS_DATA[idx].imageUrl = res.uploadedImage.imageUrl;
           this.syncFrontendAll();
           if (BackendState.activeBoTab === 'news') renderBackofficeModule('news');
         }
@@ -1463,7 +1504,7 @@ function doPost(e) {
         this.syncFrontendAll();
         await this.postToGoogleSheet({
           action: 'SYNC_NEWS_AND_SCHOOLS',
-          news: NEWS_DATA.map(({ fileDataUrl, ...rest }) => rest),
+          news: NEWS_DATA.map(({ fileDataUrl, imageDataUrl, ...rest }) => rest),
           schools: SCHOOLS_DATA
         });
         return true;
@@ -1486,7 +1527,7 @@ function doPost(e) {
         this.syncFrontendAll();
         await this.postToGoogleSheet({
           action: 'SYNC_NEWS_AND_SCHOOLS',
-          news: NEWS_DATA.map(({ fileDataUrl, ...rest }) => rest),
+          news: NEWS_DATA.map(({ fileDataUrl, imageDataUrl, ...rest }) => rest),
           schools: SCHOOLS_DATA
         });
         return school;
@@ -1962,6 +2003,82 @@ function doPost(e) {
       renderNewsList(category);
     }
 
+    function getNewsCoverImageHtml(item, heightClass = 'h-48') {
+      const imgSrc = item.imageDataUrl || item.imageUrl || '';
+      const categoryFallbackStyles = {
+        activities: {
+          gradient: 'from-royal-950 via-royal-800 to-purple-700',
+          icon: 'camera',
+          subLabel: 'ภาพกิจกรรมสำนักการศึกษา เทศบาลนครพิษณุโลก'
+        },
+        recruitment: {
+          gradient: 'from-emerald-900 via-emerald-700 to-teal-600',
+          icon: 'user-check',
+          subLabel: 'ประกาศรับสมัครและสอบแข่งขันบุคลากรทางการศึกษา'
+        },
+        egp: {
+          gradient: 'from-amber-800 via-amber-600 to-yellow-600',
+          icon: 'file-spreadsheet',
+          subLabel: 'ระบบจัดซื้อจัดจ้างภาครัฐ (e-GP) โปร่งใส ตรวจสอบได้'
+        },
+        regulations: {
+          gradient: 'from-sky-900 via-sky-700 to-indigo-700',
+          icon: 'scale',
+          subLabel: 'คำสั่ง ประกาศ และระเบียบปฏิบัติราชการ'
+        }
+      };
+      const fb = categoryFallbackStyles[item.category] || categoryFallbackStyles.activities;
+
+      if (imgSrc) {
+        return `
+          <div class="relative w-full ${heightClass} bg-slate-100 overflow-hidden border-b border-slate-100 group">
+            <img
+              src="${escapeHtml(imgSrc)}"
+              alt="${escapeHtml(item.title)}"
+              loading="lazy"
+              onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div class="hidden w-full h-full bg-gradient-to-br ${fb.gradient} text-white p-5 flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-full bg-white/15 text-gold-300 font-heading font-semibold text-[11px]">${escapeHtml(item.categoryLabel)}</span>
+                <i data-lucide="${fb.icon}" class="w-5 h-5 text-gold-300"></i>
+              </div>
+              <div>
+                <p class="font-mono text-xs text-gold-200">${escapeHtml(item.refNo)}</p>
+                <p class="font-heading text-xs text-white/90 mt-0.5">${escapeHtml(fb.subLabel)}</p>
+              </div>
+            </div>
+            <div class="absolute top-3 left-3">
+              <span class="px-3 py-1 rounded-full border font-heading font-semibold text-[11px] shadow-sm backdrop-blur-sm ${item.badgeColor}">
+                ${escapeHtml(item.categoryLabel)}
+              </span>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="relative w-full ${heightClass} bg-gradient-to-br ${fb.gradient} text-white p-5 flex flex-col justify-between overflow-hidden border-b border-slate-100">
+          <div class="absolute -right-6 -bottom-6 opacity-15 pointer-events-none">
+            <i data-lucide="${fb.icon}" class="w-32 h-32"></i>
+          </div>
+          <div class="relative flex items-center justify-between gap-2">
+            <span class="px-3 py-1 rounded-full bg-white/95 font-heading font-semibold text-[11px] shadow-sm ${item.badgeColor}">
+              ${escapeHtml(item.categoryLabel)}
+            </span>
+            <span class="w-9 h-9 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center text-gold-300">
+              <i data-lucide="${fb.icon}" class="w-4 h-4"></i>
+            </span>
+          </div>
+          <div class="relative">
+            <span class="inline-block font-mono text-xs text-gold-300 font-semibold">${escapeHtml(item.refNo)}</span>
+            <p class="font-heading text-xs text-white/90 mt-0.5 line-clamp-1">${escapeHtml(fb.subLabel)}</p>
+          </div>
+        </div>
+      `;
+    }
+
     function renderNewsList(category) {
       const container = document.getElementById('news-list-container');
       if (!container) return;
@@ -1978,39 +2095,46 @@ function doPost(e) {
       }
 
       container.innerHTML = items.map(item => `
-        <article class="bg-white rounded-3xl p-6 border border-slate-200 hover:border-royal-700 shadow-gov transition-all flex flex-col justify-between">
-          <div class="space-y-3">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <span class="px-2.5 py-1 rounded-full border font-heading font-semibold text-[11px] ${item.badgeColor}">
-                ${escapeHtml(item.categoryLabel)}
-              </span>
-              <span class="text-xs text-slate-500 font-heading">${escapeHtml(item.date)}</span>
+        <article class="bg-white rounded-3xl overflow-hidden border border-slate-200 hover:border-royal-700 shadow-gov transition-all flex flex-col justify-between">
+          <div>
+            <div onclick="openNewsDetail('${item.id}')" class="cursor-pointer">
+              ${getNewsCoverImageHtml(item, 'h-48 sm:h-52')}
             </div>
-            <h3 class="font-heading font-bold text-base sm:text-lg text-royal-950 leading-snug">
-              ${escapeHtml(item.title)}
-            </h3>
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              ${escapeHtml(item.summary)}
-            </p>
+            <div class="p-6 pb-3 space-y-2.5">
+              <div class="flex items-center justify-between gap-2 text-xs text-slate-500 font-heading">
+                <span class="inline-flex items-center gap-1">
+                  <i data-lucide="calendar" class="w-3.5 h-3.5 text-royal-800"></i>
+                  ${escapeHtml(item.date)}
+                </span>
+                <span class="font-mono text-[11px] text-slate-500">${escapeHtml(item.refNo)}</span>
+              </div>
+              <h3 onclick="openNewsDetail('${item.id}')" class="cursor-pointer font-heading font-bold text-base sm:text-lg text-royal-950 hover:text-royal-800 leading-snug">
+                ${escapeHtml(item.title)}
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-3">
+                ${escapeHtml(item.summary)}
+              </p>
+            </div>
           </div>
 
-          <div class="mt-5 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
-            <div class="flex flex-col">
-              <span class="text-xs font-mono text-slate-500">อ้างอิง: ${escapeHtml(item.refNo)}</span>
-              <span class="text-[11px] text-slate-400 truncate max-w-[210px]">📎 ${escapeHtml(item.pdfName)} (${escapeHtml(item.fileSize || 'PDF')})</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <button type="button" onclick="openDocumentPreviewModal('${item.id}')" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-heading text-xs font-semibold">
-                <i data-lucide="eye" class="w-3.5 h-3.5"></i>
-                <span>เปิดดู</span>
-              </button>
-              <button type="button" onclick="handleDocumentDownload('${item.id}')" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-heading text-xs font-medium">
-                <i data-lucide="file-down" class="w-3.5 h-3.5 text-rose-600"></i>
-                <span>ดาวน์โหลด</span>
-              </button>
-              <button type="button" onclick="openNewsDetail('${item.id}')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading text-xs font-semibold">
-                <span>รายละเอียด</span>
-              </button>
+          <div class="px-6 pb-6 pt-3">
+            <div class="pt-3.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-col min-w-0">
+                <span class="text-[11px] text-slate-500 truncate max-w-[210px]">📎 ${escapeHtml(item.pdfName)} (${escapeHtml(item.fileSize || 'PDF')})</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button type="button" onclick="openDocumentPreviewModal('${item.id}')" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-heading text-xs font-semibold">
+                  <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                  <span>เปิดดู</span>
+                </button>
+                <button type="button" onclick="handleDocumentDownload('${item.id}')" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-heading text-xs font-medium">
+                  <i data-lucide="file-down" class="w-3.5 h-3.5 text-rose-600"></i>
+                  <span>ดาวน์โหลด</span>
+                </button>
+                <button type="button" onclick="openNewsDetail('${item.id}')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading text-xs font-semibold">
+                  <span>รายละเอียด</span>
+                </button>
+              </div>
             </div>
           </div>
         </article>
@@ -2022,12 +2146,18 @@ function doPost(e) {
     function openNewsDetail(newsId) {
       const item = NEWS_DATA.find(n => n.id === newsId);
       if (!item) return;
+      const coverImg = item.imageDataUrl || item.imageUrl || '';
       openModal({
         badge: `${item.categoryLabel} • ${item.date}`,
         title: item.title,
         icon: 'newspaper',
         bodyHtml: `
           <div class="space-y-4">
+            ${coverImg ? `
+              <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-100">
+                <img src="${escapeHtml(coverImg)}" alt="${escapeHtml(item.title)}" onerror="this.parentElement.style.display='none'" class="w-full max-h-80 object-cover" />
+              </div>
+            ` : ''}
             <div class="text-xs font-mono text-slate-500">เลขที่อ้างอิง: ${escapeHtml(item.refNo)}</div>
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 leading-relaxed">
               ${escapeHtml(item.content)}
@@ -2058,31 +2188,38 @@ function doPost(e) {
     }
 
     // -----------------------------------------------------------------------
-    // 8H. E-SERVICE INTERACTIVE MODALS (CONNECTED TO GOOGLE SHEETS)
+    // 8H. E-SERVICE MODALS & CITIZEN PORTAL HANDLERS (PRODUCTION DATA)
     // -----------------------------------------------------------------------
     function openServiceModal(serviceId) {
       if (serviceId === 'admission') {
         const schoolOptions = SCHOOLS_DATA.length > 0
-          ? SCHOOLS_DATA.map(s => `<option value="${escapeHtml(s.name)}">${escapeHtml(s.name)}</option>`).join('')
-          : `<option value="">-- กรุณาเชื่อมต่อฐานข้อมูลเพื่อโหลดรายชื่อสถานศึกษา --</option>`;
+          ? SCHOOLS_DATA.map(s => `<option value="${escapeHtml(s.name)}">${escapeHtml(s.name)} (${escapeHtml(s.levels)})</option>`).join('')
+          : `<option value="โรงเรียนอนุบาลเทศบาลนครพิษณุโลก (ท.1)">โรงเรียนอนุบาลเทศบาลนครพิษณุโลก (ท.1)</option>
+             <option value="โรงเรียนเทศบาล 2 (วัดคูหาสวรรค์)">โรงเรียนเทศบาล 2 (วัดคูหาสวรรค์)</option>
+             <option value="โรงเรียนเทศบาล 3 (วัดท่ามะปราง)">โรงเรียนเทศบาล 3 (วัดท่ามะปราง)</option>
+             <option value="โรงเรียนเทศบาล 4 (วัดธรรมจักร)">โรงเรียนเทศบาล 4 (วัดธรรมจักร)</option>
+             <option value="โรงเรียนเทศบาล 5 (วัดพระขาวชัยสิทธิ์)">โรงเรียนเทศบาล 5 (วัดพระขาวชัยสิทธิ์)</option>
+             <option value="โรงเรียนกีฬาเทศบาลนครพิษณุโลก">โรงเรียนกีฬาเทศบาลนครพิษณุโลก</option>
+             <option value="ศูนย์พัฒนาเด็กเล็กเทศบาลนครพิษณุโลก">ศูนย์พัฒนาเด็กเล็กเทศบาลนครพิษณุโลก</option>`;
+
         openModal({
           badge: 'E-Service • ระบบรับสมัครนักเรียนออนไลน์',
-          title: 'รับสมัครนักเรียนออนไลน์และตรวจสอบสถานะการอนุมัติ',
+          title: 'ยื่นใบสมัครเข้าศึกษาต่อ และตรวจสอบสถานะการสมัคร',
           icon: 'graduation-cap',
           bodyHtml: `
             <div class="space-y-5">
-              <form onsubmit="handleAdmissionSubmit(event)" class="space-y-3 p-4 rounded-2xl bg-royal-50/70 border border-royal-100">
-                <h4 class="font-heading font-bold text-sm text-royal-950">1. ยื่นใบสมัครเข้าศึกษาต่อ</h4>
+              <form onsubmit="handleAdmissionSubmit(event)" class="p-4 rounded-2xl bg-royal-50/70 border border-royal-200 space-y-3">
+                <h4 class="font-heading font-bold text-sm text-royal-950">1. ยื่นใบสมัครนักเรียนออนไลน์ใหม่</h4>
                 <div class="grid sm:grid-cols-2 gap-3">
                   <div>
                     <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">ชื่อ-นามสกุล นักเรียน *</label>
-                    <input type="text" name="studentName" required placeholder="ระบุชื่อ-นามสกุลนักเรียน" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white" />
+                    <input type="text" name="studentName" required placeholder="เด็กชาย/เด็กหญิง..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm bg-white" />
                   </div>
                   <div>
                     <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">ระดับชั้นที่สมัคร *</label>
-                    <select name="level" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
-                      <option value="ปฐมวัย (อายุ 2-4 ปี)">ปฐมวัย (อายุ 2-4 ปี)</option>
-                      <option value="อนุบาล 1">อนุบาล 1</option>
+                    <select name="level" required class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm bg-white">
+                      <option value="ปฐมวัย (ศูนย์พัฒนาเด็กเล็ก)">ปฐมวัย (ศูนย์พัฒนาเด็กเล็ก)</option>
+                      <option value="อนุบาลศึกษาปีที่ 1">อนุบาลศึกษาปีที่ 1</option>
                       <option value="ประถมศึกษาปีที่ 1">ประถมศึกษาปีที่ 1</option>
                       <option value="มัธยมศึกษาปีที่ 1">มัธยมศึกษาปีที่ 1</option>
                       <option value="มัธยมศึกษาปีที่ 4 (โรงเรียนกีฬา)">มัธยมศึกษาปีที่ 4 (โรงเรียนกีฬา)</option>
@@ -2091,295 +2228,388 @@ function doPost(e) {
                 </div>
                 <div class="grid sm:grid-cols-2 gap-3">
                   <div>
-                    <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">สถานศึกษาที่เลือกสมัคร *</label>
-                    <select name="schoolName" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
+                    <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">สถานศึกษาที่ประสงค์เข้าเรียน *</label>
+                    <select name="schoolName" required class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm bg-white">
                       ${schoolOptions}
                     </select>
                   </div>
                   <div>
                     <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">เบอร์โทรศัพท์ผู้ปกครอง *</label>
-                    <input type="tel" name="parentPhone" required placeholder="08X-XXX-XXXX" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white" />
+                    <input type="tel" name="parentPhone" required placeholder="08X-XXX-XXXX" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm bg-white" />
                   </div>
                 </div>
-                <button type="submit" class="w-full py-2.5 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-sm shadow-sm">
-                  ยืนยันส่งใบสมัครเข้าสู่ระบบ
+                <button type="submit" class="w-full py-2.5 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-xs sm:text-sm shadow-sm">
+                  ส่งใบสมัครเข้าสู่ระบบฐานข้อมูลสำนักการศึกษา
                 </button>
+                <div id="admission-result-box"></div>
               </form>
 
               <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
-                <h4 class="font-heading font-bold text-sm text-royal-950">2. ตรวจสอบสถานะใบสมัครด้วยรหัสอ้างอิง</h4>
+                <h4 class="font-heading font-bold text-sm text-royal-950">2. ตรวจสอบสถานะการอนุมัติใบสมัคร</h4>
                 <div class="flex gap-2">
-                  <input type="text" id="lookup-adm-code" placeholder="กรอกรหัสอ้างอิง เช่น EDU-69XXXX" class="flex-1 px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white font-mono" />
-                  <button type="button" onclick="lookupAdmissionStatus()" class="px-4 py-2 rounded-xl bg-gold-500 hover:bg-gold-400 text-royal-950 font-heading font-bold text-xs sm:text-sm">
-                    ตรวจสอบ
+                  <input type="text" id="admission-lookup-code" placeholder="กรอกรหัสอ้างอิง เช่น EDU-69XXXX" class="flex-1 px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm font-mono bg-white uppercase" />
+                  <button type="button" onclick="lookupAdmissionStatus()" class="px-4 py-2 rounded-xl bg-gold-500 hover:bg-gold-400 text-royal-950 font-heading font-semibold text-xs sm:text-sm shrink-0">
+                    ตรวจสอบสถานะ
                   </button>
                 </div>
-                <div id="lookup-adm-result" class="text-xs text-slate-600"></div>
+                <div id="admission-lookup-result"></div>
               </div>
             </div>
           `
         });
-      } else if (serviceId === 'feedback') {
-        openModal({
-          badge: 'E-Service • ระบบรับเรื่องร้องเรียน / เสนอแนะ (Smart Feedback)',
-          title: 'ส่งเรื่องร้องเรียน / ข้อเสนอแนะ และติดตามผลการตอบกลับ',
-          icon: 'message-square-heart',
-          bodyHtml: `
-            <div class="space-y-5">
-              <form onsubmit="handleFeedbackSubmit(event)" class="space-y-3 p-4 rounded-2xl bg-rose-50/50 border border-rose-100">
-                <h4 class="font-heading font-bold text-sm text-royal-950">1. แจ้งเรื่องร้องเรียนหรือข้อเสนอแนะ</h4>
-                <div>
-                  <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">ประเภทเรื่อง *</label>
-                  <select name="category" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
-                    <option value="ข้อเสนอแนะด้านการจัดการเรียนการสอน">ข้อเสนอแนะด้านการจัดการเรียนการสอน</option>
-                    <option value="แจ้งซ่อมบำรุง/สิ่งอำนวยความสะดวก">แจ้งซ่อมบำรุง/สิ่งอำนวยความสะดวก</option>
-                    <option value="สอบถามข้อมูลสวัสดิการ/อาหารกลางวัน">สอบถามข้อมูลสวัสดิการ/อาหารกลางวัน</option>
-                    <option value="ร้องเรียนการให้บริการ">ร้องเรียนการให้บริการ</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">รายละเอียดเรื่องที่แจ้ง *</label>
-                  <textarea name="detail" required rows="2" placeholder="ระบุรายละเอียดสถานที่หรือข้อเสนอแนะ..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white"></textarea>
-                </div>
-                <div>
-                  <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">ชื่อและเบอร์ติดต่อกลับ</label>
-                  <input type="text" name="contact" placeholder="ระบุชื่อและหมายเลขโทรศัพท์ติดต่อกลับ" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white" />
-                </div>
-                <button type="submit" class="w-full py-2.5 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-sm">
-                  ส่งเรื่องเข้าสู่ระบบเจ้าหน้าที่
-                </button>
-              </form>
+        return;
+      }
 
-              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
-                <h4 class="font-heading font-bold text-sm text-royal-950">2. ติดตามผลการตอบกลับจากเจ้าหน้าที่</h4>
-                <div class="flex gap-2">
-                  <input type="text" id="lookup-fb-code" placeholder="กรอกรหัสติดตาม เช่น FB-69XXXX" class="flex-1 px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white font-mono" />
-                  <button type="button" onclick="lookupFeedbackStatus()" class="px-4 py-2 rounded-xl bg-gold-500 hover:bg-gold-400 text-royal-950 font-heading font-bold text-xs sm:text-sm">
-                    ติดตามผล
-                  </button>
-                </div>
-                <div id="lookup-fb-result" class="text-xs text-slate-600"></div>
-              </div>
-            </div>
-          `
-        });
-      } else if (serviceId === 'emis') {
-        const rows = SCHOOLS_DATA.length > 0
+      if (serviceId === 'emis') {
+        const totalStudents = SCHOOLS_DATA.reduce((sum, s) => sum + (Number(s.students) || 0), 0);
+        const totalTeachers = SCHOOLS_DATA.reduce((sum, s) => sum + (Number(s.teachers) || 0), 0);
+        const ratio = totalTeachers > 0 ? (totalStudents / totalTeachers).toFixed(1) : '-';
+        const tableRows = SCHOOLS_DATA.length > 0
           ? SCHOOLS_DATA.map(s => `
               <tr class="border-b border-slate-100">
-                <td class="py-2 pr-2 font-heading font-semibold text-xs text-royal-950">${escapeHtml(s.name)}</td>
-                <td class="py-2 px-2 text-center text-xs">${Number(s.students).toLocaleString('th-TH')}</td>
-                <td class="py-2 px-2 text-center text-xs">${Number(s.teachers).toLocaleString('th-TH')}</td>
-                <td class="py-2 pl-2 text-right text-xs font-mono">${(Number(s.students) / Math.max(1, Number(s.teachers))).toFixed(1)} : 1</td>
+                <td class="py-2.5 pr-2 font-heading font-semibold text-xs text-royal-950">${escapeHtml(s.name)}</td>
+                <td class="py-2.5 px-2 text-center text-xs">${Number(s.students).toLocaleString('th-TH')}</td>
+                <td class="py-2.5 pl-2 text-center text-xs text-gold-700 font-semibold">${Number(s.teachers).toLocaleString('th-TH')}</td>
               </tr>
             `).join('')
-          : `<tr><td colspan="4" class="py-4 text-center text-xs text-slate-500">ยังไม่มีข้อมูลในฐานข้อมูล Google Sheets</td></tr>`;
+          : `<tr><td colspan="3" class="py-4 text-center text-xs text-slate-500">ยังไม่ได้เชื่อมต่อฐานข้อมูล Google Sheets</td></tr>`;
+
         openModal({
-          badge: 'EMIS • ข้อมูลสารสนเทศทางการศึกษาแบบเรียลไทม์',
-          title: 'สถิติจำนวนนักเรียน ครู และอัตราส่วนครูต่อนักเรียน',
+          badge: 'EMIS • ระบบสารสนเทศทางการศึกษา',
+          title: 'รายงานสถิตินักเรียน ครู และอัตรากำลังรายสถานศึกษา',
           icon: 'bar-chart-3',
           bodyHtml: `
-            <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
-                <thead class="bg-royal-50 text-royal-950 font-heading text-xs">
-                  <tr>
-                    <th class="py-2 px-2">สถานศึกษา</th>
-                    <th class="py-2 px-2 text-center">นักเรียน</th>
-                    <th class="py-2 px-2 text-center">ครู</th>
-                    <th class="py-2 px-2 text-right">สัดส่วน</th>
-                  </tr>
-                </thead>
-                <tbody>${rows}</tbody>
-              </table>
+            <div class="space-y-4">
+              <div class="grid grid-cols-3 gap-2.5 text-center">
+                <div class="p-3 rounded-2xl bg-royal-50 border border-royal-100">
+                  <span class="block font-heading font-bold text-lg text-royal-950">${totalStudents.toLocaleString('th-TH')}</span>
+                  <span class="text-[11px] text-slate-600">นักเรียนรวม (คน)</span>
+                </div>
+                <div class="p-3 rounded-2xl bg-amber-50 border border-amber-100">
+                  <span class="block font-heading font-bold text-lg text-amber-800">${totalTeachers.toLocaleString('th-TH')}</span>
+                  <span class="text-[11px] text-slate-600">ครู/บุคลากร (คน)</span>
+                </div>
+                <div class="p-3 rounded-2xl bg-emerald-50 border border-emerald-100">
+                  <span class="block font-heading font-bold text-lg text-emerald-800">1 : ${ratio}</span>
+                  <span class="text-[11px] text-slate-600">สัดส่วนครู : นักเรียน</span>
+                </div>
+              </div>
+              <div class="overflow-x-auto border border-slate-200 rounded-2xl p-3">
+                <table class="w-full text-left">
+                  <thead class="text-[11px] font-heading text-slate-500 border-b border-slate-200">
+                    <tr>
+                      <th class="pb-2">สถานศึกษา</th>
+                      <th class="pb-2 text-center">นักเรียน</th>
+                      <th class="pb-2 text-center">ครู</th>
+                    </tr>
+                  </thead>
+                  <tbody>${tableRows}</tbody>
+                </table>
+              </div>
             </div>
           `
         });
-      } else if (serviceId === 'eoffice') {
-        const docItems = NEWS_DATA.slice(0, 5);
-        const docHtml = docItems.length > 0
-          ? docItems.map(n => `
-              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
-                <span class="text-xs font-mono text-royal-800 font-bold">${escapeHtml(n.refNo)} (${escapeHtml(n.date)})</span>
-                <p class="font-heading font-semibold text-sm text-royal-950 mt-1">${escapeHtml(n.title)}</p>
-              </div>
-            `).join('')
-          : `<p class="text-xs text-slate-500 text-center py-4">ยังไม่มีรายการทะเบียนหนังสือราชการในฐานข้อมูล</p>`;
+        return;
+      }
+
+      if (serviceId === 'eoffice') {
+        const recentDocs = NEWS_DATA.slice(0, 5).map(n => `
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2">
+            <div>
+              <span class="font-mono text-xs font-bold text-royal-900">${escapeHtml(n.refNo)}</span>
+              <p class="font-heading font-semibold text-xs text-slate-800 mt-0.5">${escapeHtml(n.title)}</p>
+              <span class="text-[11px] text-slate-500">วันที่ออกหนังสือ: ${escapeHtml(n.date)}</span>
+            </div>
+            <button type="button" onclick="closeModal(); openNewsDetail('${n.id}');" class="px-3 py-1.5 rounded-lg bg-royal-950 text-white font-heading text-xs shrink-0">
+              เปิดดู
+            </button>
+          </div>
+        `).join('');
+
         openModal({
           badge: 'E-Office • ระบบสารบรรณอิเล็กทรอนิกส์',
-          title: 'ตรวจสอบเลขทะเบียนหนังสือส่ง สำนักการศึกษา',
+          title: 'ทะเบียนหนังสือราชการและประกาศอิเล็กทรอนิกส์',
           icon: 'file-check-2',
-          bodyHtml: `<div class="space-y-3">${docHtml}</div>`
+          bodyHtml: `
+            <div class="space-y-3">
+              <p class="text-xs text-slate-600">รายการเลขที่หนังสือราชการและประกาศล่าสุดที่เผยแพร่ผ่านระบบสารบรรณดิจิทัล สำนักการศึกษา เทศบาลนครพิษณุโลก:</p>
+              <div class="space-y-2">
+                ${recentDocs || '<p class="text-xs text-slate-500 text-center py-4">ยังไม่มีรายการหนังสือราชการในฐานข้อมูล</p>'}
+              </div>
+            </div>
+          `
         });
-      } else if (serviceId === 'scholarship') {
+        return;
+      }
+
+      if (serviceId === 'scholarship') {
         openModal({
-          badge: 'Welfare & Equity • กองทุนและสวัสดิการการศึกษา',
+          badge: 'Education Welfare • กองทุนและสวัสดิการการศึกษา',
           title: 'สิทธิประโยชน์โครงการสนับสนุนค่าใช้จ่ายในการจัดการศึกษา 15 ปี',
           icon: 'heart-handshake',
           bodyHtml: `
-            <ul class="space-y-2.5 text-sm">
-              <li class="p-3 rounded-xl bg-emerald-50 border border-emerald-200"><strong>1. ค่าจัดการเรียนการสอน:</strong> สนับสนุนครบทุกระดับชั้นตั้งแต่ปฐมวัยถึงมัธยมศึกษา</li>
-              <li class="p-3 rounded-xl bg-emerald-50 border border-emerald-200"><strong>2. ค่าหนังสือเรียนและอุปกรณ์การเรียน:</strong> จัดสรรฟรีตามเกณฑ์มาตรฐาน 100%</li>
-              <li class="p-3 rounded-xl bg-emerald-50 border border-emerald-200"><strong>3. โครงการอาหารกลางวันและนมโรงเรียน:</strong> ดูแลโภชนาการครบถ้วนตามมาตรฐาน Thai School Lunch</li>
-            </ul>
+            <div class="space-y-3 text-xs sm:text-sm">
+              <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-950 space-y-1.5">
+                <p class="font-heading font-bold">นักเรียนในสังกัดเทศบาลนครพิษณุโลกทุกระดับชั้นได้รับสิทธิ์สนับสนุน 5 รายการหลัก:</p>
+                <ul class="list-disc pl-5 space-y-1 text-xs">
+                  <li><strong>ค่าจัดการเรียนการสอน:</strong> จัดสรรรายหัวตามระดับชั้นโดยไม่เก็บค่าเล่าเรียน</li>
+                  <li><strong>ค่าหนังสือเรียน:</strong> ครบทุกกลุ่มสาระการเรียนรู้ตามหลักสูตรแกนกลาง</li>
+                  <li><strong>ค่าอุปกรณ์การเรียน:</strong> ภาคเรียนละ 1 ครั้ง (ระดับปฐมวัย – มัธยมศึกษา)</li>
+                  <li><strong>ค่าเครื่องแบบนักเรียน:</strong> ปีการศึกษาละ 1 ครั้ง (สนับสนุนเพิ่มเติมสำหรับผู้ขาดแคลน)</li>
+                  <li><strong>โครงการอาหารกลางวันและนมโรงเรียน:</strong> นักเรียนระดับปฐมวัยถึงประถมศึกษาปีที่ 6 ครบ 100%</li>
+                </ul>
+              </div>
+              <p class="text-xs text-slate-600">ติดต่อสอบถามรายละเอียดทุนการศึกษาเพิ่มเติมได้ที่ ฝ่ายบริหารการศึกษา สำนักการศึกษา โทร. 055-983-221 ต่อ 402</p>
+            </div>
           `
         });
-      } else if (serviceId === 'smartlearning') {
+        return;
+      }
+
+      if (serviceId === 'smartlearning') {
         openModal({
           badge: 'Smart Learning • คลังสื่อการเรียนรู้ดิจิทัล',
-          title: 'แหล่งเรียนรู้ดิจิทัลและหลักสูตรท้องถิ่นศึกษาเมืองพิษณุโลก',
+          title: 'ศูนย์รวมนวัตกรรมและสื่อการสอนดิจิทัลเมืองสองแคว',
           icon: 'laptop',
           bodyHtml: `
-            <div class="grid sm:grid-cols-2 gap-3">
-              <div class="p-4 rounded-2xl bg-sky-50 border border-sky-200">
-                <h4 class="font-heading font-bold text-sm text-sky-950">1. สื่อท้องถิ่นศึกษา "เมืองสองแคว"</h4>
-                <p class="text-xs text-slate-600 mt-1">ประวัติศาสตร์ ภูมิปัญญา และแหล่งเรียนรู้สำคัญในจังหวัดพิษณุโลก</p>
+            <div class="grid sm:grid-cols-2 gap-3 text-xs">
+              <div class="p-4 rounded-2xl bg-sky-50 border border-sky-200 space-y-1">
+                <span class="font-heading font-bold text-sm text-sky-950">1. Coding & AI สำหรับเยาวชน</span>
+                <p class="text-slate-600">ชุดกิจกรรมการคิดเชิงคำนวณและพื้นฐานปัญญาประดิษฐ์สำหรับระดับประถมและมัธยมศึกษา</p>
               </div>
-              <div class="p-4 rounded-2xl bg-purple-50 border border-purple-200">
-                <h4 class="font-heading font-bold text-sm text-purple-950">2. ชุดฝึกทักษะ Coding & AI</h4>
-                <p class="text-xs text-slate-600 mt-1">บทเรียนการคิดเชิงคำนวณสำหรับนักเรียนระดับประถมและมัธยมศึกษา</p>
+              <div class="p-4 rounded-2xl bg-royal-50 border border-royal-200 space-y-1">
+                <span class="font-heading font-bold text-sm text-royal-950">2. ท้องถิ่นศึกษาเมืองพิษณุโลก</span>
+                <p class="text-slate-600">E-Book ประวัติศาสตร์เมืองสองแคว ภูมิปัญญาท้องถิ่น และแหล่งเรียนรู้ทางวัฒนธรรม</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 space-y-1">
+                <span class="font-heading font-bold text-sm text-amber-950">3. ปฐมวัยพัฒนาทักษะสมอง EF</span>
+                <p class="text-slate-600">คู่มือการจัดประสบการณ์การเรียนรู้สำหรับครูศูนย์พัฒนาเด็กเล็กและผู้ปกครอง</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-1">
+                <span class="font-heading font-bold text-sm text-emerald-950">4. คลังแผนการสอน Active Learning</span>
+                <p class="text-slate-600">ตัวอย่างแผนการจัดการเรียนรู้เชิงรุกและสื่อมัลติมีเดียของสถานศึกษาในสังกัด</p>
               </div>
             </div>
           `
         });
+        return;
       }
-    }
 
-    async function handleAdmissionSubmit(event) {
-      event.preventDefault();
-      const fd = new FormData(event.target);
-      const record = await BackendAPI.createAdmission({
-        studentName: fd.get('studentName'),
-        level: fd.get('level'),
-        schoolName: fd.get('schoolName'),
-        parentPhone: fd.get('parentPhone')
-      });
-      if (!record) return;
+      // Default: 'feedback'
       openModal({
-        badge: 'ยื่นใบสมัครออนไลน์สำเร็จ',
-        title: `รหัสอ้างอิงใบสมัครของท่านคือ ${record.refCode}`,
-        icon: 'check-circle-2',
+        badge: 'Smart Feedback • ศูนย์รับเรื่องร้องเรียนและข้อเสนอแนะ',
+        title: 'แจ้งเรื่องร้องเรียน เสนอแนะ และติดตามผลการดำเนินการ',
+        icon: 'message-square-heart',
         bodyHtml: `
-          <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-2">
-            <p class="font-heading font-bold text-base text-emerald-900">รหัสอ้างอิง: ${escapeHtml(record.refCode)}</p>
-            <p><strong>ชื่อนักเรียน:</strong> ${escapeHtml(record.studentName)}</p>
-            <p><strong>ระดับชั้น:</strong> ${escapeHtml(record.level)}</p>
-            <p><strong>สถานศึกษา:</strong> ${escapeHtml(record.schoolName)}</p>
-            <p><strong>สถานะปัจจุบัน:</strong> <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-bold">${escapeHtml(record.status)}</span></p>
-            <p class="text-xs text-slate-600 pt-1">บันทึกข้อมูลลงฐานข้อมูลเรียบร้อยแล้ว เจ้าหน้าที่จะตรวจสอบและอัปเดตผลให้ท่านทราบ</p>
+          <div class="space-y-5">
+            <form onsubmit="handleFeedbackSubmit(event)" class="p-4 rounded-2xl bg-rose-50/60 border border-rose-200 space-y-3">
+              <h4 class="font-heading font-bold text-sm text-royal-950">1. ส่งเรื่องร้องเรียน / ข้อเสนอแนะถึงสำนักการศึกษา</h4>
+              <div>
+                <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">ประเภทเรื่อง *</label>
+                <select name="category" required class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm bg-white">
+                  <option value="ข้อเสนอแนะพัฒนาคุณภาพการศึกษา">ข้อเสนอแนะพัฒนาคุณภาพการศึกษา</option>
+                  <option value="สอบถามข้อมูลการรับสมัครเรียน/สวัสดิการ">สอบถามข้อมูลการรับสมัครเรียน/สวัสดิการ</option>
+                  <option value="แจ้งปัญหาอาคารสถานที่/ความปลอดภัยในโรงเรียน">แจ้งปัญหาอาคารสถานที่/ความปลอดภัยในโรงเรียน</option>
+                  <option value="ร้องเรียนการปฏิบัติงาน/ความโปร่งใส">ร้องเรียนการปฏิบัติงาน/ความโปร่งใส</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">รายละเอียดเรื่องแจ้ง *</label>
+                <textarea name="detail" required rows="3" placeholder="ระบุรายละเอียดสถานที่ วันเวลา หรือข้อเสนอแนะของท่าน..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm bg-white"></textarea>
+              </div>
+              <div>
+                <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">ชื่อผู้แจ้ง / เบอร์โทรหรืออีเมลติดต่อกลับ</label>
+                <input type="text" name="contact" placeholder="ระบุหรือไม่ระบุก็ได้ (ข้อมูลถูกคุ้มครองตาม PDPA)" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm bg-white" />
+              </div>
+              <button type="submit" class="w-full py-2.5 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-xs sm:text-sm shadow-sm">
+                ส่งเรื่องเข้าสู่ระบบติดตามออนไลน์
+              </button>
+              <div id="feedback-result-box"></div>
+            </form>
+
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
+              <h4 class="font-heading font-bold text-sm text-royal-950">2. ติดตามผลการตอบกลับจากเจ้าหน้าที่</h4>
+              <div class="flex gap-2">
+                <input type="text" id="feedback-lookup-code" placeholder="กรอกรหัสติดตาม เช่น FB-69XXXX" class="flex-1 px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm font-mono bg-white uppercase" />
+                <button type="button" onclick="lookupFeedbackStatus()" class="px-4 py-2 rounded-xl bg-gold-500 hover:bg-gold-400 text-royal-950 font-heading font-semibold text-xs sm:text-sm shrink-0">
+                  ตรวจสอบผล
+                </button>
+              </div>
+              <div id="feedback-lookup-result"></div>
+            </div>
           </div>
         `
       });
     }
 
+    async function handleAdmissionSubmit(event) {
+      event.preventDefault();
+      const form = event.target;
+      const fd = new FormData(form);
+      const record = await BackendAPI.createAdmission({
+        studentName: String(fd.get('studentName') || '').trim(),
+        level: fd.get('level'),
+        schoolName: fd.get('schoolName'),
+        parentPhone: String(fd.get('parentPhone') || '').trim()
+      });
+
+      if (!record) return;
+      const resultBox = document.getElementById('admission-result-box');
+      if (resultBox) {
+        resultBox.innerHTML = `
+          <div class="mt-2 p-3.5 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-950 text-xs space-y-1">
+            <p class="font-heading font-bold text-sm text-emerald-800">✓ บันทึกใบสมัครเรียบร้อยแล้ว</p>
+            <p>รหัสอ้างอิงของท่านคือ: <strong class="font-mono text-sm px-2 py-0.5 rounded bg-white border border-emerald-200">${escapeHtml(record.refCode)}</strong></p>
+            <p class="text-[11px] text-emerald-700">กรุณาจดบันทึกรหัสอ้างอิงนี้ไว้สำหรับตรวจสอบผลการอนุมัติจากเจ้าหน้าที่</p>
+          </div>
+        `;
+      }
+      form.reset();
+      showToast('ยื่นใบสมัครออนไลน์สำเร็จ', `รหัสอ้างอิงใบสมัครของท่านคือ ${record.refCode}`);
+    }
+
     function lookupAdmissionStatus() {
-      const code = (document.getElementById('lookup-adm-code').value || '').trim().toUpperCase();
-      const box = document.getElementById('lookup-adm-result');
-      const found = BackendState.admissions.find(a => String(a.refCode).toUpperCase() === code);
-      if (!found) {
-        box.innerHTML = `<span class="text-rose-600 font-semibold">ไม่พบรหัสอ้างอิง "${escapeHtml(code)}" ในระบบ</span>`;
+      const input = document.getElementById('admission-lookup-code');
+      const box = document.getElementById('admission-lookup-result');
+      if (!input || !box) return;
+      const code = input.value.trim().toUpperCase();
+      if (!code) {
+        box.innerHTML = `<p class="text-xs text-rose-600 mt-1">กรุณากรอกรหัสอ้างอิงใบสมัครก่อนกดตรวจสอบ</p>`;
         return;
       }
+      const found = BackendState.admissions.find(a => String(a.refCode).toUpperCase() === code);
+      if (!found) {
+        box.innerHTML = `<p class="text-xs text-rose-600 mt-2">ไม่พบข้อมูลใบสมัครรหัส "${escapeHtml(code)}" ในฐานข้อมูล</p>`;
+        return;
+      }
+      const badgeClass = found.status === 'อนุมัติสิทธิ์เข้าศึกษา'
+        ? 'bg-emerald-100 text-emerald-800'
+        : (found.status === 'เอกสารไม่ครบ' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800');
       box.innerHTML = `
-        <div class="p-3 rounded-xl bg-white border border-slate-200 space-y-1 mt-1">
-          <p><strong>นักเรียน:</strong> ${escapeHtml(found.studentName)} (${escapeHtml(found.schoolName)})</p>
-          <p><strong>สถานะ:</strong> <span class="font-bold text-royal-900">${escapeHtml(found.status)}</span></p>
-          <p><strong>หมายเหตุเจ้าหน้าที่:</strong> ${escapeHtml(found.staffNote || '-')}</p>
+        <div class="mt-2 p-3.5 rounded-xl bg-white border border-slate-200 text-xs space-y-1.5">
+          <div class="flex items-center justify-between gap-2">
+            <span class="font-mono font-bold text-royal-900">${escapeHtml(found.refCode)}</span>
+            <span class="px-2.5 py-0.5 rounded-full font-heading font-semibold ${badgeClass}">${escapeHtml(found.status)}</span>
+          </div>
+          <p><strong>ผู้สมัคร:</strong> ${escapeHtml(found.studentName)} (${escapeHtml(found.level)})</p>
+          <p><strong>สถานศึกษา:</strong> ${escapeHtml(found.schoolName)}</p>
+          <p class="text-slate-600"><strong>หมายเหตุเจ้าหน้าที่:</strong> ${escapeHtml(found.staffNote || '-')}</p>
         </div>
       `;
     }
 
     async function handleFeedbackSubmit(event) {
       event.preventDefault();
-      const fd = new FormData(event.target);
+      const form = event.target;
+      const fd = new FormData(form);
       const ticket = await BackendAPI.createFeedback({
         category: fd.get('category'),
-        detail: fd.get('detail'),
-        contact: fd.get('contact')
+        detail: String(fd.get('detail') || '').trim(),
+        contact: String(fd.get('contact') || '').trim()
       });
+
       if (!ticket) return;
-      openModal({
-        badge: 'บันทึกเรื่องเรียบร้อยแล้ว',
-        title: `รหัสติดตามเรื่องของท่านคือ ${ticket.ticketCode}`,
-        icon: 'check-circle-2',
-        bodyHtml: `
-          <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-2">
-            <p class="font-heading font-bold text-base text-emerald-900">รหัสติดตาม: ${escapeHtml(ticket.ticketCode)}</p>
-            <p><strong>หมวดหมู่:</strong> ${escapeHtml(ticket.category)}</p>
-            <p><strong>รายละเอียด:</strong> ${escapeHtml(ticket.detail)}</p>
-            <p class="text-xs text-slate-600">ท่านสามารถนำรหัสนี้มาตรวจสอบคำตอบจากเจ้าหน้าที่ได้ตลอดเวลา</p>
+      const resultBox = document.getElementById('feedback-result-box');
+      if (resultBox) {
+        resultBox.innerHTML = `
+          <div class="mt-2 p-3.5 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-950 text-xs space-y-1">
+            <p class="font-heading font-bold text-sm text-emerald-800">✓ รับเรื่องเข้าสู่ระบบเรียบร้อยแล้ว</p>
+            <p>รหัสติดตามเรื่องของท่านคือ: <strong class="font-mono text-sm px-2 py-0.5 rounded bg-white border border-emerald-200">${escapeHtml(ticket.ticketCode)}</strong></p>
+            <p class="text-[11px] text-emerald-700">สามารถนำรหัสนี้มาตรวจสอบคำตอบกลับจากเจ้าหน้าที่ได้ตลอด 24 ชั่วโมง</p>
           </div>
-        `
-      });
+        `;
+      }
+      form.reset();
+      showToast('ส่งเรื่องร้องเรียน/เสนอแนะสำเร็จ', `รหัสติดตามเรื่องของท่านคือ ${ticket.ticketCode}`);
     }
 
     function lookupFeedbackStatus() {
-      const code = (document.getElementById('lookup-fb-code').value || '').trim().toUpperCase();
-      const box = document.getElementById('lookup-fb-result');
-      const found = BackendState.feedbackTickets.find(t => String(t.ticketCode).toUpperCase() === code);
-      if (!found) {
-        box.innerHTML = `<span class="text-rose-600 font-semibold">ไม่พบรหัสติดตาม "${escapeHtml(code)}" ในระบบ</span>`;
+      const input = document.getElementById('feedback-lookup-code');
+      const box = document.getElementById('feedback-lookup-result');
+      if (!input || !box) return;
+      const code = input.value.trim().toUpperCase();
+      if (!code) {
+        box.innerHTML = `<p class="text-xs text-rose-600 mt-1">กรุณากรอกรหัสติดตามเรื่อง (Ticket Code) ก่อน</p>`;
         return;
       }
+      const found = BackendState.feedbackTickets.find(t => String(t.ticketCode).toUpperCase() === code);
+      if (!found) {
+        box.innerHTML = `<p class="text-xs text-rose-600 mt-2">ไม่พบข้อมูลรหัสเรื่อง "${escapeHtml(code)}" ในฐานข้อมูล</p>`;
+        return;
+      }
+      const badgeClass = found.status === 'ดำเนินการแล้วเสร็จ' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800';
       box.innerHTML = `
-        <div class="p-3 rounded-xl bg-white border border-slate-200 space-y-1 mt-1">
-          <p><strong>สถานะ:</strong> <span class="font-bold text-royal-900">${escapeHtml(found.status)}</span></p>
-          <p><strong>คำตอบจากเจ้าหน้าที่:</strong> ${escapeHtml(found.reply || 'อยู่ระหว่างการพิจารณาของเจ้าหน้าที่')}</p>
+        <div class="mt-2 p-3.5 rounded-xl bg-white border border-slate-200 text-xs space-y-1.5">
+          <div class="flex items-center justify-between gap-2">
+            <span class="font-mono font-bold text-royal-900">${escapeHtml(found.ticketCode)}</span>
+            <span class="px-2.5 py-0.5 rounded-full font-heading font-semibold ${badgeClass}">${escapeHtml(found.status)}</span>
+          </div>
+          <p><strong>หมวดหมู่:</strong> ${escapeHtml(found.category)}</p>
+          <p class="text-slate-600"><strong>เรื่องแจ้ง:</strong> ${escapeHtml(found.detail)}</p>
+          <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-950">
+            <strong>คำชี้แจง/ผลการดำเนินการ:</strong> ${escapeHtml(found.reply || 'อยู่ระหว่างเจ้าหน้าที่ตรวจสอบและดำเนินการ')}
+          </div>
         </div>
       `;
     }
 
     // -----------------------------------------------------------------------
-    // 8I. BACK-OFFICE AUTHENTICATION (PRODUCTION DB CONNECTION + REAL LOGIN ONLY)
+    // 8I. BACK-OFFICE AUTHENTICATION (ONE-TIME DB SETUP + REAL LOGIN)
     // -----------------------------------------------------------------------
+    function openSheetSetupModal() {
+      openModal({
+        badge: 'Production Setup • เชื่อมต่อฐานข้อมูล Google Sheets (ตั้งค่าครั้งแรกครั้งเดียว)',
+        title: 'เชื่อมต่อ Google Apps Script Web App URL',
+        icon: 'database',
+        bodyHtml: `
+          <div class="space-y-4">
+            <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-950 leading-relaxed">
+              <strong>ตั้งค่าเพียงครั้งแรกครั้งเดียว:</strong> วาง <strong>Google Apps Script Web App URL (ลงท้ายด้วย /exec)</strong> ระบบจะบันทึกลิงก์ไว้ในเบราว์เซอร์ถาวร และไม่ถามซ้ำในครั้งถัดไป
+            </div>
+            <div class="space-y-2">
+              <label for="initial-sheet-url" class="block font-heading font-bold text-xs text-royal-950">Google Apps Script Web App URL (/exec) *</label>
+              <input
+                type="url"
+                id="initial-sheet-url"
+                value="${escapeHtml(BackendState.googleSheetUrl)}"
+                placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm font-mono focus:border-royal-800 focus:outline-none"
+              />
+              <button type="button" onclick="connectInitialSheetAndProceedLogin()" class="w-full py-3 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-sm shadow-sm">
+                บันทึกการเชื่อมต่อและเข้าสู่หน้าล็อกอินเจ้าหน้าที่
+              </button>
+            </div>
+            <div class="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs">
+              <span class="text-slate-600">ยังไม่มีสคริปต์ Google Apps Script?</span>
+              <div class="flex gap-2">
+                <button type="button" onclick="copyAppsScriptCode()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-royal-950 font-heading font-semibold">
+                  คัดลอกโค้ด Code.gs
+                </button>
+                <button type="button" onclick="downloadAppsScriptFile()" class="px-3 py-1.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-royal-950 font-heading font-semibold">
+                  ดาวน์โหลด Code.gs
+                </button>
+              </div>
+            </div>
+          </div>
+        `,
+        footerHtml: `
+          <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-heading font-medium text-sm">
+            ปิดหน้าต่าง
+          </button>
+        `
+      });
+    }
+
     function handleBackofficeEntry() {
       if (BackendState.currentStaff) {
         switchToBackoffice();
         return;
       }
 
-      // หากยังไม่ได้เชื่อมต่อฐานข้อมูล Google Sheets ให้แสดงหน้าตั้งค่าการเชื่อมต่อฐานข้อมูลก่อน
-      if (!BackendState.isSheetConnected) {
-        openModal({
-          badge: 'Production Setup • เชื่อมต่อฐานข้อมูล Google Sheets ของหน่วยงาน',
-          title: 'ตั้งค่าฐานข้อมูลจริงก่อนเข้าสู่ระบบหลังบ้าน',
-          icon: 'database',
-          bodyHtml: `
-            <div class="space-y-4">
-              <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-950 leading-relaxed">
-                <strong>ระบบพร้อมใช้งานจริง (Production Mode):</strong> กรุณานำ <strong>Google Apps Script Web App URL (ลงท้ายด้วย /exec)</strong> ของหน่วยงานมาเชื่อมต่อเพื่อโหลดรายชื่อเจ้าหน้าที่และข้อมูลทั้งหมดจาก Google Sheets
-              </div>
-              <div class="space-y-2">
-                <label for="initial-sheet-url" class="block font-heading font-bold text-xs text-royal-950">Google Apps Script Web App URL (/exec) *</label>
-                <input
-                  type="url"
-                  id="initial-sheet-url"
-                  value="${escapeHtml(BackendState.googleSheetUrl)}"
-                  placeholder="https://script.google.com/macros/s/AKfycb.../exec"
-                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm font-mono focus:border-royal-800 focus:outline-none"
-                />
-                <button type="button" onclick="connectInitialSheetAndProceedLogin()" class="w-full py-3 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-sm shadow-sm">
-                  เชื่อมต่อฐานข้อมูลและไปหน้าเข้าสู่ระบบเจ้าหน้าที่
-                </button>
-              </div>
-              <div class="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs">
-                <span class="text-slate-600">ยังไม่มีสคริปต์ Google Apps Script?</span>
-                <div class="flex gap-2">
-                  <button type="button" onclick="copyAppsScriptCode()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-royal-950 font-heading font-semibold">
-                    คัดลอกโค้ด Code.gs
-                  </button>
-                  <button type="button" onclick="downloadAppsScriptFile()" class="px-3 py-1.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-royal-950 font-heading font-semibold">
-                    ดาวน์โหลด Code.gs
-                  </button>
-                </div>
-              </div>
-            </div>
-          `,
-          footerHtml: `
-            <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-heading font-medium text-sm">
-              ปิดหน้าต่าง
-            </button>
-          `
-        });
+      // ถามลิงก์ Google Apps Script เฉพาะครั้งแรกครั้งเดียวที่ยังไม่เคยตั้งค่า URL ไว้ในระบบ
+      const hasUrl = Boolean(BackendState.googleSheetUrl && BackendState.googleSheetUrl.startsWith('https://script.google.com/'));
+      if (!BackendState.hasConfiguredUrl && !hasUrl) {
+        openSheetSetupModal();
         return;
       }
 
@@ -2402,6 +2632,12 @@ function doPost(e) {
               เข้าสู่ระบบหลังบ้าน
             </button>
           </form>
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+            <span>เชื่อมต่อฐานข้อมูล Google Sheets เรียบร้อยแล้ว</span>
+            <button type="button" onclick="openSheetSetupModal()" class="text-royal-800 hover:underline font-heading font-semibold">
+              เปลี่ยนลิงก์ฐานข้อมูล
+            </button>
+          </div>
         `,
         footerHtml: `
           <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-heading font-medium text-sm">
@@ -2419,6 +2655,11 @@ function doPost(e) {
         return;
       }
       BackendState.googleSheetUrl = url;
+      BackendState.hasConfiguredUrl = true;
+      try {
+        localStorage.setItem('phsmun_edu_sheet_url', url);
+        localStorage.setItem('phsmun_edu_sheet_configured', 'true');
+      } catch (e) {}
       showToast('กำลังเชื่อมต่อฐานข้อมูล...', 'กำลังซิงค์ข้อมูลจาก Google Sheets');
       const ok = await BackendAPI.pullFromGoogleSheet(false);
       if (ok) {
@@ -2600,19 +2841,29 @@ function doPost(e) {
         `;
       } else if (tabName === 'news') {
         const rows = NEWS_DATA.length > 0
-          ? NEWS_DATA.map(item => `
+          ? NEWS_DATA.map(item => {
+              const thumbSrc = item.imageDataUrl || item.imageUrl || '';
+              return `
               <tr class="hover:bg-slate-50">
                 <td class="px-4 py-3.5 text-xs whitespace-nowrap">
                   <span class="px-2.5 py-1 rounded-full border font-heading font-semibold ${item.badgeColor}">${escapeHtml(item.categoryLabel)}</span>
                 </td>
                 <td class="px-4 py-3.5">
-                  <p class="font-heading font-semibold text-sm text-royal-950">${escapeHtml(item.title)}</p>
-                  <p class="text-xs text-slate-500 mt-0.5">เลขที่: ${escapeHtml(item.refNo)} • วันที่: ${escapeHtml(item.date)}</p>
-                  <div class="mt-1.5 inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-slate-100 text-[11px] text-slate-700">
-                    <i data-lucide="paperclip" class="w-3.5 h-3.5 text-royal-800"></i>
-                    <span class="font-medium">${escapeHtml(item.pdfName)}</span>
-                    <span class="text-slate-400">(${escapeHtml(item.fileSize || 'PDF')})</span>
-                    ${item.fileUrl ? '<span class="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 font-bold">Google Drive จริง</span>' : ''}
+                  <div class="flex items-start gap-3">
+                    ${thumbSrc
+                      ? `<img src="${escapeHtml(thumbSrc)}" alt="${escapeHtml(item.title)}" onerror="this.style.display='none'" class="w-16 h-12 rounded-xl object-cover border border-slate-200 shrink-0" />`
+                      : `<div class="w-16 h-12 rounded-xl bg-royal-50 border border-royal-100 text-royal-800 flex items-center justify-center shrink-0"><i data-lucide="image" class="w-5 h-5"></i></div>`
+                    }
+                    <div>
+                      <p class="font-heading font-semibold text-sm text-royal-950">${escapeHtml(item.title)}</p>
+                      <p class="text-xs text-slate-500 mt-0.5">เลขที่: ${escapeHtml(item.refNo)} • วันที่: ${escapeHtml(item.date)}</p>
+                      <div class="mt-1.5 inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-slate-100 text-[11px] text-slate-700">
+                        <i data-lucide="paperclip" class="w-3.5 h-3.5 text-royal-800"></i>
+                        <span class="font-medium">${escapeHtml(item.pdfName)}</span>
+                        <span class="text-slate-400">(${escapeHtml(item.fileSize || 'PDF')})</span>
+                        ${item.fileUrl ? '<span class="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 font-bold">Google Drive จริง</span>' : ''}
+                      </div>
+                    </div>
                   </div>
                 </td>
                 <td class="px-4 py-3.5 text-right whitespace-nowrap space-x-1.5">
@@ -2627,7 +2878,7 @@ function doPost(e) {
                   </button>
                 </td>
               </tr>
-            `).join('')
+            `;}).join('')
           : `<tr><td colspan="3" class="px-4 py-8 text-center text-xs text-slate-500">ยังไม่มีรายการข่าวหรือประกาศจัดซื้อจัดจ้าง e-GP ในฐานข้อมูล กดปุ่ม "+ เพิ่มข่าว / อัปโหลดเอกสารใหม่" ด้านบนเพื่อเริ่มต้น</td></tr>`;
 
         container.innerHTML = `
@@ -2635,11 +2886,11 @@ function doPost(e) {
             <div class="p-6 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4">
               <div>
                 <h2 class="font-heading font-bold text-lg text-royal-950">จัดการข่าวประชาสัมพันธ์ ประกาศรับสมัคร และอัปโหลดเอกสาร e-GP</h2>
-                <p class="text-xs sm:text-sm text-slate-600">อัปโหลดไฟล์เอกสารจริง (PDF, Word, Excel, รูปภาพ) บันทึกลง Google Drive และเผยแพร่ขึ้นหน้าเว็บไซต์ทันที</p>
+                <p class="text-xs sm:text-sm text-slate-600">อัปโหลดภาพปกข่าวและไฟล์เอกสารจริง (PDF, Word, Excel, รูปภาพ) บันทึกลง Google Drive และเผยแพร่ขึ้นหน้าเว็บไซต์ทันที</p>
               </div>
               <button type="button" onclick="openNewsEditorModal(null)" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-sm shadow-sm">
                 <i data-lucide="upload-cloud" class="w-4 h-4 text-gold-400"></i>
-                <span>+ เพิ่มข่าว / อัปโหลดเอกสารใหม่</span>
+                <span>+ เพิ่มข่าว / อัปโหลดภาพ & เอกสารใหม่</span>
               </button>
             </div>
             <div class="overflow-x-auto">
@@ -2647,7 +2898,7 @@ function doPost(e) {
                 <thead class="bg-slate-50 text-slate-600 font-heading text-xs border-b border-slate-200">
                   <tr>
                     <th class="px-4 py-3">หมวดหมู่</th>
-                    <th class="px-4 py-3">หัวข้อข่าว / เอกสารแนบ</th>
+                    <th class="px-4 py-3">ภาพปก / หัวข้อข่าว / เอกสารแนบ</th>
                     <th class="px-4 py-3 text-right">การจัดการ</th>
                   </tr>
                 </thead>
@@ -2927,10 +3178,15 @@ function doPost(e) {
                   ${u.isActive ? '● เปิดใช้งาน' : '○ ระงับสิทธิ์'}
                 </button>
               </td>
-              <td class="px-4 py-3.5 text-right whitespace-nowrap">
+              <td class="px-4 py-3.5 text-right whitespace-nowrap space-x-1.5">
                 <button type="button" onclick="openResetStaffPasswordModal('${u.id}')" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-heading font-semibold text-xs">
                   เปลี่ยนรหัสผ่าน
                 </button>
+                ${!isCurrent ? `
+                  <button type="button" onclick="openDeleteStaffModal('${u.id}')" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-heading font-semibold text-xs">
+                    ลบผู้ใช้
+                  </button>
+                ` : ''}
               </td>
             </tr>
           `;
@@ -3039,12 +3295,21 @@ function doPost(e) {
           }
         : null;
 
+      BackendState.pendingUploadedImage = existing && existing.imageDataUrl
+        ? {
+            name: 'cover_image.jpg',
+            mimeType: 'image/jpeg',
+            dataUrl: existing.imageDataUrl
+          }
+        : null;
+
       const currentDocName = existing ? existing.pdfName : 'ยังไม่ได้เลือกไฟล์เอกสาร';
       const currentDocSize = existing && existing.fileSize ? `(${existing.fileSize})` : '';
+      const currentImgSrc = existing ? (existing.imageDataUrl || existing.imageUrl || '') : '';
 
       openModal({
-        badge: existing ? 'แก้ไขประกาศราชการและอัปโหลดเอกสาร' : 'สร้างประกาศราชการและอัปโหลดเอกสารใหม่',
-        title: existing ? 'แก้ไขข่าว / อัปโหลดเอกสารแนบ (PDF, Word, Excel, รูปภาพ)' : 'เพิ่มข่าวประชาสัมพันธ์ / ประกาศ e-GP พร้อมอัปโหลดเอกสาร',
+        badge: existing ? 'แก้ไขประกาศราชการและอัปโหลดภาพ/เอกสาร' : 'สร้างประกาศราชการและอัปโหลดภาพ/เอกสารใหม่',
+        title: existing ? 'แก้ไขข่าว / อัปโหลดภาพปกและเอกสารแนบ' : 'เพิ่มข่าวประชาสัมพันธ์ / ประกาศ e-GP พร้อมภาพประกอบ',
         icon: 'upload-cloud',
         bodyHtml: `
           <form onsubmit="handleSaveNewsForm(event, '${existing ? existing.id : ''}')" class="space-y-3.5">
@@ -3076,6 +3341,38 @@ function doPost(e) {
               <textarea name="content" rows="2" placeholder="รายละเอียดเนื้อหาข่าวหรือเงื่อนไข TOR..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">${existing ? escapeHtml(existing.content) : ''}</textarea>
             </div>
 
+            <!-- Cover Image Upload Widget -->
+            <div class="p-4 rounded-2xl bg-amber-50/70 border-2 border-dashed border-amber-300 space-y-2.5">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <label for="news-cover-image-input" class="font-heading font-bold text-xs text-amber-950 flex items-center gap-1.5">
+                  <i data-lucide="image-plus" class="w-4 h-4 text-amber-700"></i>
+                  <span>ภาพประกอบข่าว / ภาพปกประกาศ (JPG, PNG, WEBP สูงสุด 8MB)</span>
+                </label>
+                <label for="news-cover-image-input" class="cursor-pointer px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-heading font-semibold text-xs shadow-sm transition-colors">
+                  เลือกรูปภาพจากเครื่อง
+                </label>
+                <input
+                  type="file"
+                  id="news-cover-image-input"
+                  accept="image/png,image/jpeg,image/webp"
+                  onchange="handleNewsImageSelect(event)"
+                  class="hidden"
+                />
+              </div>
+
+              <div id="uploaded-image-preview-wrapper" class="${currentImgSrc ? '' : 'hidden'} relative rounded-xl overflow-hidden border border-amber-200 bg-white">
+                <img id="uploaded-image-preview" src="${escapeHtml(currentImgSrc)}" alt="ตัวอย่างภาพปกข่าว" class="w-full h-36 object-cover" />
+                <button type="button" onclick="clearSelectedNewsImage()" class="absolute top-2 right-2 px-2.5 py-1 rounded-lg bg-rose-600 text-white font-heading font-semibold text-[11px] shadow">
+                  ลบรูปภาพ
+                </button>
+              </div>
+
+              <div>
+                <label class="block font-heading text-[11px] text-slate-600 mb-1">หรือวางลิงก์รูปภาพภายนอก (Image URL):</label>
+                <input type="url" id="news-image-url-input" name="imageUrl" value="${existing ? escapeHtml(existing.imageUrl || '') : ''}" oninput="previewNewsImageUrl(this.value)" placeholder="https://..." class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white font-mono" />
+              </div>
+            </div>
+
             <!-- Real Document File Upload Widget -->
             <div class="p-4 rounded-2xl bg-royal-50/70 border-2 border-dashed border-royal-300 space-y-2.5">
               <div class="flex flex-wrap items-center justify-between gap-2">
@@ -3084,7 +3381,7 @@ function doPost(e) {
                   <span>อัปโหลดเอกสารแนบ (รองรับ .PDF, .DOCX, .XLSX, .JPG, .PNG สูงสุด 15MB)</span>
                 </label>
                 <label for="news-doc-file-input" class="cursor-pointer px-3.5 py-1.5 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-xs shadow-sm transition-colors">
-                  เลือกไฟล์จากเครื่อง
+                  เลือกไฟล์เอกสารจากเครื่อง
                 </label>
                 <input
                   type="file"
@@ -3113,7 +3410,7 @@ function doPost(e) {
             </div>
 
             <button type="submit" class="w-full py-3 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-sm shadow-sm">
-              บันทึกข้อมูลและเผยแพร่เอกสารขึ้นหน้าเว็บไซต์ทันที
+              บันทึกข้อมูลและเผยแพร่ขึ้นหน้าเว็บไซต์ทันที
             </button>
           </form>
         `,
@@ -3123,6 +3420,55 @@ function doPost(e) {
           </button>
         `
       });
+    }
+
+    function handleNewsImageSelect(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const maxBytes = 8 * 1024 * 1024;
+      if (file.size > maxBytes) {
+        showToast('ไฟล์รูปภาพใหญ่เกินกำหนด', 'กรุณาเลือกรูปภาพขนาดไม่เกิน 8 MB');
+        event.target.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        BackendState.pendingUploadedImage = {
+          name: file.name,
+          mimeType: file.type || 'image/jpeg',
+          dataUrl: e.target.result
+        };
+        const wrapper = document.getElementById('uploaded-image-preview-wrapper');
+        const imgEl = document.getElementById('uploaded-image-preview');
+        if (imgEl) imgEl.src = e.target.result;
+        if (wrapper) wrapper.classList.remove('hidden');
+        showToast('เลือกรูปภาพประกอบสำเร็จ', `พร้อมอัปโหลดภาพ "${file.name}" ขึ้น Google Drive`);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function previewNewsImageUrl(url) {
+      const wrapper = document.getElementById('uploaded-image-preview-wrapper');
+      const imgEl = document.getElementById('uploaded-image-preview');
+      if (!wrapper || !imgEl) return;
+      if (url && url.trim()) {
+        imgEl.src = url.trim();
+        wrapper.classList.remove('hidden');
+      } else if (!BackendState.pendingUploadedImage) {
+        wrapper.classList.add('hidden');
+      }
+    }
+
+    function clearSelectedNewsImage() {
+      BackendState.pendingUploadedImage = null;
+      const fileInput = document.getElementById('news-cover-image-input');
+      const urlInput = document.getElementById('news-image-url-input');
+      const wrapper = document.getElementById('uploaded-image-preview-wrapper');
+      if (fileInput) fileInput.value = '';
+      if (urlInput) urlInput.value = '';
+      if (wrapper) wrapper.classList.add('hidden');
     }
 
     function formatBytes(bytes) {
@@ -3180,6 +3526,9 @@ function doPost(e) {
       event.preventDefault();
       const fd = new FormData(event.target);
       const uploaded = BackendState.pendingUploadedDoc;
+      const uploadedImg = BackendState.pendingUploadedImage;
+      const inputImageUrl = (fd.get('imageUrl') || '').trim();
+
       const payload = {
         category: fd.get('category'),
         refNo: fd.get('refNo'),
@@ -3189,7 +3538,11 @@ function doPost(e) {
         pdfName: fd.get('pdfName') || (uploaded ? uploaded.name : 'เอกสารประกาศราชการ.pdf'),
         fileSize: uploaded ? uploaded.sizeLabel : (existingId ? undefined : '-'),
         fileMimeType: uploaded ? uploaded.mimeType : (existingId ? undefined : 'application/pdf'),
-        fileDataUrl: uploaded ? uploaded.dataUrl : null
+        fileDataUrl: uploaded ? uploaded.dataUrl : null,
+        imageUrl: inputImageUrl,
+        imageDataUrl: uploadedImg ? uploadedImg.dataUrl : null,
+        imageFileName: uploadedImg ? uploadedImg.name : null,
+        imageMimeType: uploadedImg ? uploadedImg.mimeType : null
       };
 
       closeModal();
@@ -3199,14 +3552,18 @@ function doPost(e) {
           delete payload.fileMimeType;
           delete payload.fileDataUrl;
         }
+        if (!uploadedImg) {
+          delete payload.imageDataUrl;
+        }
         await BackendAPI.updateNews(existingId, payload);
-        showToast('อัปเดตประกาศและเอกสารสำเร็จ', 'อัปโหลดขึ้น Google Drive และบันทึก Google Sheets เรียบร้อยแล้ว');
+        showToast('อัปเดตประกาศและภาพประกอบสำเร็จ', 'อัปโหลดขึ้น Google Drive และบันทึก Google Sheets เรียบร้อยแล้ว');
       } else {
         await BackendAPI.createNews(payload);
         BackendState.activeNewsFilter = payload.category;
-        showToast('เผยแพร่ประกาศและเอกสารใหม่สำเร็จ', 'อัปโหลดขึ้น Google Drive และบันทึก Google Sheets เรียบร้อยแล้ว');
+        showToast('เผยแพร่ประกาศและภาพประกอบสำเร็จ', 'อัปโหลดขึ้น Google Drive และบันทึก Google Sheets เรียบร้อยแล้ว');
       }
       BackendState.pendingUploadedDoc = null;
+      BackendState.pendingUploadedImage = null;
       renderBackofficeModule('news');
     }
 
@@ -3335,7 +3692,16 @@ function doPost(e) {
     }
 
     function copyAppsScriptCode() {
-      navigator.clipboard.writeText(GOOGLE_APPS_SCRIPT_TEMPLATE);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(GOOGLE_APPS_SCRIPT_TEMPLATE).catch(() => {});
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = GOOGLE_APPS_SCRIPT_TEMPLATE;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
       showToast('คัดลอกโค้ด Code.gs สำเร็จ', 'นำไปวางใน Google Apps Script แล้วกด Deploy > Web App ได้ทันที');
     }
 
@@ -3399,13 +3765,21 @@ function doPost(e) {
       event.preventDefault();
       if (!BackendAPI.hasPermission('rbac')) return;
       if (!BackendAPI.ensureConnected()) return;
-      const fd = new FormData(event.target);
+      const form = event.target;
+      const fd = new FormData(form);
+      const email = String(fd.get('email') || '').trim().toLowerCase();
+
+      if (BackendState.staffUsers.some(u => String(u.email).toLowerCase() === email)) {
+        showToast('อีเมลนี้มีอยู่ในระบบแล้ว', 'กรุณาใช้อีเมลราชการอื่นที่ไม่ซ้ำกับบัญชีที่มีอยู่');
+        return;
+      }
+
       const newUser = {
         id: 'staff-' + Date.now(),
-        name: fd.get('name'),
-        position: fd.get('position'),
-        email: fd.get('email'),
-        password: fd.get('password'),
+        name: String(fd.get('name') || '').trim(),
+        position: String(fd.get('position') || '').trim(),
+        email,
+        password: String(fd.get('password') || '').trim(),
         roleKey: fd.get('roleKey'),
         isActive: true
       };
@@ -3413,8 +3787,63 @@ function doPost(e) {
       const roleLabel = BackendState.roleCatalog[newUser.roleKey]?.label || newUser.roleKey;
       BackendAPI.logAudit('RBAC_ADD_STAFF', `เพิ่มบัญชีเจ้าหน้าที่ ${newUser.name} (${roleLabel})`, '201 Created');
       await BackendAPI.postToGoogleSheet({ action: 'SYNC_STAFF_RBAC', staffUsers: BackendState.staffUsers });
+      form.reset();
       renderBackofficeModule('rbac');
       showToast('เพิ่มบัญชีเจ้าหน้าที่สำเร็จ', `มอบสิทธิ์ "${roleLabel}" ให้แก่ ${newUser.name} เรียบร้อยแล้ว`);
+    }
+
+    function openDeleteStaffModal(staffId) {
+      if (!BackendAPI.hasPermission('rbac')) return;
+      const user = BackendState.staffUsers.find(u => u.id === staffId);
+      if (!user) return;
+
+      if (BackendState.currentStaff && BackendState.currentStaff.id === staffId) {
+        showToast('ไม่สามารถลบบัญชีที่กำลังใช้งานอยู่', 'กรุณาสลับไปใช้งานบัญชีผู้ดูแลระบบอื่นก่อนลบบัญชีนี้');
+        return;
+      }
+
+      const activeSuperAdmins = BackendState.staffUsers.filter(u => u.roleKey === 'superadmin' && u.isActive);
+      if (user.roleKey === 'superadmin' && activeSuperAdmins.length <= 1) {
+        showToast('ไม่สามารถลบผู้ดูแลระบบสูงสุดคนสุดท้ายได้', 'ระบบจำเป็นต้องมีผู้ดูแลระบบสูงสุด (Super Admin) อย่างน้อย 1 บัญชี');
+        return;
+      }
+
+      openModal({
+        badge: 'ยืนยันการลบบัญชีผู้ใช้งาน (RBAC)',
+        title: `ต้องการลบบัญชีของ "${user.name}" ใช่หรือไม่?`,
+        icon: 'trash-2',
+        bodyHtml: `
+          <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 space-y-2 text-rose-950">
+            <p class="font-heading font-bold text-sm">คำเตือน: การลบบัญชีผู้ใช้งานจะมีผลทันที</p>
+            <p class="text-xs"><strong>ชื่อ-นามสกุล:</strong> ${escapeHtml(user.name)}</p>
+            <p class="text-xs"><strong>ตำแหน่ง:</strong> ${escapeHtml(user.position)}</p>
+            <p class="text-xs"><strong>อีเมล:</strong> ${escapeHtml(user.email)}</p>
+            <p class="text-xs text-rose-700 pt-1">บัญชีนี้จะถูกลบออกจากชีต StaffUsers บน Google Sheets และไม่สามารถเข้าสู่ระบบหลังบ้านได้อีก</p>
+          </div>
+        `,
+        footerHtml: `
+          <button type="button" onclick="confirmDeleteStaffUser('${user.id}')" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-heading font-semibold text-sm shadow-sm">
+            ยืนยันลบบัญชีผู้ใช้งาน
+          </button>
+          <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-heading font-medium text-sm">
+            ยกเลิก
+          </button>
+        `
+      });
+    }
+
+    async function confirmDeleteStaffUser(staffId) {
+      if (!BackendAPI.hasPermission('rbac')) return;
+      if (!BackendAPI.ensureConnected()) return;
+      const idx = BackendState.staffUsers.findIndex(u => u.id === staffId);
+      if (idx === -1) return;
+
+      const removedUser = BackendState.staffUsers.splice(idx, 1)[0];
+      BackendAPI.logAudit('RBAC_DELETE_STAFF', `ลบบัญชีเจ้าหน้าที่ ${removedUser.name} (${removedUser.email})`, '200 OK');
+      closeModal();
+      await BackendAPI.postToGoogleSheet({ action: 'SYNC_STAFF_RBAC', staffUsers: BackendState.staffUsers });
+      renderBackofficeModule('rbac');
+      showToast('ลบบัญชีผู้ใช้งานสำเร็จ', `ลบบัญชีของ ${removedUser.name} ออกจากฐานข้อมูลเรียบร้อยแล้ว`);
     }
 
     async function handleChangeStaffRole(staffId, newRoleKey) {
@@ -3513,10 +3942,14 @@ function doPost(e) {
     window.switchToBackoffice = switchToBackoffice;
     window.setBackofficeTab = setBackofficeTab;
     window.openNewsEditorModal = openNewsEditorModal;
+    window.handleNewsImageSelect = handleNewsImageSelect;
+    window.previewNewsImageUrl = previewNewsImageUrl;
+    window.clearSelectedNewsImage = clearSelectedNewsImage;
     window.handleNewsFileSelect = handleNewsFileSelect;
     window.clearSelectedNewsFile = clearSelectedNewsFile;
     window.handleSaveNewsForm = handleSaveNewsForm;
     window.handleDeleteNews = handleDeleteNews;
+    window.openSheetSetupModal = openSheetSetupModal;
     window.openSchoolEditorModal = openSchoolEditorModal;
     window.handleSaveSchoolForm = handleSaveSchoolForm;
     window.handleApproveAdmission = handleApproveAdmission;
@@ -3528,6 +3961,8 @@ function doPost(e) {
     window.downloadProductionReadyHtml = downloadProductionReadyHtml;
     window.toggleRolePermission = toggleRolePermission;
     window.handleAddStaffUser = handleAddStaffUser;
+    window.openDeleteStaffModal = openDeleteStaffModal;
+    window.confirmDeleteStaffUser = confirmDeleteStaffUser;
     window.handleChangeStaffRole = handleChangeStaffRole;
     window.toggleStaffActiveStatus = toggleStaffActiveStatus;
     window.openResetStaffPasswordModal = openResetStaffPasswordModal;
@@ -3536,7 +3971,7 @@ function doPost(e) {
     window.hideToast = hideToast;
 
     // -----------------------------------------------------------------------
-    // 8M. INITIALIZATION ON PAGE LOAD (AUTO-CONNECT REAL GOOGLE SHEETS)
+    // 8M. INITIALIZATION ON PAGE LOAD (AUTO-CONNECT REAL GOOGLE SHEETS ONCE)
     // -----------------------------------------------------------------------
     async function initApp() {
       BackendAPI.syncFrontendAll();
@@ -3544,13 +3979,25 @@ function doPost(e) {
 
       const params = new URLSearchParams(window.location.search);
       const queryUrl = params.get('sheetUrl');
-      const savedUrl = localStorage.getItem('phsmun_edu_sheet_url');
+      let savedUrl = '';
+      let isConfiguredFlag = false;
+      try {
+        savedUrl = localStorage.getItem('phsmun_edu_sheet_url') || '';
+        isConfiguredFlag = localStorage.getItem('phsmun_edu_sheet_configured') === 'true';
+      } catch (e) {}
+
       const activeUrl = (queryUrl || DEFAULT_PRODUCTION_SHEET_URL || savedUrl || '').trim();
 
       if (activeUrl && activeUrl.startsWith('https://script.google.com/')) {
         BackendState.googleSheetUrl = activeUrl;
+        BackendState.hasConfiguredUrl = true;
+        try {
+          localStorage.setItem('phsmun_edu_sheet_url', activeUrl);
+          localStorage.setItem('phsmun_edu_sheet_configured', 'true');
+        } catch (e) {}
         await BackendAPI.pullFromGoogleSheet(true);
       } else {
+        BackendState.hasConfiguredUrl = isConfiguredFlag;
         BackendState.isLoadingInitialData = false;
         BackendAPI.updateConnectionBadge();
         BackendAPI.syncFrontendAll();
