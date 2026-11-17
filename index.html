@@ -433,7 +433,109 @@
         </div>
       </div>
     </section>
+ <!-- NEWS, RECRUITMENT & e-GP PROCUREMENT BOARD -->
+    <section id="news" class="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+        <div>
+          <span class="inline-block px-3 py-1 rounded-full bg-royal-100 text-royal-900 font-heading font-semibold text-xs mb-2">
+            ANNOUNCEMENTS & e-GP PROCUREMENT
+          </span>
+          <h2 class="font-heading font-bold text-2xl sm:text-3xl text-royal-950">
+            ข่าวประชาสัมพันธ์ ประกาศรับสมัคร และจัดซื้อจัดจ้าง e-GP
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base mt-1">
+            อัปเดตข่าวสารกิจกรรมทางการศึกษา ประกาศรับสมัครบุคลากร และข้อมูลจัดซื้อจัดจ้างภาครัฐ
+          </p>
+        </div>
+  
+        <!-- News Category Tabs -->
+        <div class="flex flex-wrap gap-2" role="tablist" aria-label="หมวดหมู่ข่าวสาร">
+          <button type="button" onclick="filterNews('activities')" data-news-tab="activities" class="news-tab-btn px-4 py-2 rounded-xl bg-royal-950 text-white font-heading font-semibold text-xs sm:text-sm shadow-sm transition-all">
+            ข่าวกิจกรรม
+          </button>
+          <button type="button" onclick="filterNews('recruitment')" data-news-tab="recruitment" class="news-tab-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
+            ประกาศรับสมัคร/สอบแข่งขัน
+          </button>
+          <button type="button" onclick="filterNews('egp')" data-news-tab="egp" class="news-tab-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
+            จัดซื้อจัดจ้าง e-GP
+          </button>
+          <button type="button" onclick="filterNews('regulations')" data-news-tab="regulations" class="news-tab-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
+            คำสั่งและระเบียบ
+          </button>
+        </div>
+      </div>
+      <!-- News Cards Container -->
+        <div id="news-list-container" class="grid md:grid-cols-2 gap-6">
+      </div>
+    </section>
 
+      <!-- PERSONNEL DIRECTORY SECTION (#personnel) -->
+    <section id="personnel" class="py-16 sm:py-20 bg-slate-50 border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+          <div>
+            <span class="inline-block px-3 py-1 rounded-full bg-royal-100 text-royal-900 font-heading font-semibold text-xs mb-2">
+              ORGANIZATION & PERSONNEL DIRECTORY
+            </span>
+            <h2 class="font-heading font-bold text-2xl sm:text-3xl text-royal-950">
+              ทำเนียบบุคลากรและโครงสร้างส่วนราชการ สำนักการศึกษา
+            </h2>
+            <p class="text-slate-600 text-sm sm:text-base mt-1">
+              แผนภูมิแสดงสายบังคับบัญชา: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ และกลุ่มงานภายในฝ่าย
+            </p>
+          </div>
+
+          <button type="button" onclick="handleBackofficeEntry()" class="self-start lg:self-auto inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white hover:bg-royal-50 text-royal-900 border border-slate-200 font-heading font-semibold text-xs transition-colors shadow-sm">
+            <i data-lucide="user-cog" class="w-4 h-4 text-royal-800"></i>
+            <span>จัดการทำเนียบบุคลากร (ระบบหลังบ้าน)</span>
+          </button>
+        </div>
+
+        <!-- Dynamic Personnel Directory Viewport -->
+        <div id="personnel-public-container" class="space-y-10">
+        </div>
+      </div>
+    </section>
+
+     <!-- AFFILIATED SCHOOLS DIRECTORY (WITH SCHOOL DIRECTOR PHOTO) -->
+    <section id="schools" class="py-16 sm:py-20 bg-white border-y border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+          <div>
+            <span class="inline-block px-3 py-1 rounded-full bg-gold-100 text-gold-700 font-heading font-semibold text-xs mb-2">
+              AFFILIATED EDUCATIONAL INSTITUTIONS
+            </span>
+            <h2 class="font-heading font-bold text-2xl sm:text-3xl text-royal-950">
+              ทำเนียบสถานศึกษาในสังกัดเทศบาลนครพิษณุโลก
+            </h2>
+            <p class="text-slate-600 text-sm sm:text-base mt-1">
+              ครอบคลุมการจัดการศึกษาตั้งแต่ระดับปฐมวัย ประถมศึกษา มัธยมศึกษา และโรงเรียนกีฬาเฉพาะทาง พร้อมทำเนียบผู้อำนวยการสถานศึกษา
+            </p>
+          </div>
+
+          <!-- Category Filter Tabs -->
+          <div class="flex flex-wrap gap-2" role="tablist" aria-label="ตัวกรองประเภทสถานศึกษา">
+            <button type="button" onclick="filterSchools('all')" data-school-filter="all" class="school-tab-btn px-4 py-2 rounded-xl bg-royal-950 text-white font-heading font-semibold text-xs sm:text-sm shadow-sm transition-all">
+              ทั้งหมด
+            </button>
+            <button type="button" onclick="filterSchools('municipal')" data-school-filter="municipal" class="school-tab-btn px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
+              โรงเรียนเทศบาล
+            </button>
+            <button type="button" onclick="filterSchools('sports')" data-school-filter="sports" class="school-tab-btn px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
+              โรงเรียนกีฬา
+            </button>
+            <button type="button" onclick="filterSchools('childcare')" data-school-filter="childcare" class="school-tab-btn px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
+              ศูนย์พัฒนาเด็กเล็ก
+            </button>
+          </div>
+        </div>
+
+        <!-- Schools Grid -->
+        <div id="schools-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        </div>
+      </div>
+    </section>
+    
     <!-- E-SERVICES PORTAL (6 DIGITAL SERVICES) -->
     <section id="eservices" class="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
@@ -568,110 +670,6 @@
             <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- AFFILIATED SCHOOLS DIRECTORY (WITH SCHOOL DIRECTOR PHOTO) -->
-    <section id="schools" class="py-16 sm:py-20 bg-white border-y border-slate-200">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
-          <div>
-            <span class="inline-block px-3 py-1 rounded-full bg-gold-100 text-gold-700 font-heading font-semibold text-xs mb-2">
-              AFFILIATED EDUCATIONAL INSTITUTIONS
-            </span>
-            <h2 class="font-heading font-bold text-2xl sm:text-3xl text-royal-950">
-              ทำเนียบสถานศึกษาในสังกัดเทศบาลนครพิษณุโลก
-            </h2>
-            <p class="text-slate-600 text-sm sm:text-base mt-1">
-              ครอบคลุมการจัดการศึกษาตั้งแต่ระดับปฐมวัย ประถมศึกษา มัธยมศึกษา และโรงเรียนกีฬาเฉพาะทาง พร้อมทำเนียบผู้อำนวยการสถานศึกษา
-            </p>
-          </div>
-
-          <!-- Category Filter Tabs -->
-          <div class="flex flex-wrap gap-2" role="tablist" aria-label="ตัวกรองประเภทสถานศึกษา">
-            <button type="button" onclick="filterSchools('all')" data-school-filter="all" class="school-tab-btn px-4 py-2 rounded-xl bg-royal-950 text-white font-heading font-semibold text-xs sm:text-sm shadow-sm transition-all">
-              ทั้งหมด
-            </button>
-            <button type="button" onclick="filterSchools('municipal')" data-school-filter="municipal" class="school-tab-btn px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
-              โรงเรียนเทศบาล
-            </button>
-            <button type="button" onclick="filterSchools('sports')" data-school-filter="sports" class="school-tab-btn px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
-              โรงเรียนกีฬา
-            </button>
-            <button type="button" onclick="filterSchools('childcare')" data-school-filter="childcare" class="school-tab-btn px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
-              ศูนย์พัฒนาเด็กเล็ก
-            </button>
-          </div>
-        </div>
-
-        <!-- Schools Grid -->
-        <div id="schools-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        </div>
-      </div>
-    </section>
-
-    <!-- PERSONNEL DIRECTORY SECTION (#personnel) -->
-    <section id="personnel" class="py-16 sm:py-20 bg-slate-50 border-b border-slate-200">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
-          <div>
-            <span class="inline-block px-3 py-1 rounded-full bg-royal-100 text-royal-900 font-heading font-semibold text-xs mb-2">
-              ORGANIZATION & PERSONNEL DIRECTORY
-            </span>
-            <h2 class="font-heading font-bold text-2xl sm:text-3xl text-royal-950">
-              ทำเนียบบุคลากรและโครงสร้างส่วนราชการ สำนักการศึกษา
-            </h2>
-            <p class="text-slate-600 text-sm sm:text-base mt-1">
-              แผนภูมิต้นไม้แสดงสายบังคับบัญชา: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ และกลุ่มงานภายในฝ่าย
-            </p>
-          </div>
-
-          <button type="button" onclick="handleBackofficeEntry()" class="self-start lg:self-auto inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white hover:bg-royal-50 text-royal-900 border border-slate-200 font-heading font-semibold text-xs transition-colors shadow-sm">
-            <i data-lucide="user-cog" class="w-4 h-4 text-royal-800"></i>
-            <span>จัดการทำเนียบบุคลากร (ระบบหลังบ้าน)</span>
-          </button>
-        </div>
-
-        <!-- Dynamic Personnel Directory Viewport -->
-        <div id="personnel-public-container" class="space-y-10">
-        </div>
-      </div>
-    </section>
-
-    <!-- NEWS, RECRUITMENT & e-GP PROCUREMENT BOARD -->
-    <section id="news" class="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
-        <div>
-          <span class="inline-block px-3 py-1 rounded-full bg-royal-100 text-royal-900 font-heading font-semibold text-xs mb-2">
-            ANNOUNCEMENTS & e-GP PROCUREMENT
-          </span>
-          <h2 class="font-heading font-bold text-2xl sm:text-3xl text-royal-950">
-            ข่าวประชาสัมพันธ์ ประกาศรับสมัคร และจัดซื้อจัดจ้าง e-GP
-          </h2>
-          <p class="text-slate-600 text-sm sm:text-base mt-1">
-            อัปเดตข่าวสารกิจกรรมทางการศึกษา ประกาศรับสมัครบุคลากร และข้อมูลจัดซื้อจัดจ้างภาครัฐ
-          </p>
-        </div>
-
-        <!-- News Category Tabs -->
-        <div class="flex flex-wrap gap-2" role="tablist" aria-label="หมวดหมู่ข่าวสาร">
-          <button type="button" onclick="filterNews('activities')" data-news-tab="activities" class="news-tab-btn px-4 py-2 rounded-xl bg-royal-950 text-white font-heading font-semibold text-xs sm:text-sm shadow-sm transition-all">
-            ข่าวกิจกรรม
-          </button>
-          <button type="button" onclick="filterNews('recruitment')" data-news-tab="recruitment" class="news-tab-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
-            ประกาศรับสมัคร/สอบแข่งขัน
-          </button>
-          <button type="button" onclick="filterNews('egp')" data-news-tab="egp" class="news-tab-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
-            จัดซื้อจัดจ้าง e-GP
-          </button>
-          <button type="button" onclick="filterNews('regulations')" data-news-tab="regulations" class="news-tab-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
-            คำสั่งและระเบียบ
-          </button>
-        </div>
-      </div>
-
-      <!-- News Cards Container -->
-      <div id="news-list-container" class="grid md:grid-cols-2 gap-6">
       </div>
     </section>
 
