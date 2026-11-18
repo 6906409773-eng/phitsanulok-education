@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>สำนักการศึกษา เทศบาลนครพิษณุโลก | Bureau of Education, Phitsanulok City Municipality</title>
 
+  <!-- Favicon -->
+  <link id="dynamic-favicon" rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' stroke='%23FBBF24' stroke-width='2' stroke-dasharray='3 2' fill='none'/%3E%3Cpath d='M32 7L36 16H28L32 7Z' fill='%23FBBF24'/%3E%3Cpath d='M26 17H38L40 27H24L26 17Z' fill='%23FDE68A'/%3E%3Crect x='23' y='28' width='18' height='7' rx='1.5' fill='%23F59E0B'/%3E%3Cpath d='M15 39C21 37 27 38 32 41C37 38 43 37 49 39V48C43 46 37 47 32 50C27 47 21 46 15 48V39Z' fill='%23FFFFFF' stroke='%23FBBF24' stroke-width='1.5'/%3E%3Cline x1='32' y1='41' x2='32' y2='50' stroke='%23581C87' stroke-width='1.5'/%3E%3Cpath d='M16 53C21 51 26 55 32 53C38 51 43 55 48 53' stroke='%2338BDF8' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M19 57C24 55 28 58 32 57C36 55 40 58 45 57' stroke='%23FBBF24' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E" type="image/svg+xml" />
+
   <!-- Google Fonts: Prompt (Headings & UI) & Sarabun (Official Thai Document Body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -141,8 +144,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
       <!-- Brand Identity & Custom SVG Emblem -->
       <a href="#top" onclick="switchToFrontend()" class="flex items-center gap-3.5 group focus:outline-none">
-        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-royal-950 via-royal-800 to-royal-900 p-1.5 shadow-md border-2 border-gold-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-          <svg viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <div id="main-agency-logo-container" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-royal-950 via-royal-800 to-royal-900 p-1.5 shadow-md border-2 border-gold-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden relative">
+          <svg id="default-agency-logo" viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <circle cx="32" cy="32" r="29" stroke="#FBBF24" stroke-width="2" stroke-dasharray="3 2" />
             <path d="M32 7L36 16H28L32 7Z" fill="#FBBF24" />
             <path d="M26 17H38L40 27H24L26 17Z" fill="#FDE68A" />
@@ -152,6 +155,7 @@
             <path d="M16 53C21 51 26 55 32 53C38 51 43 55 48 53" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" />
             <path d="M19 57C24 55 28 58 32 57C36 55 40 58 45 57" stroke="#FBBF24" stroke-width="1.8" stroke-linecap="round" />
           </svg>
+          <img id="custom-agency-logo" src="" alt="โลโก้หน่วยงาน" class="hidden absolute inset-0 w-full h-full object-contain p-1 bg-white rounded-xl" />
         </div>
 
         <div>
@@ -207,7 +211,7 @@
                   <span class="block font-heading font-semibold text-xs sm:text-sm">ข้อมูลทั่วไป</span>
                   <span class="block text-[11px] text-slate-500">วิสัยทัศน์ พันธกิจ และโครงสร้างองค์กร</span>
                 </div>
-              </button>            
+              </button>
 
               <a
                 href="#personnel"
@@ -223,7 +227,8 @@
                   <span class="block text-[11px] text-slate-500">แผนภูมิต้นไม้ผู้บริหาร ฝ่ายงาน และกลุ่มงาน</span>
                 </div>
               </a>
-            <a
+
+              <a
                 href="#schools"
                 role="menuitem"
                 onclick="closeAboutDropdown(); switchToFrontend();"
@@ -237,11 +242,11 @@
                   <span class="block text-[11px] text-slate-500">ทำเนียบสถานศึกษาและผู้บริหารสถานศึกษา</span>
                 </div>
               </a>
-              
-              <button
-                type="button"
+
+              <a
+                href="#plans"
                 role="menuitem"
-                onclick="closeAboutDropdown(); openAboutBureauModal('strategic_plan');"
+                onclick="closeAboutDropdown(); switchToFrontend(); filterPlans('strategic_plan');"
                 class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-royal-50 text-slate-800 hover:text-royal-950 flex items-center gap-2.5 transition-colors"
               >
                 <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
@@ -251,29 +256,32 @@
                   <span class="block font-heading font-semibold text-xs sm:text-sm">แผนปฏิบัติราชการ</span>
                   <span class="block text-[11px] text-slate-500">ยุทธศาสตร์การพัฒนาการศึกษาท้องถิ่น</span>
                 </div>
-              </button>
+              </a>
 
-              <button
-                type="button"
+              <a
+                href="#plans"
                 role="menuitem"
-                onclick="closeAboutDropdown(); openAboutBureauModal('annual_plan');"
+                onclick="closeAboutDropdown(); switchToFrontend(); filterPlans('annual_report');"
                 class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-royal-50 text-slate-800 hover:text-royal-950 flex items-center gap-2.5 transition-colors"
               >
                 <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-800 flex items-center justify-center shrink-0">
-                  <i data-lucide="calendar-check-2" class="w-4 h-4"></i>
+                  <i data-lucide="file-check-2" class="w-4 h-4"></i>
                 </span>
                 <div>
-                  <span class="block font-heading font-semibold text-xs sm:text-sm">แผนการดำเนินงานประจำปี</span>
-                  <span class="block text-[11px] text-slate-500">แผนงานโครงการและงบประมาณประจำปี</span>
+                  <span class="block font-heading font-semibold text-xs sm:text-sm">รายงานผลการดำเนินงาน</span>
+                  <span class="block text-[11px] text-slate-500">รายงานผลแผนงานและโครงการประจำปี</span>
                 </div>
-              </button>
+              </a>
             </div>
           </div>
         </div>
 
-        <a href="#eservices" onclick="switchToFrontend()" id="nav-eservices" class="px-3 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-900 transition-colors">บริการ E-Service</a>
         <a href="#news" onclick="switchToFrontend()" id="nav-news" class="px-3 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-900 transition-colors">ข่าวสาร & e-GP</a>
-        <a href="#ita" onclick="switchToFrontend()" id="nav-ita" class="px-3 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-900 transition-colors">ITA โปร่งใส</a>
+        <a href="#personnel" onclick="switchToFrontend()" id="nav-personnel" class="px-3 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-900 transition-colors">ทำเนียบบุคลากร</a>
+        <a href="#schools" onclick="switchToFrontend()" id="nav-schools" class="px-3 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-900 transition-colors">สถานศึกษา</a>
+        <a href="#plans" onclick="switchToFrontend()" id="nav-plans" class="px-3 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-900 transition-colors">แผน/รายงาน</a>
+        <a href="#eservices" onclick="switchToFrontend()" id="nav-eservices" class="px-3 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-900 transition-colors">E-Service</a>
+        <a href="#ita" onclick="switchToFrontend()" id="nav-ita" class="px-3 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-900 transition-colors">ITA</a>
         <button type="button" onclick="openServiceModal('admission')" class="ml-1.5 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-royal-950 to-royal-800 hover:from-royal-900 hover:to-royal-700 text-white font-semibold shadow-sm transition-all">
           <i data-lucide="graduation-cap" class="w-4 h-4 text-gold-400"></i>
           <span id="nav-apply-btn">สมัครเรียนออนไลน์</span>
@@ -301,27 +309,27 @@
             <i data-lucide="building-2" class="w-4 h-4 text-royal-800"></i>
             <span>1. ข้อมูลทั่วไป</span>
           </button>
-                   <a href="#personnel" onclick="closeMobileMenu(); switchToFrontend();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white text-xs sm:text-sm font-heading text-slate-700 flex items-center gap-2">
+          <a href="#personnel" onclick="closeMobileMenu(); switchToFrontend();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white text-xs sm:text-sm font-heading text-slate-700 flex items-center gap-2">
             <i data-lucide="users" class="w-4 h-4 text-purple-700"></i>
-            <span>3. ทำเนียบบุคลากร</span>
+            <span>2. ทำเนียบบุคลากร</span>
           </a>
-           <a href="#schools" onclick="closeMobileMenu(); switchToFrontend();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white text-xs sm:text-sm font-heading text-slate-700 flex items-center gap-2">
+          <a href="#schools" onclick="closeMobileMenu(); switchToFrontend();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white text-xs sm:text-sm font-heading text-slate-700 flex items-center gap-2">
             <i data-lucide="school" class="w-4 h-4 text-gold-600"></i>
-            <span>2. โรงเรียนในสังกัด</span>
+            <span>3. โรงเรียนในสังกัด</span>
           </a>
-          <button type="button" onclick="closeMobileMenu(); openAboutBureauModal('strategic_plan');" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white text-xs sm:text-sm font-heading text-slate-700 flex items-center gap-2">
+          <a href="#plans" onclick="closeMobileMenu(); switchToFrontend(); filterPlans('strategic_plan');" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white text-xs sm:text-sm font-heading text-slate-700 flex items-center gap-2">
             <i data-lucide="compass" class="w-4 h-4 text-emerald-700"></i>
             <span>4. แผนปฏิบัติราชการ</span>
-          </button>
-          <button type="button" onclick="closeMobileMenu(); openAboutBureauModal('annual_plan');" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white text-xs sm:text-sm font-heading text-slate-700 flex items-center gap-2">
-            <i data-lucide="calendar-check-2" class="w-4 h-4 text-sky-700"></i>
-            <span>5. แผนการดำเนินงานประจำปี</span>
-          </button>
+          </a>
+          <a href="#plans" onclick="closeMobileMenu(); switchToFrontend(); filterPlans('annual_report');" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white text-xs sm:text-sm font-heading text-slate-700 flex items-center gap-2">
+            <i data-lucide="file-check-2" class="w-4 h-4 text-sky-700"></i>
+            <span>5. รายงานผลการดำเนินงาน</span>
+          </a>
         </div>
       </div>
 
-      <a href="#eservices" onclick="closeMobileMenu(); switchToFrontend();" class="block px-4 py-2.5 rounded-xl font-heading font-medium text-slate-800 hover:bg-royal-50">บริการอิเล็กทรอนิกส์ (E-Service)</a>
       <a href="#news" onclick="closeMobileMenu(); switchToFrontend();" class="block px-4 py-2.5 rounded-xl font-heading font-medium text-slate-800 hover:bg-royal-50">ข่าวประชาสัมพันธ์และจัดซื้อจัดจ้าง e-GP</a>
+      <a href="#eservices" onclick="closeMobileMenu(); switchToFrontend();" class="block px-4 py-2.5 rounded-xl font-heading font-medium text-slate-800 hover:bg-royal-50">บริการอิเล็กทรอนิกส์ (E-Service)</a>
       <a href="#ita" onclick="closeMobileMenu(); switchToFrontend();" class="block px-4 py-2.5 rounded-xl font-heading font-medium text-slate-800 hover:bg-royal-50">การประเมินคุณธรรมและความโปร่งใส (ITA)</a>
       <div class="pt-2 space-y-2">
         <button type="button" onclick="closeMobileMenu(); openServiceModal('admission');" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gold-500 text-royal-950 font-heading font-semibold shadow-sm">
@@ -340,6 +348,26 @@
        3. FRONT-END PUBLIC PORTAL (#main-content)
   ====================================================================== -->
   <main id="main-content">
+
+    <!-- HERO SLIDER SECTION (DYNAMIC) -->
+    <section id="hero-slider-section" class="hidden relative w-full h-[250px] sm:h-[400px] lg:h-[550px] bg-slate-900 group">
+      <div id="hero-slider-track" class="w-full h-full relative overflow-hidden">
+        <!-- Slides injected by JS -->
+      </div>
+      <!-- Slider Controls -->
+      <div class="absolute inset-0 flex items-center justify-between px-4 pointer-events-none z-20">
+        <button type="button" onclick="prevSlide()" class="pointer-events-auto w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100">
+          <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        </button>
+        <button type="button" onclick="nextSlide()" class="pointer-events-auto w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100">
+          <i data-lucide="chevron-right" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <!-- Dots -->
+      <div id="hero-slider-dots" class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20">
+        <!-- Dots injected by JS -->
+      </div>
+    </section>
 
     <!-- HERO SECTION + REAL-TIME SMART SEARCH + LIVE STATISTICS -->
     <section id="top" class="relative overflow-hidden bg-gradient-to-br from-royal-950 via-royal-900 to-royal-800 text-white pt-12 pb-20 sm:pt-16 sm:pb-24">
@@ -433,8 +461,9 @@
         </div>
       </div>
     </section>
- <!-- NEWS, RECRUITMENT & e-GP PROCUREMENT BOARD -->
-    <section id="news" class="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+
+    <!-- 1. NEWS, RECRUITMENT & e-GP PROCUREMENT BOARD -->
+    <section id="news" class="py-16 sm:py-20 bg-white max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
       <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
         <div>
           <span class="inline-block px-3 py-1 rounded-full bg-royal-100 text-royal-900 font-heading font-semibold text-xs mb-2">
@@ -447,41 +476,42 @@
             อัปเดตข่าวสารกิจกรรมทางการศึกษา ประกาศรับสมัครบุคลากร และข้อมูลจัดซื้อจัดจ้างภาครัฐ
           </p>
         </div>
-  
-        <!-- News Category Tabs -->
-        <div class="flex flex-wrap gap-2" role="tablist" aria-label="หมวดหมู่ข่าวสาร">
-          <button type="button" onclick="filterNews('activities')" data-news-tab="activities" class="news-tab-btn px-4 py-2 rounded-xl bg-royal-950 text-white font-heading font-semibold text-xs sm:text-sm shadow-sm transition-all">
-            ข่าวกิจกรรม
-          </button>
-          <button type="button" onclick="filterNews('recruitment')" data-news-tab="recruitment" class="news-tab-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
-            ประกาศรับสมัคร/สอบแข่งขัน
-          </button>
-          <button type="button" onclick="filterNews('egp')" data-news-tab="egp" class="news-tab-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
-            จัดซื้อจัดจ้าง e-GP
-          </button>
-          <button type="button" onclick="filterNews('regulations')" data-news-tab="regulations" class="news-tab-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
-            คำสั่งและระเบียบ
-          </button>
-        </div>
-      </div>
-      <!-- News Cards Container -->
-        <div id="news-list-container" class="grid md:grid-cols-2 gap-6">
-      </div>
-    </section>
 
-      <!-- PERSONNEL DIRECTORY SECTION (#personnel) -->
-    <section id="personnel" class="py-16 sm:py-20 bg-slate-50 border-b border-slate-200">
+        <!-- News Category Tabs -->
+      <div class="flex flex-wrap gap-2" role="tablist" aria-label="หมวดหมู่ข่าวสาร">
+        <button type="button" onclick="filterNews('activities')" data-news-tab="activities" class="news-tab-btn px-4 py-2 rounded-xl bg-royal-950 text-white font-heading font-semibold text-xs sm:text-sm shadow-sm transition-all">
+          ข่าวกิจกรรม
+        </button>
+        <button type="button" onclick="filterNews('recruitment')" data-news-tab="recruitment" class="news-tab-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
+          ประกาศรับสมัคร/สอบแข่งขัน
+        </button>
+        <button type="button" onclick="filterNews('egp')" data-news-tab="egp" class="news-tab-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
+          จัดซื้อจัดจ้าง e-GP
+        </button>
+        <button type="button" onclick="filterNews('regulations')" data-news-tab="regulations" class="news-tab-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
+          คำสั่งและระเบียบ
+        </button>
+      </div>
+    </div>
+
+    <!-- News Cards Container -->
+    <div id="news-list-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    </div>
+  </section>
+
+  <!-- 2. PERSONNEL DIRECTORY SECTION -->
+    <section id="personnel" class="py-16 sm:py-20 bg-slate-50 border-t border-slate-200">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
           <div>
-            <span class="inline-block px-3 py-1 rounded-full bg-royal-100 text-royal-900 font-heading font-semibold text-xs mb-2">
+            <span class="inline-block px-3 py-1 rounded-full bg-purple-100 text-purple-900 font-heading font-semibold text-xs mb-2">
               ORGANIZATION & PERSONNEL DIRECTORY
             </span>
             <h2 class="font-heading font-bold text-2xl sm:text-3xl text-royal-950">
               ทำเนียบบุคลากรและโครงสร้างส่วนราชการ สำนักการศึกษา
             </h2>
             <p class="text-slate-600 text-sm sm:text-base mt-1">
-              แผนภูมิแสดงสายบังคับบัญชา: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ และกลุ่มงานภายในฝ่าย
+              แผนภูมิต้นไม้แสดงสายบังคับบัญชา: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ และกลุ่มงานภายในฝ่าย
             </p>
           </div>
 
@@ -497,8 +527,8 @@
       </div>
     </section>
 
-     <!-- AFFILIATED SCHOOLS DIRECTORY (WITH SCHOOL DIRECTOR PHOTO) -->
-    <section id="schools" class="py-16 sm:py-20 bg-white border-y border-slate-200">
+    <!-- 3. AFFILIATED SCHOOLS DIRECTORY (WITH SCHOOL DIRECTOR PHOTO) -->
+    <section id="schools" class="py-16 sm:py-20 bg-white border-t border-slate-200">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
           <div>
@@ -535,12 +565,45 @@
         </div>
       </div>
     </section>
-    
-    <!-- E-SERVICES PORTAL (6 DIGITAL SERVICES) -->
-    <section id="eservices" class="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- 4. STRATEGIC PLANS & PERFORMANCE REPORTS (NEW SECTION) -->
+    <section id="plans" class="py-16 sm:py-20 bg-slate-50 border-t border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+          <div>
+            <span class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 font-heading font-semibold text-xs mb-2">
+              STRATEGIC PLANS & REPORTS
+            </span>
+            <h2 class="font-heading font-bold text-2xl sm:text-3xl text-royal-950">
+              แผนปฏิบัติราชการ และรายงานผลการดำเนินงาน
+            </h2>
+            <p class="text-slate-600 text-sm sm:text-base mt-1">
+              เอกสารยุทธศาสตร์การพัฒนาการศึกษา แผนงานโครงการ และรายงานผลการปฏิบัติงานประจำปี (เปิดอ่านและดาวน์โหลดได้)
+            </p>
+          </div>
+
+          <!-- Plans Category Tabs -->
+          <div class="flex flex-wrap gap-2" role="tablist" aria-label="หมวดหมู่แผนงานและรายงาน">
+            <button type="button" onclick="filterPlans('strategic_plan')" data-plans-tab="strategic_plan" class="plans-tab-btn px-4 py-2 rounded-xl bg-royal-950 text-white font-heading font-semibold text-xs sm:text-sm shadow-sm transition-all">
+              แผนปฏิบัติราชการ
+            </button>
+            <button type="button" onclick="filterPlans('annual_report')" data-plans-tab="annual_report" class="plans-tab-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all">
+              รายงานผลการดำเนินงาน
+            </button>
+          </div>
+        </div>
+
+        <!-- Plans List Container -->
+        <div id="plans-list-container" class="flex flex-col space-y-3">
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. E-SERVICES PORTAL (6 DIGITAL SERVICES) -->
+    <section id="eservices" class="py-16 sm:py-20 bg-white border-t border-slate-200 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
         <div>
-          <span class="inline-block px-3 py-1 rounded-full bg-royal-100 text-royal-900 font-heading font-semibold text-xs mb-2">
+          <span class="inline-block px-3 py-1 rounded-full bg-sky-100 text-sky-900 font-heading font-semibold text-xs mb-2">
             DIGITAL PUBLIC SERVICES
           </span>
           <h2 id="eservices-heading" class="font-heading font-bold text-2xl sm:text-3xl text-royal-950">
@@ -673,7 +736,7 @@
       </div>
     </section>
 
-    <!-- ITA TRANSPARENCY & OPEN DATA SECTION -->
+    <!-- 6. ITA TRANSPARENCY & OPEN DATA SECTION -->
     <section id="ita" class="py-16 bg-gradient-to-br from-royal-950 to-royal-900 text-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white/10 backdrop-blur-md rounded-3xl p-6 sm:p-10 border border-white/15 grid lg:grid-cols-12 gap-8 items-center">
@@ -689,12 +752,12 @@
               สำนักการศึกษา เทศบาลนครพิษณุโลก มุ่งมั่นบริหารงานตามหลักธรรมาภิบาล เปิดเผยแผนปฏิบัติการประจำปี แผนการใช้จ่ายงบประมาณ รายงานผลการจัดซื้อจัดจ้าง และช่องทางรับเรื่องร้องเรียนการทุจริตอย่างโปร่งใส
             </p>
             <div class="grid sm:grid-cols-2 gap-3 pt-2 text-xs sm:text-sm font-heading">
-              <button type="button" onclick="openAboutBureauModal('strategic_plan')" class="flex items-center justify-between p-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 text-left transition-colors">
+              <button type="button" onclick="switchToFrontend(); location.hash='#plans'; filterPlans('strategic_plan');" class="flex items-center justify-between p-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 text-left transition-colors">
                 <span>O1-O6: โครงสร้างและแผนปฏิบัติราชการ</span>
                 <i data-lucide="arrow-up-right" class="w-4 h-4 text-gold-400 shrink-0"></i>
               </button>
-              <button type="button" onclick="openAboutBureauModal('annual_plan')" class="flex items-center justify-between p-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 text-left transition-colors">
-                <span>O7-O18: แผนการดำเนินงานประจำปีและงบประมาณ</span>
+              <button type="button" onclick="switchToFrontend(); location.hash='#plans'; filterPlans('annual_report');" class="flex items-center justify-between p-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 text-left transition-colors">
+                <span>O7-O18: แผนและรายงานผลการดำเนินงาน</span>
                 <i data-lucide="arrow-up-right" class="w-4 h-4 text-gold-400 shrink-0"></i>
               </button>
             </div>
@@ -830,9 +893,9 @@
         <h4 class="font-heading font-semibold text-white">เกี่ยวกับสำนักการศึกษา & ลิงก์ด่วน</h4>
         <ul class="space-y-1.5 text-slate-400">
           <li><button type="button" onclick="openAboutBureauModal('general')" class="hover:text-gold-300 transition-colors text-left">• ข้อมูลทั่วไปและโครงสร้างส่วนราชการ</button></li>
+          <li><a href="#personnel" onclick="switchToFrontend()" class="hover:text-gold-300 transition-colors text-left">• ทำเนียบบุคลากร ฝ่ายงาน และกลุ่มงาน</a></li>
           <li><a href="#schools" onclick="switchToFrontend()" class="hover:text-gold-300 transition-colors">• ทำเนียบสถานศึกษาในสังกัด</a></li>
-          <li><a href="#personnel" onclick="switchToFrontend()" class="hover:text-gold-300 transition-colors">• ทำเนียบบุคลากร ฝ่ายงาน และกลุ่มงาน</a></li>
-          <li><button type="button" onclick="openAboutBureauModal('strategic_plan')" class="hover:text-gold-300 transition-colors text-left">• แผนปฏิบัติราชการ และแผนการดำเนินงานประจำปี</button></li>
+          <li><a href="#plans" onclick="switchToFrontend(); filterPlans('strategic_plan');" class="hover:text-gold-300 transition-colors text-left">• แผนปฏิบัติราชการ และรายงานผลการดำเนินงาน</a></li>
           <li><button type="button" onclick="handleBackofficeEntry()" class="hover:text-gold-300 transition-colors text-left">• ระบบบริหารจัดการหลังบ้านสำหรับเจ้าหน้าที่ (CMS)</button></li>
         </ul>
       </div>
@@ -900,6 +963,16 @@
   </div>
 
   <!-- =====================================================================
+       7.5 IMAGE LIGHTBOX MODAL (หน้าต่างแสดงรูปภาพขนาดเต็ม)
+  ====================================================================== -->
+  <div id="image-lightbox" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-10 bg-slate-950/90 backdrop-blur-sm transition-opacity" onclick="closeFullImage()" aria-modal="true" role="dialog">
+    <button type="button" aria-label="ปิดรูปภาพ" class="absolute top-4 right-4 sm:top-8 sm:right-8 p-2.5 rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors">
+      <i data-lucide="x" class="w-6 h-6"></i>
+    </button>
+    <img id="lightbox-img-element" src="" alt="ภาพขนาดเต็ม" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl" onclick="event.stopPropagation()" />
+  </div>
+
+  <!-- =====================================================================
        8. PRODUCTION FULL-STACK ENGINE (GOOGLE SHEETS + GOOGLE DRIVE ONLY)
   ====================================================================== -->
   <script>
@@ -938,6 +1011,7 @@
  */
 const SHEET_NAMES = {
   SUMMARY: 'Dashboard_Summary',
+  SETTINGS: 'SiteSettings',
   SCHOOLS: 'Schools',
   ORG_UNITS: 'OrgUnits',
   PERSONNEL: 'Personnel',
@@ -1003,6 +1077,10 @@ function setupDatabaseSheets() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const schemas = [
     {
+      name: SHEET_NAMES.SETTINGS,
+      headers: ['key', 'value']
+    },
+    {
       name: SHEET_NAMES.SCHOOLS,
       headers: ['id', 'name', 'category', 'categoryLabel', 'levels', 'students', 'teachers', 'address', 'phone', 'director', 'highlight', 'directorPhotoUrl']
     },
@@ -1016,7 +1094,7 @@ function setupDatabaseSheets() {
     },
     {
       name: SHEET_NAMES.NEWS,
-      headers: ['id', 'category', 'categoryLabel', 'title', 'date', 'referenceNo', 'budget', 'summary', 'fileName', 'fileUrl', 'previewUrl', 'imageUrl']
+      headers: ['id', 'category', 'categoryLabel', 'title', 'date', 'referenceNo', 'budget', 'summary', 'fileName', 'fileUrl', 'previewUrl', 'imageUrl', 'views']
     },
     {
       name: SHEET_NAMES.ADMISSIONS,
@@ -1048,6 +1126,13 @@ function setupDatabaseSheets() {
       sheet.setFrozenRows(1);
     }
   });
+
+  // เติมการตั้งค่าเว็บไซต์เริ่มต้น
+  const settingsSheet = ss.getSheetByName(SHEET_NAMES.SETTINGS);
+  if (settingsSheet.getLastRow() === 1) {
+    settingsSheet.appendRow(['logoUrl', '']);
+    settingsSheet.appendRow(['sliders', '[]']);
+  }
 
   // เติมบัญชีผู้ดูแลระบบเริ่มต้นหากชีต StaffUsers ว่างอยู่
   const staffSheet = ss.getSheetByName(SHEET_NAMES.STAFF);
@@ -1123,8 +1208,11 @@ function readSheetObjects(sheetName) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(sheetName);
   if (!sheet || sheet.getLastRow() < 2) return [];
-  const values = sheet.getDataRange().getValues();
-  const headers = values[0];
+  
+  const dataRange = sheet.getDataRange();
+  const values = dataRange.getDisplayValues(); // ใช้ getDisplayValues() เพื่ออ่านค่าเป็น Text เป๊ะๆ แก้ปัญหา Time Zone
+  const headers = dataRange.getValues()[0]; // ส่วนหัวตารางใช้ getValues เดิม
+  
   return values.slice(1).map(row => {
     const obj = {};
     headers.forEach((h, i) => {
@@ -1159,6 +1247,7 @@ function doGet(e) {
     status: 'ok',
     timestamp: new Date().toISOString(),
     data: {
+      siteSettings: readSheetObjects(SHEET_NAMES.SETTINGS),
       schools: readSheetObjects(SHEET_NAMES.SCHOOLS),
       orgUnits: readSheetObjects(SHEET_NAMES.ORG_UNITS),
       personnel: readSheetObjects(SHEET_NAMES.PERSONNEL),
@@ -1191,6 +1280,24 @@ function doPost(e) {
       return ContentService.createTextOutput(JSON.stringify({ status: 'ok', image: uploaded })).setMimeType(ContentService.MimeType.JSON);
     }
 
+    if (action === 'incrementView' && body.newsId) {
+      const sheet = ss.getSheetByName(SHEET_NAMES.NEWS);
+      const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+      const viewColIdx = headers.indexOf('views');
+      const idColIdx = headers.indexOf('id');
+      if (viewColIdx > -1 && idColIdx > -1) {
+        const data = sheet.getDataRange().getValues();
+        for (let i = 1; i < data.length; i++) {
+          if (String(data[i][idColIdx]) === String(body.newsId)) {
+            const currentViews = Number(data[i][viewColIdx]) || 0;
+            sheet.getRange(i + 1, viewColIdx + 1).setValue(currentViews + 1);
+            break;
+          }
+        }
+      }
+      return ContentService.createTextOutput(JSON.stringify({ status: 'ok' })).setMimeType(ContentService.MimeType.JSON);
+    }
+
     if (action === 'submitAdmission' && body.record) {
       const sheet = ss.getSheetByName(SHEET_NAMES.ADMISSIONS);
       const r = body.record;
@@ -1206,6 +1313,13 @@ function doPost(e) {
     }
 
     if (action === 'syncAll') {
+      if (body.siteSettings) {
+        replaceSheetData(
+          SHEET_NAMES.SETTINGS,
+          ['key', 'value'],
+          body.siteSettings
+        );
+      }
       if (body.schools) {
         replaceSheetData(
           SHEET_NAMES.SCHOOLS,
@@ -1230,7 +1344,7 @@ function doPost(e) {
       if (body.news) {
         replaceSheetData(
           SHEET_NAMES.NEWS,
-          ['id', 'category', 'categoryLabel', 'title', 'date', 'referenceNo', 'budget', 'summary', 'fileName', 'fileUrl', 'previewUrl', 'imageUrl'],
+          ['id', 'category', 'categoryLabel', 'title', 'date', 'referenceNo', 'budget', 'summary', 'fileName', 'fileUrl', 'previewUrl', 'imageUrl', 'views'],
           body.news
         );
       }
@@ -1301,7 +1415,9 @@ function doPost(e) {
       activeBackofficeTab: 'dashboard',
       activeSchoolFilter: 'all',
       activeNewsTab: 'activities',
+      activePlansTab: 'strategic_plan',
       activePersonnelUnitFilter: 'all',
+      newsDisplayLimit: 9,
       admissions: [],
       feedback: [],
       staffUsers: [],
@@ -1311,6 +1427,16 @@ function doPost(e) {
       pendingPersonnelPhoto: null,
       pendingSchoolDirectorPhoto: null
     };
+
+    const SiteAppearance = {
+      logoUrl: localStorage.getItem('phsmun_edu_logo_url') || '',
+      sliders: JSON.parse(localStorage.getItem('phsmun_edu_sliders') || '[]')
+    };
+
+    let pendingSiteLogo = null;
+    let pendingSiteSlider = null;
+    let sliderInterval = null;
+    let currentSlideIdx = 0;
 
     // -----------------------------------------------------------------------
     // 8D. UTILITY & SECURITY HELPERS
@@ -1350,6 +1476,25 @@ function doPost(e) {
       if (banner) banner.classList.add('hidden');
     }
 
+    function viewFullImage(url, altText, event) {
+      if(event) event.stopPropagation();
+      const modal = document.getElementById('image-lightbox');
+      const img = document.getElementById('lightbox-img-element');
+      if(modal && img) {
+        img.src = url;
+        img.alt = altText || 'ภาพขนาดเต็ม';
+        modal.classList.remove('hidden');
+      }
+    }
+
+    function closeFullImage() {
+      const modal = document.getElementById('image-lightbox');
+      if(modal) {
+        modal.classList.add('hidden');
+        document.getElementById('lightbox-img-element').src = '';
+      }
+    }
+
     function openModal({ badge, title, icon, bodyHtml, footerHtml }) {
       const modal = document.getElementById('global-modal');
       if (!modal) return;
@@ -1370,10 +1515,169 @@ function doPost(e) {
       if (modal) modal.classList.add('hidden');
     }
 
-    function getThaiDateNow() {
+    function getThaiDate() {
       const now = new Date();
-      const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+      const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
       return `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear() + 543}`;
+    }
+
+    function getThaiDateTime() {
+      const now = new Date();
+      const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      return `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear() + 543} ${hours}:${minutes}:${seconds}`;
+    }
+
+    function formatDisplayDate(dateStr) {
+      if (!dateStr) return '';
+      const strVal = String(dateStr);
+      if (/[ก-๙]/.test(strVal)) return strVal; // ถ้าเป็นภาษาไทยอยู่แล้ว ให้คืนค่าเลย
+      
+      let date = new Date(strVal);
+      // รองรับ Format วันที่จาก Sheets แบบ DD/MM/YYYY หรือ DD-MM-YYYY
+      if (isNaN(date.getTime()) && strVal.match(/[-/]/)) {
+         const parts = strVal.split(' ')[0].split(/[-/]/);
+         if (parts.length === 3) date = new Date(parts[2], parts[1] - 1, parts[0]);
+      }
+      if (isNaN(date.getTime())) return strVal;
+      
+      const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+      let year = date.getFullYear();
+      if (year < 2500) year += 543; // ป้องกันการบวก 543 ซ้ำ หากปีเป็น พ.ศ. อยู่แล้ว
+      
+      return `${date.getDate()} ${months[date.getMonth()]} ${year}`;
+    }
+
+    function formatDisplayDateTime(dateStr) {
+      if (!dateStr) return '';
+      const strVal = String(dateStr);
+      if (/[ก-๙]/.test(strVal)) return strVal;
+      
+      let date = new Date(strVal);
+      // รองรับ Format วันที่และเวลาจาก Sheets แบบ DD/MM/YYYY HH:MM:SS
+      if (isNaN(date.getTime()) && strVal.match(/[-/]/)) {
+         const dtParts = strVal.split(' ');
+         const dParts = (dtParts[0] || '').split(/[-/]/);
+         const tParts = (dtParts[1] || '').split(':');
+         if (dParts.length === 3) {
+             date = new Date(dParts[2], dParts[1] - 1, dParts[0], tParts[0] || 0, tParts[1] || 0, tParts[2] || 0);
+         }
+      }
+      if (isNaN(date.getTime())) return strVal;
+      
+      const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+      let year = date.getFullYear();
+      if (year < 2500) year += 543; // ป้องกันการบวก 543 ซ้ำ หากปีเป็น พ.ศ. อยู่แล้ว
+      
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+      return `${date.getDate()} ${months[date.getMonth()]} ${year} ${hours}:${minutes}:${seconds}`;
+    }
+
+    // --- SITE APPEARANCE & HERO SLIDER LOGIC ---
+    function applySiteAppearance() {
+      const customLogo = document.getElementById('custom-agency-logo');
+      const defaultLogo = document.getElementById('default-agency-logo');
+      const favicon = document.getElementById('dynamic-favicon');
+      const container = document.getElementById('main-agency-logo-container');
+      
+      if (customLogo && defaultLogo && container) {
+        if (SiteAppearance.logoUrl) {
+          customLogo.src = SiteAppearance.logoUrl;
+          customLogo.className = "absolute inset-0 w-full h-full object-contain";
+          customLogo.classList.remove('hidden');
+          defaultLogo.classList.add('hidden');
+          container.className = "w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform relative";
+          if (favicon) favicon.href = SiteAppearance.logoUrl;
+        } else {
+          customLogo.src = '';
+          customLogo.className = "hidden absolute inset-0 w-full h-full object-contain p-1 bg-white rounded-xl";
+          customLogo.classList.add('hidden');
+          defaultLogo.classList.remove('hidden');
+          container.className = "w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-royal-950 via-royal-800 to-royal-900 p-1.5 shadow-md border-2 border-gold-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden relative";
+          if (favicon) favicon.href = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' stroke='%23FBBF24' stroke-width='2' stroke-dasharray='3 2' fill='none'/%3E%3Cpath d='M32 7L36 16H28L32 7Z' fill='%23FBBF24'/%3E%3Cpath d='M26 17H38L40 27H24L26 17Z' fill='%23FDE68A'/%3E%3Crect x='23' y='28' width='18' height='7' rx='1.5' fill='%23F59E0B'/%3E%3Cpath d='M15 39C21 37 27 38 32 41C37 38 43 37 49 39V48C43 46 37 47 32 50C27 47 21 46 15 48V39Z' fill='%23FFFFFF' stroke='%23FBBF24' stroke-width='1.5'/%3E%3Cline x1='32' y1='41' x2='32' y2='50' stroke='%23581C87' stroke-width='1.5'/%3E%3Cpath d='M16 53C21 51 26 55 32 53C38 51 43 55 48 53' stroke='%2338BDF8' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M19 57C24 55 28 58 32 57C36 55 40 58 45 57' stroke='%23FBBF24' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E";
+        }
+      }
+
+      const sliderSec = document.getElementById('hero-slider-section');
+      const sliderTrack = document.getElementById('hero-slider-track');
+      const sliderDots = document.getElementById('hero-slider-dots');
+      
+      if (sliderSec && sliderTrack && sliderDots) {
+        if (SiteAppearance.sliders.length > 0) {
+          sliderSec.classList.remove('hidden');
+          sliderTrack.innerHTML = SiteAppearance.sliders.map((url, i) => `
+            <div class="hero-slide absolute inset-0 transition-opacity duration-700 ease-in-out ${i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
+              <img src="${escapeHtml(url)}" class="w-full h-full object-contain" />
+              <div class="absolute inset-0 bg-gradient-to-t from-royal-950/70 via-transparent to-transparent pointer-events-none"></div>
+            </div>
+          `).join('');
+
+          sliderDots.innerHTML = SiteAppearance.sliders.map((_, i) => `
+            <button type="button" onclick="goToSlide(${i})" class="slide-dot w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all ${i === 0 ? 'bg-gold-400 w-6 sm:w-8' : 'bg-white/50 hover:bg-white/80'}"></button>
+          `).join('');
+
+          currentSlideIdx = 0;
+          startSlider();
+        } else {
+          sliderSec.classList.add('hidden');
+          stopSlider();
+        }
+      }
+    }
+
+    function updateSliderUI() {
+      const slides = document.querySelectorAll('.hero-slide');
+      const dots = document.querySelectorAll('.slide-dot');
+      slides.forEach((s, i) => {
+        if (i === currentSlideIdx) {
+          s.classList.replace('opacity-0', 'opacity-100');
+          s.classList.replace('z-0', 'z-10');
+        } else {
+          s.classList.replace('opacity-100', 'opacity-0');
+          s.classList.replace('z-10', 'z-0');
+        }
+      });
+      dots.forEach((d, i) => {
+        d.className = i === currentSlideIdx
+          ? 'slide-dot w-6 sm:w-8 h-2 sm:h-2.5 rounded-full transition-all bg-gold-400'
+          : 'slide-dot w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all bg-white/50 hover:bg-white/80';
+      });
+    }
+
+    function nextSlide() {
+      if (SiteAppearance.sliders.length <= 1) return;
+      currentSlideIdx = (currentSlideIdx + 1) % SiteAppearance.sliders.length;
+      updateSliderUI();
+      startSlider(); 
+    }
+
+    function prevSlide() {
+      if (SiteAppearance.sliders.length <= 1) return;
+      currentSlideIdx = (currentSlideIdx - 1 + SiteAppearance.sliders.length) % SiteAppearance.sliders.length;
+      updateSliderUI();
+      startSlider();
+    }
+
+    function goToSlide(idx) {
+      if (idx < 0 || idx >= SiteAppearance.sliders.length) return;
+      currentSlideIdx = idx;
+      updateSliderUI();
+      startSlider();
+    }
+
+    function startSlider() {
+      stopSlider();
+      if (SiteAppearance.sliders.length > 1) {
+        sliderInterval = setInterval(nextSlide, 5000);
+      }
+    }
+
+    function stopSlider() {
+      if (sliderInterval) clearInterval(sliderInterval);
     }
 
     // -----------------------------------------------------------------------
@@ -1444,7 +1748,7 @@ function doPost(e) {
       logAudit(action, detail, status = '200 OK') {
         const actor = BackendState.currentUser ? BackendState.currentUser.email : 'public_citizen';
         BackendState.auditLogs.unshift({
-          timestamp: new Date().toLocaleString('th-TH'),
+          timestamp: getThaiDateTime(),
           actor,
           action,
           detail,
@@ -1468,11 +1772,23 @@ function doPost(e) {
           if (json && json.status === 'ok' && json.data) {
             BackendState.sheetUrl = targetUrl;
             BackendState.isSheetConnected = true;
-            localStorage.setItem('phsmun_edu_sheet_url', targetUrl);
-            localStorage.setItem('phsmun_edu_sheet_configured', 'true');
+          localStorage.setItem('phsmun_edu_sheet_url', targetUrl);
+          localStorage.setItem('phsmun_edu_sheet_configured', 'true');
 
-            // Populate Schools (including directorPhotoUrl)
-            SCHOOLS_DATA.length = 0;
+          // Populate SiteSettings
+          if (json.data.siteSettings && json.data.siteSettings.length > 0) {
+            const logoSetting = json.data.siteSettings.find(s => s.key === 'logoUrl');
+            const slidersSetting = json.data.siteSettings.find(s => s.key === 'sliders');
+            SiteAppearance.logoUrl = logoSetting ? (logoSetting.value || '') : '';
+            try {
+              SiteAppearance.sliders = slidersSetting ? JSON.parse(slidersSetting.value || '[]') : [];
+            } catch(e) { 
+              SiteAppearance.sliders = []; 
+            }
+          }
+
+          // Populate Schools (including directorPhotoUrl)
+          SCHOOLS_DATA.length = 0;
             (json.data.schools || []).forEach(s => {
               SCHOOLS_DATA.push({
                 id: String(s.id || ('sch-' + Math.random().toString(36).slice(2, 7))),
@@ -1543,7 +1859,8 @@ function doPost(e) {
                 fileName: n.fileName || '',
                 fileUrl: n.fileUrl || '',
                 previewUrl: n.previewUrl || '',
-                imageUrl: n.imageUrl || ''
+                imageUrl: n.imageUrl || '',
+                views: Number(n.views) || 0
               });
             });
 
@@ -1639,8 +1956,8 @@ function doPost(e) {
       },
 
       async syncAllToCloud() {
-        if (!BackendState.isSheetConnected || !BackendState.sheetUrl) return;
-        const serializedUnits = ORG_UNITS_DATA.map(u => ({
+      if (!BackendState.isSheetConnected || !BackendState.sheetUrl) return;
+      const serializedUnits = ORG_UNITS_DATA.map(u => ({
           id: u.id,
           unitType: u.unitType,
           name: u.name,
@@ -1652,12 +1969,18 @@ function doPost(e) {
 
         const serializedSchools = SCHOOLS_DATA.map(({ directorPhotoDataUrl, ...rest }) => rest);
         const serializedPersonnel = PERSONNEL_DATA.map(({ photoDataUrl, ...rest }) => rest);
-        const serializedNews = NEWS_DATA.map(({ fileDataUrl, imageDataUrl, ...rest }) => rest);
+      const serializedNews = NEWS_DATA.map(({ fileDataUrl, imageDataUrl, ...rest }) => rest);
 
-        await this.postAction({
-          action: 'syncAll',
-          schools: serializedSchools,
-          orgUnits: serializedUnits,
+      const siteSettings = [
+        { key: 'logoUrl', value: SiteAppearance.logoUrl },
+        { key: 'sliders', value: JSON.stringify(SiteAppearance.sliders) }
+      ];
+
+      await this.postAction({
+        action: 'syncAll',
+        siteSettings: siteSettings,
+        schools: serializedSchools,
+        orgUnits: serializedUnits,
           personnel: serializedPersonnel,
           news: serializedNews,
           admissions: BackendState.admissions,
@@ -1797,8 +2120,9 @@ function doPost(e) {
           <img
             src="${escapeHtml(imgSrc)}"
             alt="${escapeHtml(school.director || school.name)}"
+            onclick="viewFullImage('${escapeHtml(imgSrc)}', '${escapeHtml(school.director || school.name)}', event)"
             onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
-            class="${sizeClass} rounded-2xl object-cover border-2 border-gold-400 shadow-sm shrink-0 bg-royal-50"
+            class="${sizeClass} rounded-2xl object-contain p-0.5 bg-white border-2 border-gold-400 shadow-sm shrink-0 cursor-pointer hover:scale-105 transition-transform"
           />
           <div class="hidden ${sizeClass} rounded-2xl bg-gradient-to-br from-royal-950 to-royal-800 text-gold-300 border-2 border-gold-400 flex items-center justify-center shrink-0">
             <i data-lucide="user-round" class="w-5 h-5"></i>
@@ -1947,8 +2271,9 @@ function doPost(e) {
           <img
             src="${escapeHtml(imgSrc)}"
             alt="${escapeHtml(person.name)}"
+            onclick="viewFullImage('${escapeHtml(imgSrc)}', '${escapeHtml(person.name)}', event)"
             onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
-            class="${sizeClass} rounded-2xl object-cover border-2 border-gold-400 shadow-sm shrink-0 bg-royal-50"
+            class="${sizeClass} rounded-2xl object-contain p-0.5 bg-white border-2 border-gold-400 shadow-sm shrink-0 cursor-pointer hover:scale-105 transition-transform"
           />
           <div class="hidden ${sizeClass} rounded-2xl bg-gradient-to-br from-royal-950 to-royal-800 text-gold-300 border-2 border-gold-400 flex items-center justify-center shrink-0">
             <i data-lucide="user-round" class="w-8 h-8"></i>
@@ -2247,12 +2572,13 @@ function doPost(e) {
       const imgSrc = item.imageDataUrl || item.imageUrl || '';
       if (!imgSrc) return '';
       return `
-        <div class="relative w-full ${heightClass} rounded-2xl overflow-hidden border border-slate-200 bg-royal-950/5">
+        <div class="relative w-full ${heightClass} rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center">
           <img
             src="${escapeHtml(imgSrc)}"
             alt="${escapeHtml(item.title)}"
+            onclick="viewFullImage('${escapeHtml(imgSrc)}', '${escapeHtml(item.title)}', event)"
             onerror="this.parentElement.style.display='none'"
-            class="w-full h-full object-cover"
+            class="w-full h-full object-contain cursor-pointer"
           />
           <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-royal-950/85 text-gold-300 font-heading font-semibold text-[11px] backdrop-blur-sm">
             ${escapeHtml(item.categoryLabel)}
@@ -2263,6 +2589,7 @@ function doPost(e) {
 
     function filterNews(category) {
       BackendState.activeNewsTab = category;
+      BackendState.newsDisplayLimit = 9; // รีเซ็ตการแสดงผลกลับมาที่ 9 ข่าวเสมอเมื่อเปลี่ยนแท็บ
       document.querySelectorAll('.news-tab-btn').forEach(btn => {
         const isSelected = btn.getAttribute('data-news-tab') === category;
         btn.className = isSelected
@@ -2297,62 +2624,77 @@ function doPost(e) {
         return;
       }
 
-      container.innerHTML = items.map(item => `
-        <article class="bg-white rounded-3xl p-6 border border-slate-200 hover:border-royal-700 shadow-gov transition-all flex flex-col justify-between space-y-4">
-          <div class="space-y-3">
-            ${getNewsCoverImageHtml(item, 'h-48')}
-            <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
-              <span class="px-3 py-1 rounded-full bg-royal-100 text-royal-900 font-heading font-semibold">
-                ${escapeHtml(item.categoryLabel)}
-              </span>
-              <span class="text-slate-500 font-heading">${escapeHtml(item.date)}</span>
-            </div>
+      // แสดงผลทีละ 9 ข่าว
+      const displayLimit = BackendState.newsDisplayLimit || 9;
+      const displayItems = items.slice(0, displayLimit);
 
-            <h3 class="font-heading font-bold text-base sm:text-lg text-royal-950 leading-snug">
-              ${escapeHtml(item.title)}
-            </h3>
-
-            ${(item.referenceNo || item.budget) ? `
-              <div class="flex flex-wrap gap-3 text-xs text-slate-600 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200/70">
-                ${item.referenceNo ? `<span><strong>เลขที่:</strong> ${escapeHtml(item.referenceNo)}</span>` : ''}
-                ${item.budget ? `<span><strong>งบประมาณ:</strong> ${escapeHtml(item.budget)}</span>` : ''}
+      let html = displayItems.map(item => {
+        const imgSrc = item.imageDataUrl || item.imageUrl || '';
+        
+        return `
+        <article class="bg-white rounded-3xl border border-slate-200 hover:border-royal-600 shadow-sm hover:shadow-xl transition-all flex flex-col overflow-hidden cursor-pointer group" onclick="openNewsDetailModal('${item.id}')">
+          <!-- Image Area -->
+          <div class="relative w-full h-64 bg-slate-50 flex items-center justify-center border-b border-slate-100 overflow-hidden">
+            ${imgSrc ? `
+              <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(item.title)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+            ` : `
+              <div class="flex flex-col items-center text-slate-300">
+                <i data-lucide="image" class="w-10 h-10 mb-2"></i>
+                <span class="font-heading text-xs">ไม่มีรูปภาพประกอบ</span>
               </div>
-            ` : ''}
-
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-3">
-              ${escapeHtml(item.summary)}
-            </p>
+            `}
+            <span class="absolute top-3 left-3 px-3 py-1.5 rounded-xl bg-royal-950/90 text-gold-300 font-heading font-medium text-[10px] shadow-sm backdrop-blur-md">
+              ${escapeHtml(item.categoryLabel)}
+            </span>
           </div>
 
-          <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
-            <button type="button" onclick="openNewsDetailModal('${item.id}')" class="px-4 py-2 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-xs transition-colors">
-              อ่านรายละเอียด
-            </button>
-
-            <div class="flex items-center gap-2">
-              ${(item.previewUrl || item.fileUrl || item.fileDataUrl) ? `
-                <button type="button" onclick="previewNewsAttachment('${item.id}')" class="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-heading font-semibold text-xs transition-colors">
-                  <i data-lucide="eye" class="w-3.5 h-3.5"></i>
-                  <span>เปิดดูเอกสาร</span>
-                </button>
-                <button type="button" onclick="downloadNewsAttachment('${item.id}')" class="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-heading font-semibold text-xs transition-colors">
-                  <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                  <span>ดาวน์โหลด</span>
-                </button>
-              ` : ''}
+          <!-- Content Area -->
+          <div class="p-5 flex flex-col flex-1">
+            <h3 class="font-heading font-bold text-base text-slate-800 leading-snug line-clamp-2 group-hover:text-royal-800 transition-colors mb-4" title="${escapeHtml(item.title)}">
+              ${escapeHtml(item.title)}
+            </h3>
+            
+            <!-- Footer Area -->
+            <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] sm:text-xs">
+              <div class="flex items-center gap-1.5 text-slate-500 font-heading">
+                <span>${escapeHtml(formatDisplayDate(item.date))}</span>
+              </div>
+              <div class="flex items-center gap-1 font-heading font-bold text-royal-700 group-hover:text-royal-900 transition-colors shrink-0">
+                <span class="underline underline-offset-2 decoration-royal-300 group-hover:decoration-royal-700">อ่านต่อ</span>
+                <i data-lucide="arrow-right" class="w-4 h-4 translate-x-0 group-hover:translate-x-1 transition-transform"></i>
+              </div>
             </div>
           </div>
         </article>
-      `).join('');
+      `}).join('');
+
+      // เพิ่มปุ่ม "โหลดข่าวเพิ่มเติม" ถ้ายังมีข่าวเหลือ
+      if (items.length > displayLimit) {
+        html += `
+          <div class="col-span-full flex justify-center mt-4">
+            <button type="button" onclick="loadMoreNews()" class="px-6 py-2.5 rounded-2xl bg-white border border-slate-200 hover:border-royal-400 hover:bg-royal-50 text-royal-900 font-heading font-semibold text-sm transition-all shadow-sm">
+              โหลดข่าวเพิ่มเติม...
+            </button>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
       refreshIcons();
+    }
+
+    function loadMoreNews() {
+      BackendState.newsDisplayLimit = (BackendState.newsDisplayLimit || 9) + 9;
+      renderNewsList(BackendState.activeNewsTab);
     }
 
     function openNewsDetailModal(newsId) {
       const item = NEWS_DATA.find(n => n.id === newsId);
       if (!item) return;
+
       const hasAttachment = Boolean(item.previewUrl || item.fileUrl || item.fileDataUrl);
       openModal({
-        badge: `${item.categoryLabel} • ${item.date}`,
+        badge: `${item.categoryLabel} • ${formatDisplayDate(item.date)}`,
         title: item.title,
         icon: 'newspaper',
         bodyHtml: `
@@ -2421,11 +2763,19 @@ function doPost(e) {
       const input = document.getElementById('global-search-input');
       if (input) {
         input.value = keyword;
-        handleLiveSearch(keyword);
+        executeLiveSearch(keyword);
       }
     }
 
+    let searchDebounceTimer = null;
     function handleLiveSearch(rawQuery) {
+      if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        executeLiveSearch(rawQuery);
+      }, 300); // ประวิงเวลา 0.3 วินาทีหลังพิมพ์เสร็จเพื่อลดภาระการประมวลผล
+    }
+
+    function executeLiveSearch(rawQuery) {
       const box = document.getElementById('live-search-results');
       if (!box) return;
       const q = String(rawQuery || '').trim().toLowerCase();
@@ -2487,11 +2837,16 @@ function doPost(e) {
 
       NEWS_DATA.forEach(n => {
         if (n.title.toLowerCase().includes(q) || (n.referenceNo || '').toLowerCase().includes(q) || (n.summary || '').toLowerCase().includes(q)) {
+          const isPlanType = (n.category === 'strategic_plan' || n.category === 'annual_report');
+          const onClickAction = isPlanType
+            ? `document.getElementById('live-search-results').classList.add('hidden'); location.hash='#plans'; filterPlans('${n.category}');`
+            : `document.getElementById('live-search-results').classList.add('hidden'); openNewsDetailModal('${n.id}');`;
+          
           results.push({
             type: n.categoryLabel,
             title: n.title,
-            sub: `${n.date} ${n.referenceNo ? '• ' + n.referenceNo : ''}`,
-            action: `document.getElementById('live-search-results').classList.add('hidden'); openNewsDetailModal('${n.id}');`
+            sub: `${formatDisplayDate(n.date)} ${n.referenceNo ? '• ' + n.referenceNo : ''}`,
+            action: onClickAction
           });
         }
       });
@@ -2556,118 +2911,80 @@ function doPost(e) {
             </div>
           `
         });
-      } else if (sectionKey === 'strategic_plan') {
-        const items = NEWS_DATA.filter(n => n.category === 'strategic_plan');
-        const docsListHtml = items.length > 0 ? '<div class="mt-5 space-y-3"><h4 class="font-heading font-bold text-sm text-royal-950 border-t border-slate-200 pt-4">เอกสารแผนปฏิบัติราชการ (ดาวน์โหลด)</h4>' + items.map(item => `
-          <div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div class="flex items-start gap-2.5">
-              <i data-lucide="file-text" class="w-5 h-5 text-royal-800 shrink-0 mt-0.5"></i>
-              <div>
-                <p class="font-heading font-semibold text-sm text-royal-950">${escapeHtml(item.title)}</p>
-                ${item.summary ? `<p class="text-[11px] text-slate-600 line-clamp-2 mt-0.5">${escapeHtml(item.summary)}</p>` : ''}
+      }
+    }
+
+    function filterPlans(category) {
+      BackendState.activePlansTab = category;
+      document.querySelectorAll('.plans-tab-btn').forEach(btn => {
+        const isSelected = btn.getAttribute('data-plans-tab') === category;
+        btn.className = isSelected
+          ? 'plans-tab-btn px-4 py-2 rounded-xl bg-royal-950 text-white font-heading font-semibold text-xs sm:text-sm shadow-sm transition-all'
+          : 'plans-tab-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-royal-50 font-heading font-medium text-xs sm:text-sm transition-all';
+      });
+      renderPlansList(category);
+    }
+
+    function renderPlansList(category = 'strategic_plan') {
+      const container = document.getElementById('plans-list-container');
+      if (!container) return;
+
+      if (BackendState.isLoadingInitialData) {
+        container.innerHTML = `<div class="col-span-full bg-white rounded-3xl p-8 border border-slate-200 text-center text-slate-500 font-heading text-sm">กำลังโหลดข้อมูลเอกสาร...</div>`;
+        return;
+      }
+
+      if (!BackendState.isSheetConnected) {
+        container.innerHTML = `
+          <div class="col-span-full bg-white rounded-3xl p-8 border border-slate-200 text-center space-y-2">
+            <p class="font-heading font-bold text-base text-royal-950">ยังไม่ได้เชื่อมต่อฐานข้อมูลเอกสาร</p>
+            <p class="text-xs sm:text-sm text-slate-600">โปรดเชื่อมต่อ Google Sheets ในระบบหลังบ้านเพื่อเผยแพร่แผนปฏิบัติราชการและรายงานผล</p>
+          </div>
+        `;
+        return;
+      }
+
+      const items = NEWS_DATA.filter(n => n.category === category);
+      if (items.length === 0) {
+        container.innerHTML = `<div class="col-span-full bg-white rounded-3xl p-8 border border-slate-200 text-center text-slate-500 text-sm">ยังไม่มีเอกสารในหมวดหมู่นี้</div>`;
+        return;
+      }
+
+      container.innerHTML = items.map(item => {
+        const hasAttachment = Boolean(item.previewUrl || item.fileUrl || item.fileDataUrl);
+        const titleElement = hasAttachment 
+          ? `<h3 class="font-heading font-bold text-sm sm:text-base text-royal-950 truncate cursor-pointer hover:text-emerald-700 transition-colors" title="คลิกเพื่อเปิดดูเอกสาร: ${escapeHtml(item.title)}" onclick="previewNewsAttachment('${item.id}')">${escapeHtml(item.title)}</h3>`
+          : `<h3 class="font-heading font-bold text-sm sm:text-base text-royal-950 truncate" title="${escapeHtml(item.title)}">${escapeHtml(item.title)}</h3>`;
+
+        return `
+        <article class="bg-white rounded-2xl p-4 border border-slate-200 hover:border-emerald-500 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5 flex-1 min-w-0">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0 border border-emerald-100 hidden sm:flex">
+              <i data-lucide="file-check-2" class="w-5 h-5"></i>
+            </div>
+            <div class="space-y-1 min-w-0">
+              ${titleElement}
+              <div class="flex flex-wrap items-center gap-2 text-[11px] sm:text-xs text-slate-500">
+                <span class="inline-block px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-heading font-semibold">
+                  อัปเดต: ${escapeHtml(formatDisplayDate(item.date))}
+                </span>
+                ${item.referenceNo ? `<span>อ้างอิง: ${escapeHtml(item.referenceNo)}</span>` : ''}
               </div>
             </div>
-            ${(item.fileUrl || item.previewUrl || item.fileDataUrl) ? `
-              <button type="button" onclick="downloadNewsAttachment('${item.id}')" class="shrink-0 px-3 py-1.5 rounded-xl bg-royal-50 hover:bg-royal-100 text-royal-900 border border-royal-200 font-heading font-semibold text-[11px] transition-colors inline-flex items-center gap-1.5">
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto shrink-0 pt-3 sm:pt-0 border-t sm:border-0 border-slate-100 mt-2 sm:mt-0">
+            ${hasAttachment ? `
+              <button type="button" onclick="previewNewsAttachment('${item.id}')" class="flex-1 sm:flex-none justify-center inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-heading font-semibold text-xs transition-colors">
+                <i data-lucide="eye" class="w-3.5 h-3.5"></i> เปิดดู
+              </button>
+              <button type="button" onclick="downloadNewsAttachment('${item.id}')" class="flex-1 sm:flex-none justify-center inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-semibold text-xs transition-colors">
                 <i data-lucide="download" class="w-3.5 h-3.5"></i> ดาวน์โหลด
               </button>
-            ` : ''}
+            ` : `<span class="w-full sm:w-auto text-center text-xs text-slate-400 bg-slate-50 px-3 py-2 rounded-xl border border-slate-100">ไม่มีไฟล์แนบ</span>`}
           </div>
-        `).join('') + '</div>' : '';
-
-        openModal({
-          badge: 'เกี่ยวกับสำนักการศึกษา • แผนปฏิบัติราชการ',
-          title: 'แผนปฏิบัติราชการพัฒนาการศึกษาท้องถิ่น เทศบาลนครพิษณุโลก',
-          icon: 'compass',
-          bodyHtml: `
-            <div class="space-y-3">
-              <p class="text-xs sm:text-sm text-slate-600">ยุทธศาสตร์หลัก 4 ด้านในการขับเคลื่อนคุณภาพการศึกษาของสถานศึกษาในสังกัด:</p>
-              <div class="grid sm:grid-cols-2 gap-3">
-                <div class="p-3.5 rounded-2xl bg-royal-50 border border-royal-100">
-                  <span class="font-heading font-bold text-xs text-royal-900">ยุทธศาสตร์ที่ 1</span>
-                  <p class="font-heading font-bold text-sm text-royal-950 mt-0.5">ยกระดับคุณภาพผู้เรียนสู่ศตวรรษที่ 21</p>
-                </div>
-                <div class="p-3.5 rounded-2xl bg-royal-50 border border-royal-100">
-                  <span class="font-heading font-bold text-xs text-royal-900">ยุทธศาสตร์ที่ 2</span>
-                  <p class="font-heading font-bold text-sm text-royal-950 mt-0.5">พัฒนาระบบบริหารจัดการที่ทันสมัย</p>
-                </div>
-                <div class="p-3.5 rounded-2xl bg-royal-50 border border-royal-100">
-                  <span class="font-heading font-bold text-xs text-royal-900">ยุทธศาสตร์ที่ 3</span>
-                  <p class="font-heading font-bold text-sm text-royal-950 mt-0.5">ส่งเสริมการเรียนรู้ตลอดชีวิต</p>
-                </div>
-                <div class="p-3.5 rounded-2xl bg-royal-50 border border-royal-100">
-                  <span class="font-heading font-bold text-xs text-royal-900">ยุทธศาสตร์ที่ 4</span>
-                  <p class="font-heading font-bold text-sm text-royal-950 mt-0.5">ทำนุบำรุงศาสนา ศิลปะ และวัฒนธรรม</p>
-                </div>
-              </div>
-              ${docsListHtml}
-            </div>
-          `
-        });
-      } else if (sectionKey === 'annual_plan') {
-        const items = NEWS_DATA.filter(n => n.category === 'annual_plan');
-            const docsListHtml = items.length > 0 ? '<div class="mt-5 space-y-3"><h4 class="font-heading font-bold text-sm text-royal-950 border-t border-slate-200 pt-4">เอกสารแผนการดำเนินงานประจำปี (ดาวน์โหลด)</h4>' + items.map(item => `
-              <div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div class="flex items-start gap-2.5">
-                  <i data-lucide="file-text" class="w-5 h-5 text-royal-800 shrink-0 mt-0.5"></i>
-                  <div>
-                    <p class="font-heading font-semibold text-sm text-royal-950">${escapeHtml(item.title)}</p>
-                    ${item.summary ? `<p class="text-[11px] text-slate-600 line-clamp-2 mt-0.5">${escapeHtml(item.summary)}</p>` : ''}
-                  </div>
-                </div>
-                ${(item.fileUrl || item.previewUrl || item.fileDataUrl) ? `
-                  <button type="button" onclick="downloadNewsAttachment('${item.id}')" class="shrink-0 px-3 py-1.5 rounded-xl bg-royal-50 hover:bg-royal-100 text-royal-900 border border-royal-200 font-heading font-semibold text-[11px] transition-colors inline-flex items-center gap-1.5">
-                    <i data-lucide="download" class="w-3.5 h-3.5"></i> ดาวน์โหลด
-                  </button>
-                ` : ''}
-              </div>
-            `).join('') + '</div>' : '';
-
-        openModal({
-          badge: 'เกี่ยวกับสำนักการศึกษา • แผนการดำเนินงานประจำปี',
-          title: 'แผนการดำเนินงานและโครงการประจำปีงบประมาณ',
-          icon: 'calendar-check-2',
-          bodyHtml: `
-            <div class="space-y-3">
-              <p class="text-xs sm:text-sm text-slate-600">สรุปแผนงานโครงการสำคัญของสำนักการศึกษา เทศบาลนครพิษณุโลก ประจำปีงบประมาณ พ.ศ. 2569:</p>
-              <div class="overflow-x-auto border border-slate-200 rounded-2xl">
-                <table class="w-full text-left border-collapse text-xs">
-                  <thead class="bg-royal-950 text-gold-300 font-heading">
-                    <tr>
-                      <th class="px-3 py-2.5">แผนงาน / โครงการหลัก</th>
-                      <th class="px-3 py-2.5">หน่วยรับผิดชอบ</th>
-                      <th class="px-3 py-2.5">ไตรมาส</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-slate-200">
-                    <tr>
-                      <td class="px-3 py-2.5 font-semibold text-royal-950">โครงการสนับสนุนค่าใช้จ่ายในการจัดการศึกษาตั้งแต่ระดับอนุบาลจนจบการศึกษาขั้นพื้นฐาน</td>
-                      <td class="px-3 py-2.5">ฝ่ายบริหารการศึกษา</td>
-                      <td class="px-3 py-2.5">ไตรมาส 1–4</td>
-                    </tr>
-                    <tr>
-                      <td class="px-3 py-2.5 font-semibold text-royal-950">โครงการอาหารกลางวันและอาหารเสริม (นม) สำหรับเด็กปฐมวัยและนักเรียน</td>
-                      <td class="px-3 py-2.5">ฝ่ายบริหารการศึกษา</td>
-                      <td class="px-3 py-2.5">ไตรมาส 1–4</td>
-                    </tr>
-                    <tr>
-                      <td class="px-3 py-2.5 font-semibold text-royal-950">โครงการแข่งขันทักษะวิชาการและมหกรรมการจัดการศึกษาท้องถิ่น</td>
-                      <td class="px-3 py-2.5">หน่วยศึกษานิเทศก์</td>
-                      <td class="px-3 py-2.5">ไตรมาส 2–3</td>
-                    </tr>
-                    <tr>
-                      <td class="px-3 py-2.5 font-semibold text-royal-950">โครงการส่งเสริมกีฬาเยาวชนและสืบสานประเพณีวัฒนธรรมเมืองพิษณุโลก</td>
-                      <td class="px-3 py-2.5">ฝ่ายส่งเสริมการศึกษาฯ</td>
-                      <td class="px-3 py-2.5">ไตรมาส 1–4</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              ${docsListHtml}
-            </div>
-          `
-        });
-      }
+        </article>
+      `}).join('');
+      refreshIcons();
     }
 
     function openServiceModal(serviceId) {
@@ -2877,7 +3194,7 @@ function doPost(e) {
         parentName: String(fd.get('parentName') || '').trim(),
         parentPhone: String(fd.get('parentPhone') || '').trim(),
         status: 'รอตรวจสอบ',
-        submittedAt: getThaiDateNow()
+        submittedAt: getThaiDateTime()
       };
       BackendState.admissions.unshift(record);
       updateHeroMetrics();
@@ -2930,7 +3247,7 @@ function doPost(e) {
         message: String(fd.get('message') || '').trim(),
         status: 'รอดำเนินการ',
         reply: '',
-        submittedAt: getThaiDateNow()
+        submittedAt: getThaiDateTime()
       };
       BackendState.feedback.unshift(record);
       updateHeroMetrics();
@@ -3142,7 +3459,7 @@ function doPost(e) {
         const auditRows = BackendState.auditLogs.length > 0
           ? BackendState.auditLogs.slice(0, 20).map(log => `
               <tr class="hover:bg-slate-50">
-                <td class="px-4 py-2.5 font-mono text-xs text-slate-500">${escapeHtml(log.timestamp)}</td>
+                <td class="px-4 py-2.5 font-mono text-xs text-slate-500">${escapeHtml(formatDisplayDateTime(log.timestamp))}</td>
                 <td class="px-4 py-2.5 text-xs font-semibold text-royal-950">${escapeHtml(log.actor)}</td>
                 <td class="px-4 py-2.5 font-mono text-xs text-royal-800">${escapeHtml(log.action)}</td>
                 <td class="px-4 py-2.5 text-xs text-slate-600">${escapeHtml(log.detail)}</td>
@@ -3202,6 +3519,72 @@ function doPost(e) {
                 </table>
               </div>
             </div>
+
+            <!-- SITE APPEARANCE MANAGER -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mt-6">
+              <div class="p-5 border-b border-slate-200 flex items-center gap-2 bg-slate-50">
+                <i data-lucide="image" class="w-5 h-5 text-royal-800"></i>
+                <h3 class="font-heading font-bold text-base text-royal-950">ตั้งค่าส่วนแสดงผลหน้าเว็บไซต์ (Site Appearance)</h3>
+              </div>
+              <div class="p-6 grid lg:grid-cols-2 gap-8">
+                
+                <!-- อัปโหลดโลโก้ -->
+                <div class="space-y-4">
+                  <div>
+                    <h4 class="font-heading font-bold text-sm text-royal-950">1. โลโก้หน่วยงาน (มุมซ้ายบน)</h4>
+                    <p class="text-[11px] text-slate-500">อัปโหลดภาพโลโก้ใหม่เพื่อแทนที่รูป SVG มาตรฐาน แนะนำไฟล์ PNG โปร่งใส</p>
+                  </div>
+                  <div class="p-4 rounded-2xl border border-slate-200 flex items-start gap-4 bg-slate-50/50">
+                    <div class="w-16 h-16 rounded-xl bg-white border border-slate-200 flex items-center justify-center p-1.5 shrink-0 shadow-sm">
+                      ${SiteAppearance.logoUrl ? `<img src="${escapeHtml(SiteAppearance.logoUrl)}" class="w-full h-full object-contain" />` : '<span class="text-[10px] text-slate-400 text-center">โลโก้<br>มาตรฐาน</span>'}
+                    </div>
+                    <div class="flex-1 space-y-2.5">
+                      <input type="file" accept="image/*" onchange="handleAppearanceLogoSelect(this)" class="block w-full text-[11px] text-slate-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-royal-100 file:text-royal-900 file:font-heading file:font-semibold" />
+                      <div class="flex gap-2">
+                        <button type="button" onclick="uploadAppearanceLogo()" class="px-3 py-1.5 rounded-lg bg-royal-950 text-white font-heading font-semibold text-[11px]">อัปโหลด & บันทึกโลโก้</button>
+                        ${SiteAppearance.logoUrl ? `<button type="button" onclick="resetAppearanceLogo()" class="px-3 py-1.5 rounded-lg bg-rose-50 text-rose-700 border border-rose-200 font-heading font-semibold text-[11px]">ลบออก</button>` : ''}
+                      </div>
+                      <p id="appearance-logo-status" class="text-[10px] text-emerald-700"></p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- อัปโหลดสไลด์ -->
+                <div class="space-y-4">
+                  <div>
+                    <h4 class="font-heading font-bold text-sm text-royal-950">2. ภาพสไลด์แบนเนอร์ (Hero Slider)</h4>
+                    <p class="text-[11px] text-slate-500">ภาพที่อัปโหลดจะถูกแสดงผลเป็นแบนเนอร์เลื่อนอัตโนมัติบริเวณบนสุดของหน้าแรก (จำกัดสูงสุด 5 ภาพ)</p>
+                  </div>
+                  <div class="p-4 rounded-2xl border border-slate-200 space-y-4 bg-slate-50/50">
+                    <div class="flex items-start gap-3">
+                      <div class="flex-1 space-y-2">
+                        <input type="file" accept="image/*" onchange="handleAppearanceSliderSelect(this)" class="block w-full text-[11px] text-slate-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-gold-100 file:text-gold-900 file:font-heading file:font-semibold" />
+                        <p id="appearance-slider-status" class="text-[10px] text-emerald-700"></p>
+                      </div>
+                      <button type="button" onclick="uploadAppearanceSlider()" class="shrink-0 px-3 py-1.5 rounded-lg bg-royal-950 text-white font-heading font-semibold text-[11px]">+ เพิ่มสไลด์</button>
+                    </div>
+                    
+                    ${SiteAppearance.sliders.length > 0 ? `
+                      <div class="space-y-2 border-t border-slate-200 pt-3">
+                        <p class="font-heading font-semibold text-[11px] text-slate-700">ภาพสไลด์ปัจจุบัน (${SiteAppearance.sliders.length} ภาพ):</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          ${SiteAppearance.sliders.map((url, idx) => `
+                            <div class="relative group rounded-lg overflow-hidden border border-slate-200 bg-white aspect-[21/9]">
+                              <img src="${escapeHtml(url)}" class="w-full h-full object-cover" />
+                              <button type="button" onclick="deleteAppearanceSlider(${idx})" class="absolute top-1 right-1 w-6 h-6 rounded bg-rose-600/90 hover:bg-rose-600 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" title="ลบภาพนี้">
+                                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                              </button>
+                            </div>
+                          `).join('')}
+                        </div>
+                      </div>
+                    ` : `<p class="text-[11px] text-slate-400 border-t border-slate-200 pt-3">ยังไม่มีภาพสไลด์</p>`}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
           </div>
         `;
       } else if (tabName === 'news') {
@@ -3213,7 +3596,7 @@ function doPost(e) {
                 <tr class="hover:bg-slate-50">
                   <td class="px-4 py-3 text-xs">
                     <span class="px-2.5 py-1 rounded-full bg-royal-100 text-royal-900 font-heading font-semibold">${escapeHtml(n.categoryLabel)}</span>
-                    <span class="block text-slate-500 mt-1">${escapeHtml(n.date)}</span>
+                    <span class="block text-slate-500 mt-1">${escapeHtml(formatDisplayDate(n.date))}</span>
                   </td>
                   <td class="px-4 py-3">
                     <p class="font-heading font-bold text-sm text-royal-950">${escapeHtml(n.title)}</p>
@@ -3234,14 +3617,14 @@ function doPost(e) {
 
         container.innerHTML = `
           <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div class="p-6 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <h2 class="font-heading font-bold text-lg text-royal-950">จัดการข่าว แผนปฏิบัติราชการ และประกาศจัดซื้อจัดจ้าง e-GP</h2>
-                <p class="text-xs sm:text-sm text-slate-600">รองรับการอัปโหลดภาพปกและไฟล์เอกสาร (PDF/Word/Excel) ขึ้น Google Drive อัตโนมัติ</p>
-              </div>
-              <button type="button" onclick="openNewsEditorModal(null)" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-sm">
-                <i data-lucide="plus" class="w-4 h-4 text-gold-400"></i>
-                <span>+ เพิ่มข้อมูล / ประกาศ</span>
+        <div class="p-6 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="font-heading font-bold text-lg text-royal-950">จัดการข่าว แผนปฏิบัติราชการ และประกาศจัดซื้อจัดจ้าง e-GP</h2>
+            <p class="text-xs sm:text-sm text-slate-600">เพิ่ม ลบ แก้ไข ข่าวสาร และรายงานผลการดำเนินงาน พร้อมรองรับการอัปโหลดไฟล์ (PDF/Word/Excel)</p>
+          </div>
+          <button type="button" onclick="openNewsEditorModal(null)" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-sm">
+            <i data-lucide="plus" class="w-4 h-4 text-gold-400"></i>
+            <span>+ เพิ่มข้อมูล / ประกาศ</span>
               </button>
             </div>
             <div class="overflow-x-auto">
@@ -3272,7 +3655,7 @@ function doPost(e) {
                   <td class="px-4 py-3">
                     <div class="flex items-center gap-2.5">
                       ${dirPhoto
-                        ? `<img src="${escapeHtml(dirPhoto)}" alt="${escapeHtml(s.director)}" onerror="this.style.display='none'" class="w-10 h-10 rounded-xl object-cover border border-gold-400 shrink-0" />`
+                        ? `<img src="${escapeHtml(dirPhoto)}" alt="${escapeHtml(s.director)}" onclick="viewFullImage('${escapeHtml(dirPhoto)}', '${escapeHtml(s.director)}', event)" onerror="this.style.display='none'" class="w-10 h-10 rounded-xl object-contain p-0.5 bg-white border border-gold-400 shrink-0 cursor-pointer hover:scale-110 transition-transform" />`
                         : `<div class="w-10 h-10 rounded-xl bg-royal-950 text-gold-300 flex items-center justify-center shrink-0"><i data-lucide="user-round" class="w-4 h-4"></i></div>`
                       }
                       <div>
@@ -3434,7 +3817,7 @@ function doPost(e) {
                   <td class="px-4 py-3">
                     <div class="flex items-center gap-3">
                       ${photoSrc
-                        ? `<img src="${escapeHtml(photoSrc)}" alt="${escapeHtml(p.name)}" onerror="this.style.display='none'" class="w-11 h-11 rounded-xl object-cover border border-gold-400 shrink-0" />`
+                        ? `<img src="${escapeHtml(photoSrc)}" alt="${escapeHtml(p.name)}" onclick="viewFullImage('${escapeHtml(photoSrc)}', '${escapeHtml(p.name)}', event)" onerror="this.style.display='none'" class="w-11 h-11 rounded-xl object-contain p-0.5 bg-white border border-gold-400 shrink-0 cursor-pointer hover:scale-110 transition-transform" />`
                         : `<div class="w-11 h-11 rounded-xl bg-royal-950 text-gold-300 flex items-center justify-center shrink-0"><i data-lucide="user" class="w-5 h-5"></i></div>`
                       }
                       <div>
@@ -3781,12 +4164,12 @@ function doPost(e) {
                   <option value="egp" ${existing && existing.category === 'egp' ? 'selected' : ''}>จัดซื้อจัดจ้าง e-GP</option>
                   <option value="regulations" ${existing && existing.category === 'regulations' ? 'selected' : ''}>คำสั่งและระเบียบ</option>
                   <option value="strategic_plan" ${existing && existing.category === 'strategic_plan' ? 'selected' : ''}>แผนปฏิบัติราชการ</option>
-                  <option value="annual_plan" ${existing && existing.category === 'annual_plan' ? 'selected' : ''}>แผนการดำเนินงานประจำปี</option>
+                  <option value="annual_report" ${existing && existing.category === 'annual_report' ? 'selected' : ''}>รายงานผลการดำเนินงาน</option>
                 </select>
               </div>
               <div>
                 <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">วันที่ประกาศ *</label>
-                <input type="text" name="date" required value="${existing ? escapeHtml(existing.date) : getThaiDateNow()}" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm" />
+                <input type="text" name="date" required value="${existing ? escapeHtml(existing.date) : getThaiDate()}" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm" />
               </div>
             </div>
 
@@ -3880,7 +4263,7 @@ function doPost(e) {
         egp: 'จัดซื้อจัดจ้าง e-GP',
         regulations: 'คำสั่งและระเบียบ',
         strategic_plan: 'แผนปฏิบัติราชการ',
-        annual_plan: 'แผนการดำเนินงานประจำปี'
+        annual_report: 'รายงานผลการดำเนินงาน'
       };
       const title = String(fd.get('title') || '').trim();
       const date = String(fd.get('date') || '').trim();
@@ -3937,6 +4320,7 @@ function doPost(e) {
         existing.fileName = fileName;
         existing.fileUrl = fileUrl;
         existing.previewUrl = previewUrl;
+        // ยอดวิว existing.views คงเดิมไว้
         BackendAPI.logAudit('PUT /api/v1/news/' + existingId, `แก้ไขข่าว: ${title}`, '200 OK');
       } else {
         NEWS_DATA.unshift({
@@ -3951,7 +4335,8 @@ function doPost(e) {
           fileName,
           fileUrl,
           previewUrl,
-          imageUrl
+          imageUrl,
+          views: 0
         });
         BackendAPI.logAudit('POST /api/v1/news', `เพิ่มข่าวใหม่: ${title}`, '201 Created');
       }
@@ -4036,7 +4421,7 @@ function doPost(e) {
                 <label class="block font-heading font-bold text-xs text-royal-950">รูปถ่ายผู้อำนวยการสถานศึกษา (อัปโหลดขึ้น Google Drive อัตโนมัติ)</label>
                 <div class="flex items-center gap-3">
                   ${currentDirPhoto
-                    ? `<img src="${escapeHtml(currentDirPhoto)}" alt="รูปผู้อำนวยการ" onerror="this.style.display='none'" class="w-12 h-12 rounded-xl object-cover border-2 border-gold-400 shrink-0" />`
+                    ? `<img src="${escapeHtml(currentDirPhoto)}" alt="รูปผู้อำนวยการ" onclick="viewFullImage('${escapeHtml(currentDirPhoto)}', 'รูปผู้อำนวยการ', event)" onerror="this.style.display='none'" class="w-12 h-12 rounded-xl object-contain p-0.5 bg-white border-2 border-gold-400 shrink-0 cursor-pointer hover:scale-105 transition-transform" />`
                     : ''
                   }
                   <input type="file" accept="image/*" onchange="handleSchoolDirectorPhotoSelect(this)" class="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-royal-950 file:text-white file:font-heading file:font-semibold" />
@@ -4621,9 +5006,19 @@ function doPost(e) {
     }
 
     function copyAppsScriptCode() {
-      navigator.clipboard.writeText(GOOGLE_APPS_SCRIPT_TEMPLATE).then(() => {
+      try {
+        const textarea = document.createElement('textarea');
+        textarea.value = GOOGLE_APPS_SCRIPT_TEMPLATE;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
         showToast('คัดลอกโค้ด Code.gs สำเร็จ', 'นำไปวางแทนที่โค้ดเดิมใน Google Apps Script แล้วกด Deploy Web App');
-      });
+      } catch (err) {
+        showToast('คัดลอกไม่สำเร็จ', 'เบราว์เซอร์ของคุณอาจปิดกั้นการคัดลอกอัตโนมัติ กรุณาดาวน์โหลดเป็นไฟล์แทน');
+      }
     }
 
     function downloadAppsScriptFile() {
@@ -4819,7 +5214,107 @@ function doPost(e) {
       renderSchoolsGrid(BackendState.activeSchoolFilter);
       renderPersonnelPublicDirectory(BackendState.activePersonnelUnitFilter);
       renderNewsList(BackendState.activeNewsTab);
+      renderPlansList(BackendState.activePlansTab);
+      applySiteAppearance();
       refreshIcons();
+    }
+
+    // --- APPEARANCE UPLOAD HANDLERS ---
+    function handleAppearanceLogoSelect(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      const statusEl = document.getElementById('appearance-logo-status');
+      const reader = new FileReader();
+      reader.onload = () => {
+        pendingSiteLogo = { base64: reader.result, name: file.name, mime: file.type };
+        if (statusEl) statusEl.textContent = `รอการบันทึก: ${file.name}`;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function uploadAppearanceLogo() {
+      if (!pendingSiteLogo) {
+        showToast('แจ้งเตือน', 'กรุณาเลือกไฟล์รูปภาพโลโก้ก่อน');
+        return;
+      }
+      showToast('กำลังอัปโหลดโลโก้...', 'ระบบกำลังบันทึกภาพขึ้นคลาวด์');
+      let finalUrl = '';
+      if (BackendState.isSheetConnected) {
+        const res = await BackendAPI.uploadImageToDrive(pendingSiteLogo.base64, pendingSiteLogo.name, pendingSiteLogo.mime);
+        if (res && res.imageUrl) finalUrl = res.imageUrl;
+      } else {
+        finalUrl = pendingSiteLogo.base64;
+      }
+
+      if (finalUrl) {
+        SiteAppearance.logoUrl = finalUrl;
+        localStorage.setItem('phsmun_edu_logo_url', finalUrl);
+        pendingSiteLogo = null;
+        applySiteAppearance();
+        await BackendAPI.syncAllToCloud();
+        if (BackendState.activeBackofficeTab === 'dashboard') renderBackofficeModule('dashboard');
+        showToast('อัปเดตโลโก้สำเร็จ', 'โลโก้ใหม่ถูกแสดงผลและบันทึกลงฐานข้อมูลแล้ว');
+      }
+    }
+
+    async function resetAppearanceLogo() {
+      SiteAppearance.logoUrl = '';
+      localStorage.removeItem('phsmun_edu_logo_url');
+      pendingSiteLogo = null;
+      applySiteAppearance();
+      await BackendAPI.syncAllToCloud();
+      if (BackendState.activeBackofficeTab === 'dashboard') renderBackofficeModule('dashboard');
+      showToast('ลบโลโก้สำเร็จ', 'เปลี่ยนกลับไปใช้โลโก้มาตรฐานของระบบแล้ว');
+    }
+
+    function handleAppearanceSliderSelect(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      const statusEl = document.getElementById('appearance-slider-status');
+      const reader = new FileReader();
+      reader.onload = () => {
+        pendingSiteSlider = { base64: reader.result, name: file.name, mime: file.type };
+        if (statusEl) statusEl.textContent = `รอการเพิ่ม: ${file.name}`;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function uploadAppearanceSlider() {
+      if (!pendingSiteSlider) {
+        showToast('แจ้งเตือน', 'กรุณาเลือกไฟล์ภาพสไลด์ก่อน');
+        return;
+      }
+      if (SiteAppearance.sliders.length >= 5) {
+        showToast('ไม่สามารถเพิ่มได้', 'จำกัดภาพสไลด์สูงสุดที่ 5 ภาพ');
+        return;
+      }
+      showToast('กำลังอัปโหลดภาพสไลด์...', 'กรุณารอสักครู่');
+      let finalUrl = '';
+      if (BackendState.isSheetConnected) {
+        const res = await BackendAPI.uploadImageToDrive(pendingSiteSlider.base64, pendingSiteSlider.name, pendingSiteSlider.mime);
+        if (res && res.imageUrl) finalUrl = res.imageUrl;
+      } else {
+        finalUrl = pendingSiteSlider.base64;
+      }
+
+      if (finalUrl) {
+        SiteAppearance.sliders.push(finalUrl);
+        localStorage.setItem('phsmun_edu_sliders', JSON.stringify(SiteAppearance.sliders));
+        pendingSiteSlider = null;
+        applySiteAppearance();
+        await BackendAPI.syncAllToCloud();
+        if (BackendState.activeBackofficeTab === 'dashboard') renderBackofficeModule('dashboard');
+        showToast('เพิ่มภาพสไลด์สำเร็จ', 'ภาพสไลด์ถูกเพิ่มเข้าในระบบและบันทึกลงฐานข้อมูลแล้ว');
+      }
+    }
+
+    async function deleteAppearanceSlider(idx) {
+      SiteAppearance.sliders.splice(idx, 1);
+      localStorage.setItem('phsmun_edu_sliders', JSON.stringify(SiteAppearance.sliders));
+      applySiteAppearance();
+      await BackendAPI.syncAllToCloud();
+      if (BackendState.activeBackofficeTab === 'dashboard') renderBackofficeModule('dashboard');
+      showToast('ลบภาพสไลด์สำเร็จ', 'ลบภาพสไลด์ออกจากระบบเรียบร้อย');
     }
 
     async function initApp() {
@@ -4867,11 +5362,15 @@ function doPost(e) {
       openSchoolDetailModal,
       filterPersonnelUnit,
       filterNews,
+      loadMoreNews,
+      filterPlans,
       openNewsDetailModal,
       previewNewsAttachment,
       downloadNewsAttachment,
       openModal,
       closeModal,
+      viewFullImage,
+      closeFullImage,
       showToast,
       hideToast,
       handleAdmissionSubmit,
@@ -4917,7 +5416,17 @@ function doPost(e) {
       openChangePasswordModal,
       handleChangeStaffPassword,
       confirmDeleteStaffUser,
-      executeDeleteStaffUser
+      executeDeleteStaffUser,
+      applySiteAppearance,
+      nextSlide,
+      prevSlide,
+      goToSlide,
+      handleAppearanceLogoSelect,
+      uploadAppearanceLogo,
+      resetAppearanceLogo,
+      handleAppearanceSliderSelect,
+      uploadAppearanceSlider,
+      deleteAppearanceSlider
     });
 
     if (document.readyState === 'loading') {
