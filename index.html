@@ -275,7 +275,7 @@
           </div>
         </div>
 
-        <a href="#news" onclick="switchToFrontend()" id="nav-news" class="px-2.5 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-900 transition-colors">ข่าวสาร</a>
+        <a href="#news" onclick="switchToFrontend()" id="nav-news" class="px-2.5 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-900 transition-colors">ข่าวสาร & e-GP</a>
         <a href="#personnel" onclick="switchToFrontend()" id="nav-personnel" class="px-2.5 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-900 transition-colors">ทำเนียบบุคลากร</a>
         <a href="#schools" onclick="switchToFrontend()" id="nav-schools" class="px-2.5 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-900 transition-colors">สถานศึกษา</a>
         <a href="#plans" onclick="switchToFrontend()" id="nav-plans" class="px-2.5 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-900 transition-colors">แผน/รายงาน</a>
@@ -609,7 +609,7 @@
             ระบบบริการอิเล็กทรอนิกส์ (E-Service)
           </h2>
           <p class="text-slate-600 text-sm sm:text-base mt-1">
-            อำนวยความสะดวกแก่นักเรียน ผู้ปกครอง ครู และประชาชน เชื่อมต่อฐานข้อมูลจริงแบบเรียลไทม์
+            อำนวยความสะดวกแก่นักเรียน ผู้ปกครอง ครู และประชาชน เชื่อมต่อฐานข้อมูลแบบเรียลไทม์
           </p>
         </div>
         <button type="button" onclick="handleBackofficeEntry()" class="self-start md:self-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-royal-50 hover:bg-royal-100 text-royal-900 border border-royal-200 font-heading font-semibold text-xs sm:text-sm transition-colors">
@@ -858,7 +858,7 @@
         </button>
         <button type="button" onclick="setBackofficeTab('architecture')" data-bo-tab="architecture" class="bo-tab-btn px-3.5 py-2.5 rounded-xl font-heading font-medium text-xs sm:text-sm text-slate-700 hover:bg-royal-50 inline-flex items-center gap-2 transition-all">
           <i data-lucide="database" class="w-4 h-4 text-royal-800"></i>
-          <span>7. เชื่อมฐานข้อมูลจริง</span>
+          <span>7. เชื่อมฐานข้อมูล</span>
         </button>
         <button type="button" onclick="setBackofficeTab('rbac')" data-bo-tab="rbac" class="bo-tab-btn px-3.5 py-2.5 rounded-xl font-heading font-medium text-xs sm:text-sm text-slate-700 hover:bg-royal-50 inline-flex items-center gap-2 transition-all">
           <i data-lucide="shield-check" class="w-4 h-4 text-royal-800"></i>
@@ -980,10 +980,10 @@
     // วาง Google Apps Script Web App URL (ลงท้ายด้วย /exec) ด้านล่าง
     // หรือเชื่อมต่อผ่านหน้าเว็บในครั้งแรก ระบบจะบันทึกค่าไว้ให้อัตโนมัติ
     // =========================================================================
-    const DEFAULT_PRODUCTION_SHEET_URL = "";
+    const DEFAULT_PRODUCTION_SHEET_URL = "https://script.google.com/macros/s/AKfycby2VLfcQ5lYJso5NRPb80M094iG22q0oPHC3nK6g194MDXyNavVAb_ZjyLLwotx2bit/exec";
 
     // -----------------------------------------------------------------------
-    // 8A. LIVE DATA STORES (ดึงข้อมูลจริงทั้งหมดจากฐานข้อมูล Google Sheets)
+    // 8A. LIVE DATA STORES (ดึงข้อมูลทั้งหมดจากฐานข้อมูล Google Sheets)
     // -----------------------------------------------------------------------
     const SCHOOLS_DATA = [];
     const NEWS_DATA = [];
@@ -1004,7 +1004,7 @@
     // -----------------------------------------------------------------------
     const GOOGLE_APPS_SCRIPT_TEMPLATE = `/**
  * ============================================================================
- * ระบบฐานข้อมูลและจัดเก็บไฟล์เอกสารจริง (Production Serverless Backend)
+ * ระบบฐานข้อมูลและจัดเก็บไฟล์เอกสาร (Production Serverless Backend)
  * สำนักการศึกษา เทศบาลนครพิษณุโลก (Google Sheets + Google Drive)
  * ============================================================================
  */
@@ -1429,7 +1429,9 @@ function doPost(e) {
 
     const SiteAppearance = {
       logoUrl: localStorage.getItem('phsmun_edu_logo_url') || '',
-      sliders: JSON.parse(localStorage.getItem('phsmun_edu_sliders') || '[]')
+      sliders: JSON.parse(localStorage.getItem('phsmun_edu_sliders') || '[]'),
+      aboutVision: 'จัดการศึกษาท้องถิ่นอย่างมีคุณภาพ ทันสมัย บนพื้นฐานคุณธรรมและอัตลักษณ์เมืองสองแคว สู่มาตรฐานสากล',
+      aboutMission: 'บริหารจัดการศึกษาปฐมวัย การศึกษาขั้นพื้นฐาน และโรงเรียนกีฬาในสังกัดเทศบาลนครพิษณุโลก\nนิเทศ ติดตาม ประเมินผล และพัฒนาหลักสูตรการเรียนรู้ให้สอดคล้องกับมาตรฐานการศึกษาชาติ\nส่งเสริมศาสนา ศิลปวัฒนธรรม จารีตประเพณี กีฬา และนันทนาการของเด็ก เยาวชน และประชาชน'
     };
 
     let pendingSiteLogo = null;
@@ -1737,7 +1739,7 @@ function doPost(e) {
 
       ensureConnected() {
         if (!BackendState.isSheetConnected || !BackendState.sheetUrl) {
-          showToast('กรุณาเชื่อมต่อฐานข้อมูลจริงก่อน', 'ระบุ Google Apps Script Web App URL ในแท็บ 7. เชื่อมฐานข้อมูลจริง');
+          showToast('กรุณาเชื่อมต่อฐานข้อมูลก่อน', 'ระบุ Google Apps Script Web App URL ในแท็บ 7. เชื่อมฐานข้อมูล');
           return false;
         }
         return true;
@@ -1784,7 +1786,13 @@ function doPost(e) {
           if (json.data.siteSettings && json.data.siteSettings.length > 0) {
             const logoSetting = json.data.siteSettings.find(s => s.key === 'logoUrl');
             const slidersSetting = json.data.siteSettings.find(s => s.key === 'sliders');
+            const visionSetting = json.data.siteSettings.find(s => s.key === 'aboutVision');
+            const missionSetting = json.data.siteSettings.find(s => s.key === 'aboutMission');
+            
             SiteAppearance.logoUrl = logoSetting ? (logoSetting.value || '') : '';
+            if (visionSetting && visionSetting.value) SiteAppearance.aboutVision = visionSetting.value;
+            if (missionSetting && missionSetting.value) SiteAppearance.aboutMission = missionSetting.value;
+            
             try {
               SiteAppearance.sliders = slidersSetting ? JSON.parse(slidersSetting.value || '[]') : [];
             } catch(e) { 
@@ -1909,7 +1917,7 @@ function doPost(e) {
             this.updateConnectionUI();
             refreshAllViews();
             if (!silent) {
-              showToast('ซิงค์ฐานข้อมูลจริงสำเร็จ', 'ดึงข้อมูลล่าสุดจาก Google Sheets เรียบร้อยแล้ว');
+              showToast('ซิงค์ฐานข้อมูลสำเร็จ', 'ดึงข้อมูลล่าสุดจาก Google Sheets เรียบร้อยแล้ว');
             }
             return true;
           }
@@ -1978,7 +1986,9 @@ function doPost(e) {
 
       const siteSettings = [
         { key: 'logoUrl', value: SiteAppearance.logoUrl },
-        { key: 'sliders', value: JSON.stringify(SiteAppearance.sliders) }
+        { key: 'sliders', value: JSON.stringify(SiteAppearance.sliders) },
+        { key: 'aboutVision', value: SiteAppearance.aboutVision },
+        { key: 'aboutMission', value: SiteAppearance.aboutMission }
       ];
 
       await this.postAction({
@@ -2399,7 +2409,7 @@ function doPost(e) {
       if (!BackendState.isSheetConnected) {
         container.innerHTML = `
           <div class="bg-white rounded-3xl p-8 border border-slate-200 text-center space-y-3">
-            <p class="font-heading font-bold text-base text-royal-950">แผนภูมิต้นไม้ทำเนียบบุคลากร: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ</p>
+            <p class="font-heading font-bold text-base text-royal-950">แผนภูมิทำเนียบบุคลากร: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ</p>
             <p class="text-xs sm:text-sm text-slate-600">เชื่อมต่อฐานข้อมูล Google Sheets ในระบบหลังบ้านเพื่อแสดงและจัดการแผนภูมิโครงสร้างบุคลากรแบบเรียลไทม์</p>
           </div>
         `;
@@ -2449,7 +2459,7 @@ function doPost(e) {
             onclick="filterPersonnelUnit('all')"
             class="px-3.5 py-1.5 rounded-xl font-heading text-xs transition-all ${selectedUnitId === 'all' ? 'bg-royal-950 text-white font-semibold shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-royal-50 font-medium'}"
           >
-            แผนภูมิต้นไม้ทั้งหมด
+            แผนภูมิทั้งหมด
           </button>
           ${sectionExecs.map(sec => `
             <button
@@ -2889,6 +2899,8 @@ function doPost(e) {
           </div>
         `).join('');
 
+        const missionListHtml = SiteAppearance.aboutMission.split('\n').filter(m => m.trim()).map(m => `<li>${escapeHtml(m.trim())}</li>`).join('');
+
         openModal({
           badge: 'เกี่ยวกับสำนักการศึกษา • ข้อมูลทั่วไป',
           title: 'สำนักการศึกษา เทศบาลนครพิษณุโลก',
@@ -2897,14 +2909,12 @@ function doPost(e) {
             <div class="space-y-4">
               <div class="p-4 rounded-2xl bg-royal-50 border border-royal-100 space-y-2">
                 <h4 class="font-heading font-bold text-sm text-royal-950">วิสัยทัศน์ (Vision)</h4>
-                <p class="text-xs sm:text-sm text-slate-700">"จัดการศึกษาท้องถิ่นอย่างมีคุณภาพ ทันสมัย บนพื้นฐานคุณธรรมและอัตลักษณ์เมืองสองแคว สู่มาตรฐานสากล"</p>
+                <p class="text-xs sm:text-sm text-slate-700">"${escapeHtml(SiteAppearance.aboutVision)}"</p>
               </div>
               <div class="space-y-1.5">
                 <h4 class="font-heading font-bold text-sm text-royal-950">อำนาจหน้าที่ความรับผิดชอบ</h4>
                 <ul class="list-disc pl-5 text-xs sm:text-sm text-slate-700 space-y-1">
-                  <li>บริหารจัดการศึกษาปฐมวัย การศึกษาขั้นพื้นฐาน และโรงเรียนกีฬาในสังกัดเทศบาลนครพิษณุโลก</li>
-                  <li>นิเทศ ติดตาม ประเมินผล และพัฒนาหลักสูตรการเรียนรู้ให้สอดคล้องกับมาตรฐานการศึกษาชาติ</li>
-                  <li>ส่งเสริมศาสนา ศิลปวัฒนธรรม จารีตประเพณี กีฬา และนันทนาการของเด็ก เยาวชน และประชาชน</li>
+                  ${missionListHtml}
                 </ul>
               </div>
               <div class="space-y-2">
@@ -3039,7 +3049,7 @@ function doPost(e) {
                   </div>
                 </div>
                 <button type="submit" class="w-full py-2.5 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-xs sm:text-sm">
-                  ส่งใบสมัครเรียนเข้าสู่ฐานข้อมูลจริง
+                  ส่งใบสมัครเรียนเข้าสู่ฐานข้อมูล
                 </button>
               </form>
 
@@ -3322,7 +3332,7 @@ function doPost(e) {
           bodyHtml: `
             <div class="space-y-4">
               <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-950 space-y-1">
-                <p class="font-heading font-bold">ระบบเชื่อมต่อฐานข้อมูลจริง 100% (ตั้งค่าเพียงครั้งแรกครั้งเดียว)</p>
+                <p class="font-heading font-bold">ระบบเชื่อมต่อฐานข้อมูล 100% (ตั้งค่าเพียงครั้งแรกครั้งเดียว)</p>
                 <p>วางลิงก์ Google Apps Script Web App (<code class="font-mono">https://script.google.com/macros/s/.../exec</code>) ด้านล่าง ระบบจะจดจำการเชื่อมต่อไว้ถาวรและสร้างชีตทั้ง 9 ตารางให้อัตโนมัติ</p>
               </div>
               <form onsubmit="connectGoogleSheetUrl(event, true)" class="space-y-3">
@@ -3331,7 +3341,7 @@ function doPost(e) {
                   <input type="url" name="sheetUrl" required placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm font-mono" />
                 </div>
                 <button type="submit" class="w-full py-3 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-sm">
-                  เชื่อมต่อและโหลดฐานข้อมูลจริง
+                  เชื่อมต่อและโหลดฐานข้อมูล
                 </button>
               </form>
               <div class="border-t border-slate-200 pt-3 flex items-center justify-between text-xs">
@@ -3598,6 +3608,27 @@ function doPost(e) {
                       </div>
                     ` : `<p class="text-[11px] text-slate-400 border-t border-slate-200 pt-3">ยังไม่มีภาพสไลด์</p>`}
                   </div>
+                </div>
+
+                <!-- ข้อมูลทั่วไป (วิสัยทัศน์ / พันธกิจ) -->
+                <div class="space-y-4 lg:col-span-2">
+                  <div>
+                    <h4 class="font-heading font-bold text-sm text-royal-950">3. ข้อมูลทั่วไปของหน่วยงาน (วิสัยทัศน์ และ พันธกิจ)</h4>
+                    <p class="text-[11px] text-slate-500">ข้อมูลนี้จะไปแสดงในหน้าต่าง "เกี่ยวกับสำนักการศึกษา > ข้อมูลทั่วไป"</p>
+                  </div>
+                  <form onsubmit="handleSaveAboutSettings(event)" class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-4">
+                    <div>
+                      <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">วิสัยทัศน์ (Vision)</label>
+                      <input type="text" name="aboutVision" required value="${escapeHtml(SiteAppearance.aboutVision)}" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white" />
+                    </div>
+                    <div>
+                      <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">พันธกิจ / อำนาจหน้าที่ (ขึ้นบรรทัดใหม่เพื่อแยกข้อ)</label>
+                      <textarea name="aboutMission" required rows="4" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">${escapeHtml(SiteAppearance.aboutMission)}</textarea>
+                    </div>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-xs transition-colors">
+                      บันทึกข้อมูลทั่วไป
+                    </button>
+                  </form>
                 </div>
 
               </div>
@@ -3872,7 +3903,7 @@ function doPost(e) {
                   <span class="inline-block px-2.5 py-0.5 rounded-full bg-royal-100 text-royal-900 font-heading font-bold text-[11px] mb-1">
                     ORGANIZATION TREE STRUCTURE EDITOR
                   </span>
-                  <h2 class="font-heading font-bold text-lg text-royal-950">จัดการโครงสร้างแผนภูมิต้นไม้: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ</h2>
+                  <h2 class="font-heading font-bold text-lg text-royal-950">จัดการโครงสร้างแผนภูมิ: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ</h2>
                   <p class="text-xs sm:text-sm text-slate-600">เพิ่ม (+) และแก้ไขตำแหน่งผู้บริหาร ผู้บริหารส่วนงาน ฝ่ายงานต่างๆ และกลุ่มงานภายในฝ่าย พร้อมจัดสายบังคับบัญชา</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
@@ -3937,7 +3968,7 @@ function doPost(e) {
                     <tr>
                       <th class="px-4 py-3 text-center w-16">ลำดับ</th>
                       <th class="px-4 py-3">ชื่อ-นามสกุล / ตำแหน่ง</th>
-                      <th class="px-4 py-3">สังกัดในแผนภูมิต้นไม้</th>
+                      <th class="px-4 py-3">สังกัดในแผนภูมิ</th>
                       <th class="px-4 py-3">โทรศัพท์</th>
                       <th class="px-4 py-3 text-right">การจัดการ</th>
                     </tr>
@@ -4049,7 +4080,7 @@ function doPost(e) {
             <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
               <div class="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <h2 class="font-heading font-bold text-lg text-royal-950">เชื่อมต่อฐานข้อมูลจริง (Google Sheets + Google Drive)</h2>
+                  <h2 class="font-heading font-bold text-lg text-royal-950">เชื่อมต่อฐานข้อมูล (Google Sheets + Google Drive)</h2>
                   <p class="text-xs sm:text-sm text-slate-600">ตั้งค่าเพียงครั้งแรกครั้งเดียว ระบบจะบันทึก URL และซิงค์ข้อมูลทั้งหมดอัตโนมัติ</p>
                 </div>
                 ${BackendState.isSheetConnected ? `
@@ -4069,7 +4100,7 @@ function doPost(e) {
                   class="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm font-mono"
                 />
                 <button type="submit" class="px-5 py-2.5 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-xs sm:text-sm shrink-0">
-                  บันทึกและซิงค์ข้อมูลจริง
+                  บันทึกและซิงค์ข้อมูล
                 </button>
               </form>
 
@@ -4084,7 +4115,7 @@ function doPost(e) {
                 </button>
                 <button type="button" onclick="exportProductionHtmlFile()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gold-500 hover:bg-gold-400 text-royal-950 font-heading font-bold text-xs">
                   <i data-lucide="file-code" class="w-4 h-4"></i>
-                  <span>ดาวน์โหลด index.html ฉบับใช้งานจริง (ฝัง URL แล้ว)</span>
+                  <span>ดาวน์โหลด index.html ฉบับใช้งาน (ฝัง URL แล้ว)</span>
                 </button>
               </div>
             </div>
@@ -4575,7 +4606,7 @@ function doPost(e) {
 
       const parentSelectorHtml = unitType === 'division' ? `
         <div>
-          <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">อยู่ภายใต้ผู้บริหารส่วนงานใด (สำหรับจัดเรียงในแผนภูมิต้นไม้)</label>
+          <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">อยู่ภายใต้ผู้บริหารส่วนงานใด (สำหรับจัดเรียงในแผนภูมิ)</label>
           <select name="parentUnitId" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
             <option value="">-- ขึ้นตรงสำนักการศึกษา (ไม่สังกัดส่วนงานย่อย) --</option>
             ${sectionExecs.map(sec => `
@@ -4589,7 +4620,7 @@ function doPost(e) {
 
       openModal({
         badge: existing ? `แก้ไข${typeLabel}` : `เพิ่ม${typeLabel}ใหม่`,
-        title: existing ? `แก้ไขข้อมูล${typeLabel}: ${existing.name}` : `+ เพิ่ม${typeLabel}ในแผนภูมิต้นไม้`,
+        title: existing ? `แก้ไขข้อมูล${typeLabel}: ${existing.name}` : `+ เพิ่ม${typeLabel}ในแผนภูมิ`,
         icon: unitType === 'division' ? 'layers' : 'award',
         bodyHtml: `
           <form onsubmit="handleSaveOrgUnitForm(event, '${existing ? existing.id : ''}', '${unitType}')" class="space-y-3.5">
@@ -4668,7 +4699,7 @@ function doPost(e) {
       closeModal();
       await BackendAPI.syncOrgAndPersonnel();
       renderBackofficeModule('personnel');
-      showToast('บันทึกโครงสร้างแผนภูมิต้นไม้สำเร็จ', `อัปเดต "${name}" บนหน้าเว็บไซต์และ Google Sheets เรียบร้อยแล้ว`);
+      showToast('บันทึกโครงสร้างแผนภูมิสำเร็จ', `อัปเดต "${name}" บนหน้าเว็บไซต์และ Google Sheets เรียบร้อยแล้ว`);
     }
 
     async function handleDeleteOrgUnit(unitId) {
@@ -4679,7 +4710,7 @@ function doPost(e) {
       BackendAPI.logAudit('DELETE /api/v1/org-units/' + unitId, `ลบโครงสร้าง: ${removed.name}`, '200 OK');
       await BackendAPI.syncOrgAndPersonnel();
       renderBackofficeModule('personnel');
-      showToast('ลบโครงสร้างสำเร็จ', `ลบ "${removed.name}" ออกจากแผนภูมิต้นไม้แล้ว`);
+      showToast('ลบโครงสร้างสำเร็จ', `ลบ "${removed.name}" ออกจากแผนภูมิแล้ว`);
     }
 
     function openSubGroupEditorModal(divId, sgIndex) {
@@ -4774,7 +4805,7 @@ function doPost(e) {
 
       openModal({
         badge: existing ? 'แก้ไขข้อมูลบุคลากร' : 'เพิ่มบุคลากรใหม่ในทำเนียบ',
-        title: existing ? `แก้ไขข้อมูล: ${existing.name}` : '+ เพิ่มบุคลากรในแผนภูมิต้นไม้',
+        title: existing ? `แก้ไขข้อมูล: ${existing.name}` : '+ เพิ่มบุคลากรในแผนภูมิ',
         icon: 'user-plus',
         bodyHtml: `
           <form onsubmit="handleSavePersonnelForm(event, '${existing ? existing.id : ''}')" class="space-y-3">
@@ -4791,7 +4822,7 @@ function doPost(e) {
 
             <div class="grid sm:grid-cols-2 gap-3">
               <div>
-                <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">สังกัดในแผนภูมิต้นไม้ *</label>
+                <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">สังกัดในแผนภูมิ *</label>
                 <select name="unitId" id="personnel-unit-select" onchange="updateSubGroupOptionsForUnit(this.value, '')" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
                   ${unitOptionsHtml}
                 </select>
@@ -4920,7 +4951,7 @@ function doPost(e) {
       closeModal();
       await BackendAPI.syncOrgAndPersonnel();
       renderBackofficeModule('personnel');
-      showToast('บันทึกข้อมูลบุคลากรสำเร็จ', `อัปเดต "${name}" ในแผนภูมิต้นไม้เรียบร้อยแล้ว`);
+      showToast('บันทึกข้อมูลบุคลากรสำเร็จ', `อัปเดต "${name}" ในแผนภูมิเรียบร้อยแล้ว`);
     }
 
     async function handleDeletePersonnel(personId) {
@@ -5066,7 +5097,7 @@ function doPost(e) {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showToast('ส่งออกไฟล์ index.html สำเร็จ', 'ฝัง URL ฐานข้อมูลจริงเรียบร้อย พร้อมอัปโหลดขึ้น GitHub Pages / Netlify / Vercel');
+      showToast('ส่งออกไฟล์ index.html สำเร็จ', 'ฝัง URL ฐานข้อมูลเรียบร้อย พร้อมอัปโหลดขึ้น GitHub Pages / Netlify / Vercel');
     }
 
     function openStaffUserModal() {
@@ -5335,6 +5366,15 @@ function doPost(e) {
       showToast('ลบภาพสไลด์สำเร็จ', 'ลบภาพสไลด์ออกจากระบบเรียบร้อย');
     }
 
+    async function handleSaveAboutSettings(event) {
+      event.preventDefault();
+      const fd = new FormData(event.target);
+      SiteAppearance.aboutVision = String(fd.get('aboutVision') || '').trim();
+      SiteAppearance.aboutMission = String(fd.get('aboutMission') || '').trim();
+      await BackendAPI.syncAllToCloud();
+      showToast('บันทึกข้อมูลทั่วไปสำเร็จ', 'อัปเดตวิสัยทัศน์และพันธกิจเรียบร้อยแล้ว');
+    }
+
     async function initApp() {
       refreshIcons();
       const resolvedUrl = BackendAPI.resolveInitialSheetUrl();
@@ -5445,7 +5485,8 @@ function doPost(e) {
       resetAppearanceLogo,
       handleAppearanceSliderSelect,
       uploadAppearanceSlider,
-      deleteAppearanceSlider
+      deleteAppearanceSlider,
+      handleSaveAboutSettings
     });
 
     if (document.readyState === 'loading') {
