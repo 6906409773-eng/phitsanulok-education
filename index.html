@@ -223,7 +223,7 @@
                 </span>
                 <div>
                   <span class="block font-heading font-semibold text-xs sm:text-sm">ทำเนียบบุคลากร</span>
-                  <span class="block text-[11px] text-slate-500">แผนภูมิผู้บริหาร ฝ่ายงาน และกลุ่มงาน</span>
+                  <span class="block text-[11px] text-slate-500">แผนภูมิต้นไม้ผู้บริหาร ฝ่ายงาน และกลุ่มงาน</span>
                 </div>
               </a>
 
@@ -510,7 +510,7 @@
               ทำเนียบบุคลากรและโครงสร้างส่วนราชการ สำนักการศึกษา
             </h2>
             <p class="text-slate-600 text-sm sm:text-base mt-1">
-              แผนภูมิแสดงสายบังคับบัญชา: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ และกลุ่มงานภายในฝ่าย
+              แผนภูมิต้นไม้แสดงสายบังคับบัญชา: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ และกลุ่มงานภายในฝ่าย
             </p>
           </div>
 
@@ -609,7 +609,7 @@
             ระบบบริการอิเล็กทรอนิกส์ (E-Service)
           </h2>
           <p class="text-slate-600 text-sm sm:text-base mt-1">
-            อำนวยความสะดวกแก่นักเรียน ผู้ปกครอง ครู และประชาชน เชื่อมต่อฐานข้อมูลแบบเรียลไทม์
+            อำนวยความสะดวกแก่นักเรียน ผู้ปกครอง ครู และประชาชน เชื่อมต่อฐานข้อมูลจริงแบบเรียลไทม์
           </p>
         </div>
         <button type="button" onclick="handleBackofficeEntry()" class="self-start md:self-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-royal-50 hover:bg-royal-100 text-royal-900 border border-royal-200 font-heading font-semibold text-xs sm:text-sm transition-colors">
@@ -858,7 +858,7 @@
         </button>
         <button type="button" onclick="setBackofficeTab('architecture')" data-bo-tab="architecture" class="bo-tab-btn px-3.5 py-2.5 rounded-xl font-heading font-medium text-xs sm:text-sm text-slate-700 hover:bg-royal-50 inline-flex items-center gap-2 transition-all">
           <i data-lucide="database" class="w-4 h-4 text-royal-800"></i>
-          <span>7. เชื่อมฐานข้อมูล</span>
+          <span>7. เชื่อมฐานข้อมูลจริง</span>
         </button>
         <button type="button" onclick="setBackofficeTab('rbac')" data-bo-tab="rbac" class="bo-tab-btn px-3.5 py-2.5 rounded-xl font-heading font-medium text-xs sm:text-sm text-slate-700 hover:bg-royal-50 inline-flex items-center gap-2 transition-all">
           <i data-lucide="shield-check" class="w-4 h-4 text-royal-800"></i>
@@ -983,7 +983,7 @@
     const DEFAULT_PRODUCTION_SHEET_URL = "https://script.google.com/macros/s/AKfycby2VLfcQ5lYJso5NRPb80M094iG22q0oPHC3nK6g194MDXyNavVAb_ZjyLLwotx2bit/exec";
 
     // -----------------------------------------------------------------------
-    // 8A. LIVE DATA STORES (ดึงข้อมูลทั้งหมดจากฐานข้อมูล Google Sheets)
+    // 8A. LIVE DATA STORES (ดึงข้อมูลจริงทั้งหมดจากฐานข้อมูล Google Sheets)
     // -----------------------------------------------------------------------
     const SCHOOLS_DATA = [];
     const NEWS_DATA = [];
@@ -1004,7 +1004,7 @@
     // -----------------------------------------------------------------------
     const GOOGLE_APPS_SCRIPT_TEMPLATE = `/**
  * ============================================================================
- * ระบบฐานข้อมูลและจัดเก็บไฟล์เอกสาร (Production Serverless Backend)
+ * ระบบฐานข้อมูลและจัดเก็บไฟล์เอกสารจริง (Production Serverless Backend)
  * สำนักการศึกษา เทศบาลนครพิษณุโลก (Google Sheets + Google Drive)
  * ============================================================================
  */
@@ -1238,6 +1238,12 @@ function replaceSheetData(sheetName, headers, items) {
 }
 
 function doGet(e) {
+  const cache = CacheService.getScriptCache();
+  const cached = cache.get('api_data');
+  if (cached && !(e.parameter && e.parameter.nocache)) {
+    return ContentService.createTextOutput(cached).setMimeType(ContentService.MimeType.JSON);
+  }
+
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   if (!ss.getSheetByName(SHEET_NAMES.SCHOOLS)) {
     setupDatabaseSheets();
@@ -1257,11 +1263,17 @@ function doGet(e) {
       auditLogs: readSheetObjects(SHEET_NAMES.AUDIT)
     }
   };
-  return ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(ContentService.MimeType.JSON);
+  
+  const jsonString = JSON.stringify(payload);
+  cache.put('api_data', jsonString, 900); // แคชข้อมูลไว้ 15 นาที เพื่อให้เว็บไซต์โหลดเร็วขึ้น
+  return ContentService.createTextOutput(jsonString).setMimeType(ContentService.MimeType.JSON);
 }
 
 function doPost(e) {
   try {
+    const cache = CacheService.getScriptCache();
+    cache.remove('api_data'); // ล้างแคชทุกครั้งเมื่อมีการบันทึก/แก้ไขข้อมูลใหม่
+    
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     if (!ss.getSheetByName(SHEET_NAMES.SCHOOLS)) {
       setupDatabaseSheets();
@@ -1739,7 +1751,7 @@ function doPost(e) {
 
       ensureConnected() {
         if (!BackendState.isSheetConnected || !BackendState.sheetUrl) {
-          showToast('กรุณาเชื่อมต่อฐานข้อมูลก่อน', 'ระบุ Google Apps Script Web App URL ในแท็บ 7. เชื่อมฐานข้อมูล');
+          showToast('กรุณาเชื่อมต่อฐานข้อมูลจริงก่อน', 'ระบุ Google Apps Script Web App URL ในแท็บ 7. เชื่อมฐานข้อมูลจริง');
           return false;
         }
         return true;
@@ -1917,7 +1929,7 @@ function doPost(e) {
             this.updateConnectionUI();
             refreshAllViews();
             if (!silent) {
-              showToast('ซิงค์ฐานข้อมูลสำเร็จ', 'ดึงข้อมูลล่าสุดจาก Google Sheets เรียบร้อยแล้ว');
+              showToast('ซิงค์ฐานข้อมูลจริงสำเร็จ', 'ดึงข้อมูลล่าสุดจาก Google Sheets เรียบร้อยแล้ว');
             }
             return true;
           }
@@ -2366,10 +2378,7 @@ function doPost(e) {
 
       return `
         <div class="relative flex flex-col items-center w-full">
-          <div class="w-0.5 h-6 bg-royal-700"></div>
-          <div class="w-3 h-3 rounded-full bg-gold-500 border-2 border-royal-950 -mt-1.5 z-10"></div>
-
-          <div class="w-full bg-white rounded-3xl p-5 border-2 border-royal-200 hover:border-royal-700 shadow-gov transition-all space-y-3.5 -mt-1">
+          <div class="w-full bg-white rounded-3xl p-5 border-2 border-royal-200 hover:border-royal-700 shadow-gov hover:shadow-2xl transition-all duration-300 transform sm:hover:scale-105 space-y-3.5 mt-1 relative z-20">
             <div class="flex flex-wrap items-start justify-between gap-2 border-b border-slate-100 pb-3">
               <div class="flex items-start gap-3">
                 <div class="w-10 h-10 rounded-xl bg-royal-950 text-gold-400 flex items-center justify-center shrink-0 mt-0.5">
@@ -2409,7 +2418,7 @@ function doPost(e) {
       if (!BackendState.isSheetConnected) {
         container.innerHTML = `
           <div class="bg-white rounded-3xl p-8 border border-slate-200 text-center space-y-3">
-            <p class="font-heading font-bold text-base text-royal-950">แผนภูมิทำเนียบบุคลากร: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ</p>
+            <p class="font-heading font-bold text-base text-royal-950">แผนภูมิต้นไม้ทำเนียบบุคลากร: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ</p>
             <p class="text-xs sm:text-sm text-slate-600">เชื่อมต่อฐานข้อมูล Google Sheets ในระบบหลังบ้านเพื่อแสดงและจัดการแผนภูมิโครงสร้างบุคลากรแบบเรียลไทม์</p>
           </div>
         `;
@@ -2424,7 +2433,7 @@ function doPost(e) {
         const execPeople = PERSONNEL_DATA.filter(p => p.unitId === execUnit.id);
         if (execPeople.length === 0) {
           return `
-            <div class="bg-gradient-to-br from-royal-950 via-royal-900 to-royal-800 text-white rounded-3xl p-5 sm:p-6 border-2 border-gold-400 shadow-xl max-w-md w-full mx-auto text-center space-y-1.5">
+            <div class="bg-gradient-to-br from-royal-950 via-royal-900 to-royal-800 text-white rounded-3xl p-5 sm:p-6 border-2 border-gold-400 shadow-xl w-full text-center space-y-1.5 transform transition-all duration-300 sm:hover:scale-105 hover:shadow-2xl hover:z-30 relative">
               <span class="inline-block px-3 py-0.5 rounded-full bg-gold-500 text-royal-950 font-heading font-bold text-[11px]">ระดับที่ 1 • ผู้บริหาร</span>
               <h3 class="font-heading font-bold text-lg sm:text-xl text-white">${escapeHtml(execUnit.name)}</h3>
               <p class="text-xs text-royal-100">${escapeHtml(execUnit.description || 'ผู้บริหารสำนักการศึกษา เทศบาลนครพิษณุโลก')}</p>
@@ -2432,8 +2441,8 @@ function doPost(e) {
           `;
         }
         return execPeople.map(person => `
-          <div class="bg-gradient-to-br from-royal-950 via-royal-900 to-royal-800 text-white rounded-3xl p-5 sm:p-6 border-2 border-gold-400 shadow-xl max-w-lg w-full mx-auto flex flex-col sm:flex-row items-center text-center sm:text-left gap-4">
-            ${getPersonAvatarHtml(person, 'w-20 h-20')}
+          <div class="bg-gradient-to-br from-royal-950 via-royal-900 to-royal-800 text-white rounded-3xl p-5 border-2 border-gold-400 shadow-xl w-full flex flex-col items-center text-center gap-3 transform transition-all duration-300 sm:hover:scale-105 hover:shadow-2xl hover:z-30 relative">
+            ${getPersonAvatarHtml(person, 'w-24 h-24')}
             <div class="space-y-1">
               <span class="inline-block px-3 py-0.5 rounded-full bg-gold-500 text-royal-950 font-heading font-bold text-[11px]">
                 ${escapeHtml(execUnit.name)}
@@ -2441,7 +2450,7 @@ function doPost(e) {
               <h3 class="font-heading font-bold text-lg sm:text-xl text-white">${escapeHtml(person.name)}</h3>
               <p class="text-xs sm:text-sm font-heading text-gold-200">${escapeHtml(person.position)}</p>
               ${person.phone ? `
-                <p class="text-xs text-royal-100 inline-flex items-center gap-1 pt-0.5">
+                <p class="text-xs text-royal-100 inline-flex items-center gap-1 pt-0.5 justify-center">
                   <i data-lucide="phone" class="w-3.5 h-3.5 text-gold-400"></i>
                   <span>${escapeHtml(person.phone)}</span>
                 </p>
@@ -2459,7 +2468,7 @@ function doPost(e) {
             onclick="filterPersonnelUnit('all')"
             class="px-3.5 py-1.5 rounded-xl font-heading text-xs transition-all ${selectedUnitId === 'all' ? 'bg-royal-950 text-white font-semibold shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-royal-50 font-medium'}"
           >
-            แผนภูมิทั้งหมด
+            แผนภูมิต้นไม้ทั้งหมด
           </button>
           ${sectionExecs.map(sec => `
             <button
@@ -2477,13 +2486,13 @@ function doPost(e) {
         ? sectionExecs
         : sectionExecs.filter(sec => sec.id === selectedUnitId);
 
-      const sectionBranchesHtml = visibleSectionExecs.map((secUnit, idx) => {
+      const sectionBranchesHtml = visibleSectionExecs.map((secUnit, idx, arr) => {
         const secPeople = PERSONNEL_DATA.filter(p => p.unitId === secUnit.id);
         const childDivisions = divisions.filter(d => (d.parentUnitId || '') === secUnit.id);
 
         const secCardHtml = secPeople.length > 0
           ? secPeople.map(person => `
-              <div class="bg-white rounded-3xl p-5 border-2 border-gold-400 shadow-lg w-full flex flex-col sm:flex-row items-center text-center sm:text-left gap-4">
+              <div class="bg-white rounded-3xl p-5 border-2 border-gold-400 shadow-lg w-full flex flex-col sm:flex-row items-center text-center sm:text-left gap-4 transform transition-all duration-300 sm:hover:scale-105 hover:shadow-2xl relative z-20">
                 ${getPersonAvatarHtml(person, 'w-16 h-16')}
                 <div class="space-y-1 min-w-0">
                   <span class="inline-block px-2.5 py-0.5 rounded-full bg-gold-100 text-gold-900 border border-gold-300 font-heading font-bold text-[11px]">
@@ -2496,7 +2505,7 @@ function doPost(e) {
               </div>
             `).join('')
           : `
-              <div class="bg-white rounded-3xl p-5 border-2 border-gold-400 shadow-lg w-full text-center space-y-1">
+              <div class="bg-white rounded-3xl p-5 border-2 border-gold-400 shadow-lg w-full text-center space-y-1 transform transition-all duration-300 sm:hover:scale-105 hover:shadow-2xl relative z-20">
                 <span class="inline-block px-2.5 py-0.5 rounded-full bg-gold-100 text-gold-900 border border-gold-300 font-heading font-bold text-[11px]">
                   ผู้บริหารส่วนงาน
                 </span>
@@ -2506,33 +2515,71 @@ function doPost(e) {
             `;
 
         return `
-          <div class="relative flex flex-col items-center">
-            ${visibleSectionExecs.length > 1 ? `
-              <div class="hidden lg:block w-full h-0.5 bg-royal-800 ${idx === 0 ? 'ml-[50%] w-1/2' : (idx === visibleSectionExecs.length - 1 ? 'mr-[50%] w-1/2' : 'w-full')}"></div>
-            ` : ''}
+          <div class="flex flex-col lg:flex-row relative w-full items-center lg:items-stretch gap-8 lg:gap-0">
+              <!-- Main Spine Dot -->
+              <div class="hidden lg:block w-3 h-3 rounded-full bg-gold-500 border-2 border-royal-950 absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 z-20"></div>
+              
+              <!-- Desktop Vertical Spine Segments -->
+              ${idx !== 0 ? `<div class="hidden lg:block absolute bottom-1/2 left-0 w-1 bg-royal-800 -translate-x-1/2 z-0 h-[calc(50%+1.5rem)] lg:h-[calc(50%+2rem)]"></div>` : ''}
+              ${idx !== arr.length - 1 ? `<div class="hidden lg:block absolute top-1/2 left-0 w-1 bg-royal-800 -translate-x-1/2 z-0 h-[calc(50%+1.5rem)] lg:h-[calc(50%+2rem)]"></div>` : ''}
+              
+              <!-- Mobile Connector UP to Executive -->
+              ${idx === 0 ? `<div class="lg:hidden absolute bottom-full left-1/2 w-1 h-4 bg-royal-800 -translate-x-1/2 z-0"></div>` : ''}
+              <!-- Mobile Vertical Spine Segment (UP) to previous Section Exec -->
+              ${idx !== 0 ? `<div class="lg:hidden absolute bottom-full left-1/2 w-1 h-6 bg-royal-800 -translate-x-1/2 z-0"></div>` : ''}
+              <!-- Mobile Vertical Spine Segment (DOWN) to next Section Exec -->
+              ${idx !== arr.length - 1 ? `<div class="lg:hidden absolute top-full left-1/2 w-1 h-6 bg-royal-800 -translate-x-1/2 z-0"></div>` : ''}
 
-            <div class="w-0.5 h-7 bg-royal-800"></div>
-            <div class="w-3.5 h-3.5 rounded-full bg-royal-950 border-2 border-gold-400 -mt-1.5 z-10"></div>
-
-            <div class="w-full max-w-xl -mt-1">
-              ${secCardHtml}
-            </div>
-
-            ${childDivisions.length > 0 ? `
-              <div class="w-full pt-1 flex flex-col items-center">
-                <div class="w-0.5 h-6 bg-royal-700"></div>
-                <div class="w-full grid ${childDivisions.length > 1 ? 'md:grid-cols-2' : 'grid-cols-1 max-w-2xl'} gap-5 relative">
-                  ${childDivisions.length > 1 ? `
-                    <div class="hidden md:block absolute top-0 left-1/4 right-1/4 h-0.5 bg-royal-700"></div>
-                  ` : ''}
-                  ${childDivisions.map(div => renderDivisionTreeCard(div)).join('')}
-                </div>
+              <!-- Section Exec Card Column -->
+              <div class="w-full lg:w-[40%] flex flex-col justify-center relative pl-0 lg:pl-8 pr-0 lg:pr-6 z-10">
+                  <!-- Horizontal connector passing behind card -->
+                  ${childDivisions.length > 0 ? `
+                     <div class="hidden lg:block absolute top-1/2 left-0 w-full h-1 bg-royal-800 -translate-y-1/2 z-0"></div>
+                     <!-- mobile connector DOWN to divisions -->
+                     <div class="lg:hidden absolute bottom-0 left-1/2 w-1 h-4 bg-royal-800 -translate-x-1/2 -mb-4 z-10"></div>
+                  ` : `
+                     <div class="hidden lg:block absolute top-1/2 left-0 w-8 h-1 bg-royal-800 -translate-y-1/2 z-0"></div>
+                  `}
+                  
+                  <div class="w-full max-w-md mx-auto lg:ml-0 z-20">
+                     ${secCardHtml}
+                  </div>
               </div>
-            ` : `
-              <div class="mt-3 px-4 py-2 rounded-xl bg-white/80 border border-dashed border-slate-300 text-xs text-slate-500">
-                ยังไม่มีฝ่ายงานที่ผูกภายใต้ ${escapeHtml(secUnit.name)}
-              </div>
-            `}
+
+              <!-- Divisions Container -->
+              ${childDivisions.length > 0 ? `
+                  <!-- Secondary Spine -->
+                  <div class="w-full lg:w-[60%] flex flex-col relative gap-6">
+                      ${childDivisions.map((div, dIdx, dArr) => `
+                          <div class="relative w-full pl-0 lg:pl-8 flex flex-col lg:flex-row items-center">
+                              <!-- Connector from Secondary Spine to Division -->
+                              <div class="hidden lg:block absolute top-1/2 left-0 w-8 h-1 bg-royal-800 -translate-y-1/2 z-0"></div>
+                              <div class="hidden lg:block w-3 h-3 rounded-full bg-gold-500 border-2 border-royal-950 absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 z-20"></div>
+                              
+                              <!-- Desktop Vertical Spine Segments -->
+                              ${dIdx !== 0 ? `<div class="hidden lg:block absolute bottom-1/2 left-0 w-1 bg-royal-800 -translate-x-1/2 z-0 h-[calc(50%+0.75rem)]"></div>` : ''}
+                              ${dIdx !== dArr.length - 1 ? `<div class="hidden lg:block absolute top-1/2 left-0 w-1 bg-royal-800 -translate-x-1/2 z-0 h-[calc(50%+0.75rem)]"></div>` : ''}
+                              
+                              <!-- Mobile Connector UP to Section Exec -->
+                              ${dIdx === 0 ? `<div class="lg:hidden absolute bottom-full left-1/2 w-1 h-4 bg-royal-800 -translate-x-1/2 z-0"></div>` : ''}
+                              <!-- Mobile Vertical Spine Segment (UP) -->
+                              ${dIdx !== 0 ? `<div class="lg:hidden absolute bottom-full left-1/2 w-1 h-3 bg-royal-800 -translate-x-1/2 z-0"></div>` : ''}
+                              <!-- Mobile Vertical Spine Segment (DOWN) -->
+                              ${dIdx !== dArr.length - 1 ? `<div class="lg:hidden absolute top-full left-1/2 w-1 h-3 bg-royal-800 -translate-x-1/2 z-0"></div>` : ''}
+                              
+                              <div class="w-full z-20">
+                                  ${renderDivisionTreeCard(div)}
+                              </div>
+                          </div>
+                      `).join('')}
+                  </div>
+              ` : `
+                  <div class="w-full lg:w-[60%] flex items-center pl-0 lg:pl-8">
+                      <div class="px-4 py-3 rounded-xl bg-white/80 border border-dashed border-slate-300 text-xs text-slate-500 w-full text-center lg:text-left">
+                          ยังไม่มีฝ่ายงานที่ผูกภายใต้ ${escapeHtml(secUnit.name)}
+                      </div>
+                  </div>
+              `}
           </div>
         `;
       }).join('');
@@ -2542,35 +2589,57 @@ function doPost(e) {
         : [];
 
       const orphanBranchHtml = orphanDivisions.length > 0 ? `
-        <div class="pt-6 flex flex-col items-center">
-          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-royal-100 text-royal-900 font-heading font-bold text-xs mb-3">
+        <div class="pt-10 flex flex-col items-center w-full">
+          <div class="w-1 h-10 bg-royal-800 -mt-10"></div>
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-royal-100 text-royal-900 font-heading font-bold text-xs mb-6 relative z-20">
             <i data-lucide="git-branch" class="w-4 h-4"></i>
             <span>ฝ่ายงาน / หน่วยงานขึ้นตรงสำนักการศึกษา</span>
           </div>
-          <div class="w-full grid ${orphanDivisions.length > 1 ? 'md:grid-cols-2' : 'grid-cols-1 max-w-2xl'} gap-5">
-            ${orphanDivisions.map(div => renderDivisionTreeCard(div)).join('')}
+          <div class="w-full grid ${orphanDivisions.length > 1 ? 'md:grid-cols-2' : 'grid-cols-1 max-w-2xl'} gap-8">
+            ${orphanDivisions.map(div => `
+              <div class="relative flex flex-col items-center w-full">
+                <!-- Top Connector for orphan -->
+                <div class="w-1 h-6 bg-royal-800 absolute -top-6"></div>
+                <div class="w-3 h-3 rounded-full bg-gold-500 border-2 border-royal-950 absolute -top-6 -mt-1.5 z-10"></div>
+                ${renderDivisionTreeCard(div)}
+              </div>
+            `).join('')}
           </div>
         </div>
       ` : '';
 
       container.innerHTML = `
-        <div class="space-y-6">
+        <div class="space-y-8">
           ${sectionExecs.length > 0 ? filterBarHtml : ''}
 
-          <div class="relative flex flex-col items-center">
-            ${executives.length > 0 ? `
-              <div class="w-full flex flex-col items-center">
-                <div class="w-full grid ${executives.length > 1 ? 'md:grid-cols-2 max-w-4xl' : 'grid-cols-1 max-w-xl'} gap-4">
-                  ${execNodesHtml}
-                </div>
-              </div>
-            ` : ''}
+          <div class="relative flex flex-col items-center w-full overflow-x-auto pb-4">
+            
+            <!-- Horizontal Tree Container -->
+            <div class="flex flex-col lg:flex-row w-full items-center lg:items-stretch min-w-[320px] lg:min-w-[900px]">
+               
+               <!-- 1. Executive Column (Left) -->
+               <div class="w-full lg:w-[25%] flex flex-col justify-center relative pr-0 lg:pr-6 mb-8 lg:mb-0">
+                   <!-- Desktop horizontal out from Exec to Main Spine -->
+                   ${executives.length > 0 && visibleSectionExecs.length > 0 ? `
+                      <div class="hidden lg:block absolute top-1/2 left-1/2 w-1/2 h-1 bg-royal-800 -translate-y-1/2 z-0"></div>
+                   ` : ''}
+                   <div class="w-full max-w-sm mx-auto z-20 relative space-y-4">
+                       ${execNodesHtml}
+                   </div>
+                   <!-- Mobile vertical out -->
+                   ${executives.length > 0 && visibleSectionExecs.length > 0 ? `
+                      <div class="lg:hidden absolute bottom-0 left-1/2 w-1 h-4 bg-royal-800 -translate-x-1/2 -mb-4 z-10"></div>
+                   ` : ''}
+               </div>
 
-            ${visibleSectionExecs.length > 0 ? `
-              <div class="w-full grid ${visibleSectionExecs.length > 1 ? 'lg:grid-cols-2' : 'grid-cols-1'} gap-8 items-start">
-                ${sectionBranchesHtml}
-              </div>
-            ` : ''}
+               <!-- 2. & 3. Section Execs and Divisions (Right) -->
+               ${visibleSectionExecs.length > 0 ? `
+                 <div class="w-full lg:w-[75%] flex flex-col relative gap-12 lg:gap-16">
+                     ${sectionBranchesHtml}
+                 </div>
+               ` : ''}
+
+            </div>
 
             ${orphanBranchHtml}
           </div>
@@ -3049,7 +3118,7 @@ function doPost(e) {
                   </div>
                 </div>
                 <button type="submit" class="w-full py-2.5 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-xs sm:text-sm">
-                  ส่งใบสมัครเรียนเข้าสู่ฐานข้อมูล
+                  ส่งใบสมัครเรียนเข้าสู่ฐานข้อมูลจริง
                 </button>
               </form>
 
@@ -3332,7 +3401,7 @@ function doPost(e) {
           bodyHtml: `
             <div class="space-y-4">
               <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-950 space-y-1">
-                <p class="font-heading font-bold">ระบบเชื่อมต่อฐานข้อมูล 100% (ตั้งค่าเพียงครั้งแรกครั้งเดียว)</p>
+                <p class="font-heading font-bold">ระบบเชื่อมต่อฐานข้อมูลจริง 100% (ตั้งค่าเพียงครั้งแรกครั้งเดียว)</p>
                 <p>วางลิงก์ Google Apps Script Web App (<code class="font-mono">https://script.google.com/macros/s/.../exec</code>) ด้านล่าง ระบบจะจดจำการเชื่อมต่อไว้ถาวรและสร้างชีตทั้ง 9 ตารางให้อัตโนมัติ</p>
               </div>
               <form onsubmit="connectGoogleSheetUrl(event, true)" class="space-y-3">
@@ -3341,7 +3410,7 @@ function doPost(e) {
                   <input type="url" name="sheetUrl" required placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm font-mono" />
                 </div>
                 <button type="submit" class="w-full py-3 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-sm">
-                  เชื่อมต่อและโหลดฐานข้อมูล
+                  เชื่อมต่อและโหลดฐานข้อมูลจริง
                 </button>
               </form>
               <div class="border-t border-slate-200 pt-3 flex items-center justify-between text-xs">
@@ -3903,7 +3972,7 @@ function doPost(e) {
                   <span class="inline-block px-2.5 py-0.5 rounded-full bg-royal-100 text-royal-900 font-heading font-bold text-[11px] mb-1">
                     ORGANIZATION TREE STRUCTURE EDITOR
                   </span>
-                  <h2 class="font-heading font-bold text-lg text-royal-950">จัดการโครงสร้างแผนภูมิ: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ</h2>
+                  <h2 class="font-heading font-bold text-lg text-royal-950">จัดการโครงสร้างแผนภูมิต้นไม้: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ</h2>
                   <p class="text-xs sm:text-sm text-slate-600">เพิ่ม (+) และแก้ไขตำแหน่งผู้บริหาร ผู้บริหารส่วนงาน ฝ่ายงานต่างๆ และกลุ่มงานภายในฝ่าย พร้อมจัดสายบังคับบัญชา</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
@@ -3968,7 +4037,7 @@ function doPost(e) {
                     <tr>
                       <th class="px-4 py-3 text-center w-16">ลำดับ</th>
                       <th class="px-4 py-3">ชื่อ-นามสกุล / ตำแหน่ง</th>
-                      <th class="px-4 py-3">สังกัดในแผนภูมิ</th>
+                      <th class="px-4 py-3">สังกัดในแผนภูมิต้นไม้</th>
                       <th class="px-4 py-3">โทรศัพท์</th>
                       <th class="px-4 py-3 text-right">การจัดการ</th>
                     </tr>
@@ -4080,7 +4149,7 @@ function doPost(e) {
             <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
               <div class="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <h2 class="font-heading font-bold text-lg text-royal-950">เชื่อมต่อฐานข้อมูล (Google Sheets + Google Drive)</h2>
+                  <h2 class="font-heading font-bold text-lg text-royal-950">เชื่อมต่อฐานข้อมูลจริง (Google Sheets + Google Drive)</h2>
                   <p class="text-xs sm:text-sm text-slate-600">ตั้งค่าเพียงครั้งแรกครั้งเดียว ระบบจะบันทึก URL และซิงค์ข้อมูลทั้งหมดอัตโนมัติ</p>
                 </div>
                 ${BackendState.isSheetConnected ? `
@@ -4100,7 +4169,7 @@ function doPost(e) {
                   class="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm font-mono"
                 />
                 <button type="submit" class="px-5 py-2.5 rounded-xl bg-royal-950 hover:bg-royal-800 text-white font-heading font-semibold text-xs sm:text-sm shrink-0">
-                  บันทึกและซิงค์ข้อมูล
+                  บันทึกและซิงค์ข้อมูลจริง
                 </button>
               </form>
 
@@ -4115,7 +4184,7 @@ function doPost(e) {
                 </button>
                 <button type="button" onclick="exportProductionHtmlFile()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gold-500 hover:bg-gold-400 text-royal-950 font-heading font-bold text-xs">
                   <i data-lucide="file-code" class="w-4 h-4"></i>
-                  <span>ดาวน์โหลด index.html ฉบับใช้งาน (ฝัง URL แล้ว)</span>
+                  <span>ดาวน์โหลด index.html ฉบับใช้งานจริง (ฝัง URL แล้ว)</span>
                 </button>
               </div>
             </div>
@@ -4606,7 +4675,7 @@ function doPost(e) {
 
       const parentSelectorHtml = unitType === 'division' ? `
         <div>
-          <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">อยู่ภายใต้ผู้บริหารส่วนงานใด (สำหรับจัดเรียงในแผนภูมิ)</label>
+          <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">อยู่ภายใต้ผู้บริหารส่วนงานใด (สำหรับจัดเรียงในแผนภูมิต้นไม้)</label>
           <select name="parentUnitId" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
             <option value="">-- ขึ้นตรงสำนักการศึกษา (ไม่สังกัดส่วนงานย่อย) --</option>
             ${sectionExecs.map(sec => `
@@ -4620,7 +4689,7 @@ function doPost(e) {
 
       openModal({
         badge: existing ? `แก้ไข${typeLabel}` : `เพิ่ม${typeLabel}ใหม่`,
-        title: existing ? `แก้ไขข้อมูล${typeLabel}: ${existing.name}` : `+ เพิ่ม${typeLabel}ในแผนภูมิ`,
+        title: existing ? `แก้ไขข้อมูล${typeLabel}: ${existing.name}` : `+ เพิ่ม${typeLabel}ในแผนภูมิต้นไม้`,
         icon: unitType === 'division' ? 'layers' : 'award',
         bodyHtml: `
           <form onsubmit="handleSaveOrgUnitForm(event, '${existing ? existing.id : ''}', '${unitType}')" class="space-y-3.5">
@@ -4699,7 +4768,7 @@ function doPost(e) {
       closeModal();
       await BackendAPI.syncOrgAndPersonnel();
       renderBackofficeModule('personnel');
-      showToast('บันทึกโครงสร้างแผนภูมิสำเร็จ', `อัปเดต "${name}" บนหน้าเว็บไซต์และ Google Sheets เรียบร้อยแล้ว`);
+      showToast('บันทึกโครงสร้างแผนภูมิต้นไม้สำเร็จ', `อัปเดต "${name}" บนหน้าเว็บไซต์และ Google Sheets เรียบร้อยแล้ว`);
     }
 
     async function handleDeleteOrgUnit(unitId) {
@@ -4710,7 +4779,7 @@ function doPost(e) {
       BackendAPI.logAudit('DELETE /api/v1/org-units/' + unitId, `ลบโครงสร้าง: ${removed.name}`, '200 OK');
       await BackendAPI.syncOrgAndPersonnel();
       renderBackofficeModule('personnel');
-      showToast('ลบโครงสร้างสำเร็จ', `ลบ "${removed.name}" ออกจากแผนภูมิแล้ว`);
+      showToast('ลบโครงสร้างสำเร็จ', `ลบ "${removed.name}" ออกจากแผนภูมิต้นไม้แล้ว`);
     }
 
     function openSubGroupEditorModal(divId, sgIndex) {
@@ -4805,7 +4874,7 @@ function doPost(e) {
 
       openModal({
         badge: existing ? 'แก้ไขข้อมูลบุคลากร' : 'เพิ่มบุคลากรใหม่ในทำเนียบ',
-        title: existing ? `แก้ไขข้อมูล: ${existing.name}` : '+ เพิ่มบุคลากรในแผนภูมิ',
+        title: existing ? `แก้ไขข้อมูล: ${existing.name}` : '+ เพิ่มบุคลากรในแผนภูมิต้นไม้',
         icon: 'user-plus',
         bodyHtml: `
           <form onsubmit="handleSavePersonnelForm(event, '${existing ? existing.id : ''}')" class="space-y-3">
@@ -4822,7 +4891,7 @@ function doPost(e) {
 
             <div class="grid sm:grid-cols-2 gap-3">
               <div>
-                <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">สังกัดในแผนภูมิ *</label>
+                <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">สังกัดในแผนภูมิต้นไม้ *</label>
                 <select name="unitId" id="personnel-unit-select" onchange="updateSubGroupOptionsForUnit(this.value, '')" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
                   ${unitOptionsHtml}
                 </select>
@@ -4951,7 +5020,7 @@ function doPost(e) {
       closeModal();
       await BackendAPI.syncOrgAndPersonnel();
       renderBackofficeModule('personnel');
-      showToast('บันทึกข้อมูลบุคลากรสำเร็จ', `อัปเดต "${name}" ในแผนภูมิเรียบร้อยแล้ว`);
+      showToast('บันทึกข้อมูลบุคลากรสำเร็จ', `อัปเดต "${name}" ในแผนภูมิต้นไม้เรียบร้อยแล้ว`);
     }
 
     async function handleDeletePersonnel(personId) {
@@ -5097,7 +5166,7 @@ function doPost(e) {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showToast('ส่งออกไฟล์ index.html สำเร็จ', 'ฝัง URL ฐานข้อมูลเรียบร้อย พร้อมอัปโหลดขึ้น GitHub Pages / Netlify / Vercel');
+      showToast('ส่งออกไฟล์ index.html สำเร็จ', 'ฝัง URL ฐานข้อมูลจริงเรียบร้อย พร้อมอัปโหลดขึ้น GitHub Pages / Netlify / Vercel');
     }
 
     function openStaffUserModal() {
