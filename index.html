@@ -6,8 +6,7 @@
   <title>สำนักการศึกษา เทศบาลนครพิษณุโลก | Bureau of Education, Phitsanulok City Municipality</title>
 
   <!-- Favicon -->
-  <link id="dynamic-favicon" rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' stroke='%23FBBF24' stroke-width='2' stroke-dasharray='3 2' fill='none'/%3E%3Cpath d='M32 7L36 16H28L32 7Z' fill='%23FBBF24'/%3E%3Cpath d='M26 17H38L40 27H24L26 17Z' fill='%23FDE68A'/%3E%3Crect x='23' y='28' width='18' height='7' rx='1.5' fill='%23F59E0B'/%3E%3Cpath d='M15 39C21 37 27 38 32 41C37 38 43 37 49 39V48C43 46 37 47 32 50C27 47 21 46 15 48V39Z' fill='%23FFFFFF' stroke='%23FBBF24' stroke-width='1.5'/%3E%3Cline x1='32' y1='41' x2='32' y2='50' stroke='%23581C87' stroke-width='1.5'/%3E%3Cpath d='M16 53C21 51 26 55 32 53C38 51 43 55 48 53' stroke='%2338BDF8' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M19 57C24 55 28 58 32 57C36 55 40 58 45 57' stroke='%23FBBF24' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E" type="image/svg+xml" />
-
+ <link rel="icon" type="image/png" href="https://img1.pic.in.th/images/logo2856b5a35c712c5ef.png" /> 
   <!-- Google Fonts: Prompt (Headings & UI) & Sarabun (Official Thai Document Body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -93,7 +92,7 @@
       <div class="flex flex-wrap items-center gap-3 sm:gap-4">
         <span class="inline-flex items-center gap-1.5 text-gold-300 font-heading font-medium">
           <span id="global-db-dot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-          <span id="global-db-status-label">เว็บไซต์ทางการหน่วยงานภาครัฐ (.go.th)</span>
+          <span id="global-db-status-label">เว็บไซต์ทางการหน่วยงานภาครัฐ</span>
         </span>
         <span class="hidden md:inline text-royal-200">|</span>
         <a href="#ita" onclick="switchToFrontend()" class="hidden sm:inline-flex items-center gap-1 text-royal-100 hover:text-gold-300 transition-colors">
@@ -298,7 +297,7 @@
     <div id="mobile-nav-drawer" class="hidden lg:hidden bg-white border-t border-slate-200 px-4 pt-3 pb-5 space-y-2 shadow-lg max-h-[82vh] overflow-y-auto">
       <a href="#top" onclick="closeMobileMenu(); switchToFrontend();" class="block px-4 py-2.5 rounded-xl font-heading font-medium text-slate-800 hover:bg-royal-50">หน้าแรก</a>
 
-      <!-- Mobile Accordion: เกี่ยวกับสำนัก -->
+      <!-- Mobile Accordion: เกี่ยวกับสำนักการศึกษา -->
       <div class="rounded-2xl bg-slate-50 border border-slate-200 overflow-hidden">
         <button type="button" onclick="toggleMobileAboutSubmenu()" class="w-full px-4 py-2.5 flex items-center justify-between font-heading font-semibold text-royal-950">
           <span>เกี่ยวกับสำนักการศึกษา</span>
@@ -511,7 +510,7 @@
               ทำเนียบบุคลากรและโครงสร้างส่วนราชการ สำนักการศึกษา
             </h2>
             <p class="text-slate-600 text-sm sm:text-base mt-1">
-              แผนภูมิต้นไม้แสดงสายบังคับบัญชา: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ และกลุ่มงานภายในฝ่าย
+              แผนภูมิแสดงสายบังคับบัญชา: ผู้บริหาร → ผู้บริหารส่วนงาน → ฝ่ายงานต่างๆ และกลุ่มงานภายในฝ่าย
             </p>
           </div>
 
@@ -1592,8 +1591,8 @@ function doPost(e) {
           defaultLogo.classList.add('hidden');
           container.className = "w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform relative";
           if (favicon) {
-            const svgFavicon = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><clipPath id="circleClip"><circle cx="32" cy="32" r="32" /></clipPath></defs><circle cx="32" cy="32" r="32" fill="#ffffff" /><image href="${SiteAppearance.logoUrl}" width="64" height="64" preserveAspectRatio="xMidYMid meet" clip-path="url(#circleClip)" /></svg>`)}`;
-            favicon.href = svgFavicon;
+            favicon.href = SiteAppearance.logoUrl;
+            favicon.removeAttribute('type');
           }
         } else {
           customLogo.src = '';
@@ -1601,7 +1600,10 @@ function doPost(e) {
           customLogo.classList.add('hidden');
           defaultLogo.classList.remove('hidden');
           container.className = "w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-royal-950 via-royal-800 to-royal-900 p-1.5 shadow-md border-2 border-gold-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden relative";
-          if (favicon) favicon.href = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' stroke='%23FBBF24' stroke-width='2' stroke-dasharray='3 2' fill='none'/%3E%3Cpath d='M32 7L36 16H28L32 7Z' fill='%23FBBF24'/%3E%3Cpath d='M26 17H38L40 27H24L26 17Z' fill='%23FDE68A'/%3E%3Crect x='23' y='28' width='18' height='7' rx='1.5' fill='%23F59E0B'/%3E%3Cpath d='M15 39C21 37 27 38 32 41C37 38 43 37 49 39V48C43 46 37 47 32 50C27 47 21 46 15 48V39Z' fill='%23FFFFFF' stroke='%23FBBF24' stroke-width='1.5'/%3E%3Cline x1='32' y1='41' x2='32' y2='50' stroke='%23581C87' stroke-width='1.5'/%3E%3Cpath d='M16 53C21 51 26 55 32 53C38 51 43 55 48 53' stroke='%2338BDF8' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M19 57C24 55 28 58 32 57C36 55 40 58 45 57' stroke='%23FBBF24' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E";
+          if (favicon) {
+            favicon.href = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' stroke='%23FBBF24' stroke-width='2' stroke-dasharray='3 2' fill='none'/%3E%3Cpath d='M32 7L36 16H28L32 7Z' fill='%23FBBF24'/%3E%3Cpath d='M26 17H38L40 27H24L26 17Z' fill='%23FDE68A'/%3E%3Crect x='23' y='28' width='18' height='7' rx='1.5' fill='%23F59E0B'/%3E%3Cpath d='M15 39C21 37 27 38 32 41C37 38 43 37 49 39V48C43 46 37 47 32 50C27 47 21 46 15 48V39Z' fill='%23FFFFFF' stroke='%23FBBF24' stroke-width='1.5'/%3E%3Cline x1='32' y1='41' x2='32' y2='50' stroke='%23581C87' stroke-width='1.5'/%3E%3Cpath d='M16 53C21 51 26 55 32 53C38 51 43 55 48 53' stroke='%2338BDF8' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M19 57C24 55 28 58 32 57C36 55 40 58 45 57' stroke='%23FBBF24' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E";
+            favicon.type = "image/svg+xml";
+          }
         }
       }
 
@@ -1715,9 +1717,9 @@ function doPost(e) {
             dot.classList.remove('bg-amber-400');
             dot.classList.add('bg-emerald-400');
           }
-          if (topLabel) topLabel.textContent = 'เชื่อมต่อฐานข้อมูลจริง Google Sheets & Drive แล้ว';
+          if (topLabel) topLabel.textContent = 'เชื่อมต่อฐานข้อมูลแล้ว';
           if (boBadge) {
-            boBadge.textContent = '● เชื่อมต่อฐานข้อมูลจริง Google Sheets & Drive แล้ว';
+            boBadge.textContent = '● เชื่อมต่อฐานข้อมูลแล้ว';
             boBadge.className = 'px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/50 text-emerald-200 font-heading text-[11px]';
           }
         } else {
@@ -3312,7 +3314,7 @@ function doPost(e) {
         return;
       }
 
-      if (!BackendState.isSheetConnected || !BackendState.sheetUrl) {
+      if (!BackendState.sheetUrl) {
         openModal({
           badge: 'ตั้งค่าครั้งแรกครั้งเดียว • เชื่อมต่อฐานข้อมูล Google Sheets',
           title: 'เชื่อมต่อ Google Apps Script Web App URL ของหน่วยงาน',
@@ -3348,11 +3350,16 @@ function doPost(e) {
     }
 
     function openStaffLoginModal() {
+      const dbStatusHtml = BackendState.isSheetConnected 
+        ? `<div class="p-3 mb-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4"></i><span>เชื่อมต่อฐานข้อมูลพร้อมใช้งาน</span></div>`
+        : `<div class="p-3 mb-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2"><i data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5"></i><div><span class="font-semibold">ไม่สามารถเชื่อมต่อฐานข้อมูลได้</span><p class="mt-0.5">หาก URL ผิดพลาด <button type="button" onclick="resetDatabaseConnection()" class="underline font-bold text-rose-900 hover:text-rose-700">คลิกที่นี่เพื่อตั้งค่า URL ใหม่</button></p></div></div>`;
+
       openModal({
         badge: 'ระบบยืนยันตัวตนเจ้าหน้าที่ (RBAC Authentication)',
         title: 'เข้าสู่ระบบบริหารจัดการหลังบ้าน สำนักการศึกษา',
         icon: 'lock',
         bodyHtml: `
+          ${dbStatusHtml}
           <form onsubmit="handleStaffLogin(event)" class="space-y-4">
             <div>
               <label class="block font-heading font-semibold text-xs text-royal-950 mb-1">อีเมลเจ้าหน้าที่ (@phsmun.go.th) *</label>
@@ -3368,6 +3375,14 @@ function doPost(e) {
           </form>
         `
       });
+    }
+
+    function resetDatabaseConnection() {
+      closeModal();
+      BackendState.sheetUrl = '';
+      localStorage.removeItem('phsmun_edu_sheet_url');
+      localStorage.removeItem('phsmun_edu_sheet_configured');
+      handleBackofficeEntry();
     }
 
     function handleStaffLogin(event) {
@@ -5410,6 +5425,7 @@ function doPost(e) {
       handleSaveFeedbackReply,
       connectGoogleSheetUrl,
       disconnectGoogleSheet,
+      resetDatabaseConnection,
       copyAppsScriptCode,
       downloadAppsScriptFile,
       exportProductionHtmlFile,
