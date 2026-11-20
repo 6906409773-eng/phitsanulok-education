@@ -134,13 +134,7 @@
        1. TOP BAR (Government Status & Login)
   ====================================================================== -->
   <div class="bg-royal-950 text-white border-b border-royal-800 text-xs sm:text-sm relative z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-between gap-2">
-      <div class="flex items-center gap-3">
-        <span class="inline-flex items-center gap-1.5 text-gold-300 font-heading font-medium">
-          <span id="global-db-dot" class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
-          <span id="global-db-status-label">Local Data (Mock)</span>
-        </span>
-      </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-end gap-2">
       <div class="flex items-center gap-2">
         <button type="button" id="btn-backoffice-toggle" onclick="handleBackofficeEntry()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-royal-950 font-heading font-bold text-xs shadow-sm transition-all">
           <i data-lucide="lock" class="w-3.5 h-3.5"></i>
@@ -204,22 +198,9 @@
        3. FRONT-END PUBLIC PORTAL
   ====================================================================== -->
   <main id="main-content" class="flex-grow">
-    
-    <!-- SECTION: SLIDER (Separate Section) -->
-    <section id="hero-slider-section" class="relative w-full h-[250px] sm:h-[400px] lg:h-[500px] bg-slate-900 overflow-hidden group border-b border-royal-900/50">
-      <img id="hero-bg-slider" src="https://placehold.co/1920x1080/4c1d95/2e1065?text=Phitsanulok+Education" class="w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-100" alt="Slider" />
-      <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none"></div>
-      
-      <!-- Slider Controls -->
-      <button onclick="prevSlide()" class="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-black/30 text-white hover:bg-black/60 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 backdrop-blur-sm"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
-      <button onclick="nextSlide()" class="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-black/30 text-white hover:bg-black/60 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 backdrop-blur-sm"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
-      
-      <!-- Slider Indicators -->
-      <div id="slider-indicators" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2"></div>
-    </section>
 
-    <!-- HERO SECTION -->
-    <section id="top" class="relative overflow-hidden bg-slate-900 text-white py-12 lg:py-20">
+    <!-- HERO SECTION (Welcome Text) -->
+    <section id="top" class="relative overflow-hidden bg-slate-900 text-white py-12 lg:py-20 border-b-4 border-gold-400">
       <div class="absolute inset-0 bg-gradient-to-r from-royal-950 to-slate-900 z-0"></div>
 
       <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 w-full animate-fade-up z-10">
@@ -228,10 +209,10 @@
             <i data-lucide="award" class="w-4 h-4"></i> ยกระดับการศึกษาท้องถิ่น
           </div>
           <h1 class="font-heading font-bold text-4xl sm:text-5xl lg:text-6xl leading-tight text-white drop-shadow-lg">
-            พัฒนาการศึกษา <br/>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-amber-500">เพื่ออนาคตเมืองสองแคว</span>
+            <span id="front-headline">พัฒนาการศึกษา</span> <br/>
+            <span id="front-subheadline" class="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-amber-500">เพื่ออนาคตเมืองสองแคว</span>
           </h1>
-          <p class="text-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl font-body">
+          <p id="front-description" class="text-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl font-body">
             ศูนย์กลางข้อมูล ข่าวสาร และบริการดิจิทัล สำนักการศึกษา เทศบาลนครพิษณุโลก มุ่งมั่นจัดการศึกษาอย่างมีคุณภาพ ทันสมัย บนพื้นฐานคุณธรรม
           </p>
           <div class="flex flex-wrap gap-4 pt-4">
@@ -251,21 +232,21 @@
               <div class="p-2 rounded-lg bg-white/10"><i data-lucide="school" class="w-5 h-5 text-gold-300"></i></div>
               <p class="font-heading text-sm text-slate-300">สถานศึกษาในสังกัด</p>
             </div>
-            <div class="font-heading font-bold text-3xl text-white"><span id="metric-total-schools">5</span> <span class="text-base text-slate-400 font-normal">แห่ง</span></div>
+            <div class="font-heading font-bold text-3xl text-white"><span id="metric-total-schools">0</span> <span class="text-base text-slate-400 font-normal">แห่ง</span></div>
           </div>
           <div class="glass-dark rounded-2xl p-5 border-l-4 border-l-blue-400">
             <div class="flex items-center gap-3 mb-2">
               <div class="p-2 rounded-lg bg-white/10"><i data-lucide="users" class="w-5 h-5 text-blue-300"></i></div>
               <p class="font-heading text-sm text-slate-300">นักเรียนรวม</p>
             </div>
-            <div class="font-heading font-bold text-3xl text-white"><span id="metric-total-students">4,250</span> <span class="text-base text-slate-400 font-normal">คน</span></div>
+            <div class="font-heading font-bold text-3xl text-white"><span id="metric-total-students">0</span> <span class="text-base text-slate-400 font-normal">คน</span></div>
           </div>
           <div class="glass-dark rounded-2xl p-5 border-l-4 border-l-emerald-400">
             <div class="flex items-center gap-3 mb-2">
               <div class="p-2 rounded-lg bg-white/10"><i data-lucide="graduation-cap" class="w-5 h-5 text-emerald-300"></i></div>
               <p class="font-heading text-sm text-slate-300">ครูและบุคลากร</p>
             </div>
-            <div class="font-heading font-bold text-3xl text-white"><span id="metric-total-teachers">280</span> <span class="text-base text-slate-400 font-normal">คน</span></div>
+            <div class="font-heading font-bold text-3xl text-white"><span id="metric-total-teachers">0</span> <span class="text-base text-slate-400 font-normal">คน</span></div>
           </div>
           <div class="glass-dark rounded-2xl p-5 border-l-4 border-l-rose-400 flex flex-col justify-between h-full">
             <div>
@@ -293,9 +274,26 @@
         </div>
       </div>
     </section>
+
+    <!-- SECTION: SLIDER (16:9 Aspect Ratio Before News) -->
+    <section id="slider-wrapper" class="pt-12 bg-white">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative w-full aspect-video bg-[#1a1a2e] overflow-hidden group rounded-2xl shadow-lg border border-slate-100 flex items-center justify-center">
+          <img id="hero-bg-slider" src="https://placehold.co/1920x1080/4c1d95/2e1065?text=Phitsanulok+Education" class="w-full h-full object-contain transition-opacity duration-700 ease-in-out opacity-100" alt="Slider" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#1a1a2e]/40 via-transparent to-transparent pointer-events-none"></div>
+          
+          <!-- Slider Controls -->
+          <button onclick="prevSlide()" class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-black/40 text-white hover:bg-black/70 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 backdrop-blur-sm"><i data-lucide="chevron-left" class="w-5 h-5 sm:w-6 sm:h-6"></i></button>
+          <button onclick="nextSlide()" class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-black/40 text-white hover:bg-black/70 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 backdrop-blur-sm"><i data-lucide="chevron-right" class="w-5 h-5 sm:w-6 sm:h-6"></i></button>
+          
+          <!-- Slider Indicators -->
+          <div id="slider-indicators" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2"></div>
+        </div>
+      </div>
+    </section>
     
     <!-- SECTION: NEWS -->
-    <section id="news" class="py-16 bg-white">
+    <section id="news" class="pt-12 pb-16 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4">
           <div>
@@ -331,7 +329,7 @@
               <tr>
                 <th class="p-4 w-16 text-center">ลำดับ</th>
                 <th class="p-4">ชื่อเอกสาร</th>
-                <th class="p-4 w-32">วันที่เผยแพร่</th>
+                <th class="p-4 w-32 whitespace-nowrap text-center">วันที่เผยแพร่</th>
                 <th class="p-4 w-24 text-center">ดาวน์โหลด</th>
               </tr>
             </thead>
@@ -543,9 +541,6 @@
         </div>
       </div>
       <div class="flex items-center gap-3">
-        <span id="db-badge" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-bold border border-rose-500/30">
-          <span class="w-2 h-2 rounded-full bg-rose-500"></span> Local Data
-        </span>
         <button type="button" onclick="logoutBackoffice()" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-600/80 hover:bg-rose-600 text-white text-xs sm:text-sm font-medium transition-colors" title="ออกจากระบบ">
           <i data-lucide="power" class="w-4 h-4"></i> <span class="hidden sm:inline">ออกจากระบบ</span>
         </button>
@@ -586,11 +581,11 @@
           <nav class="space-y-1">
             <button onclick="setBackofficeTab('admissions')" id="tab-admissions" data-perm="admissions" class="bo-tab flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-royal-50 hover:text-royal-700 text-left">
               <i data-lucide="file-check" class="w-4 h-4"></i> รายชื่อผู้สมัครเรียน
-              <span id="badge-adm-count" class="ml-auto bg-rose-500 text-white text-[10px] px-2 py-0.5 rounded-full">0</span>
+              <span id="badge-adm-count" class="ml-auto bg-rose-500 text-white text-[10px] px-2 py-0.5 rounded-full hidden">0</span>
             </button>
             <button onclick="setBackofficeTab('feedback')" id="tab-feedback" data-perm="feedback" class="bo-tab flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-royal-50 hover:text-royal-700 text-left">
               <i data-lucide="message-square" class="w-4 h-4"></i> เรื่องร้องเรียน
-              <span id="badge-fb-count" class="ml-auto bg-amber-500 text-white text-[10px] px-2 py-0.5 rounded-full">0</span>
+              <span id="badge-fb-count" class="ml-auto bg-amber-500 text-white text-[10px] px-2 py-0.5 rounded-full hidden">0</span>
             </button>
           </nav>
         </div>
@@ -601,11 +596,6 @@
               <i data-lucide="shield" class="w-4 h-4 text-royal-600"></i> กำหนดสิทธิ์ผู้ใช้งาน
             </button>
           </nav>
-        </div>
-        <div class="mt-auto p-4 border-t border-slate-100 bg-slate-50">
-          <button onclick="setBackofficeTab('database')" id="tab-database" data-perm="database" class="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-royal-100 hover:text-royal-800 text-left bg-white border shadow-sm">
-            <i data-lucide="database" class="w-4 h-4 text-emerald-600"></i> เชื่อมต่อ Supabase
-          </button>
         </div>
       </aside>
 
@@ -656,81 +646,32 @@
   </div>
 
   <!-- =====================================================================
-       6. JAVASCRIPT LOGIC (MOCK DATA + APP STATE + RENDERING)
+       6. JAVASCRIPT LOGIC (SUPABASE + APP STATE + RENDERING)
   ====================================================================== -->
   <script>
     // ============================================================================
     // การตั้งค่าการเชื่อมต่อฐานข้อมูล SUPABASE (ฝังในโค้ด)
     // ============================================================================
-    // ให้นำ Project URL และ Anon Key จาก Supabase ของคุณมาใส่ที่นี่
-    // ข้อมูลเหล่านี้สามารถเปิดเผยที่หน้าบ้านได้ (Anon Key ออกแบบมาสำหรับใช้งานฝั่ง Client)
     const SUPABASE_URL = 'https://mpvpglwnoatjkkyauqvv.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wdnBnbHdub2F0amtreWF1cXZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUwNTk1MjMsImV4cCI6MjExMDYzNTUyM30.7-ohUOOsmbE2hyLVqHcAKEQ8tyAeZWB8pQOEXgkHpn0';
     
     let supabaseClient = null;
     let isConnected = false;
 
-    // --- Initial Persistent Data (Default Fallback) ---
-    const DEFAULT_DB = {
-      sliders: [
-        { name: 'slider_hero_1.jpg', url: 'https://placehold.co/1920x1080/4c1d95/2e1065?text=Phitsanulok+Education+Slider+1' },
-        { name: 'slider_hero_2.jpg', url: 'https://placehold.co/1920x1080/0f172a/38bdf8?text=Phitsanulok+Education+Slider+2' }
-      ],
-      schools: [
-        { id: 's1', name: 'โรงเรียนเทศบาล 1 (วัดใหม่อภัยาราม)', categoryLabel: 'โรงเรียนสังกัดเทศบาล', levels: 'อนุบาล 1 - มัธยมศึกษาปีที่ 3', students: 850, teachers: 45, director: 'นายสมมติ นามสกุล', address: 'ต.ในเมือง อ.เมืองพิษณุโลก', phone: '055-123-111', coverUrl: 'https://placehold.co/600x400/4c1d95/ffffff?text=School+1' },
-        { id: 's2', name: 'โรงเรียนเทศบาล 2 (วัดคูหาสวรรค์)', categoryLabel: 'โรงเรียนสังกัดเทศบาล', levels: 'ประถมศึกษาปีที่ 1 - 6', students: 1200, teachers: 60, director: 'นางใจดี มีสุข', address: 'ต.ในเมือง อ.เมืองพิษณุโลก', phone: '055-123-222', coverUrl: 'https://placehold.co/600x400/581c87/ffffff?text=School+2' },
-        { id: 's3', name: 'โรงเรียนเทศบาล 3 (วัดสระแก้ว)', categoryLabel: 'โรงเรียนสังกัดเทศบาล', levels: 'อนุบาล 1 - 3', students: 950, teachers: 50, director: 'นายจริงใจ ใสสะอาด', address: 'ต.ในเมือง อ.เมืองพิษณุโลก', phone: '055-123-333', coverUrl: 'https://placehold.co/600x400/6b21a8/ffffff?text=School+3' },
-        { id: 's4', name: 'โรงเรียนเทศบาล 4 (ชุมชนวัดธรรมจักร)', categoryLabel: 'โรงเรียนสังกัดเทศบาล', levels: 'อนุบาล 1 - ประถมศึกษาปีที่ 6', students: 1100, teachers: 55, director: 'นางบุญรักษา ค่าควร', address: 'ต.ในเมือง อ.เมืองพิษณุโลก', phone: '055-123-444', coverUrl: 'https://placehold.co/600x400/7e22ce/ffffff?text=School+4' }
-      ],
-      news: [
-        { id: 'n1', title: 'ประกาศประกวดราคาจ้างก่อสร้างอาคารเรียน รร.เทศบาล 2', category: 'egp', categoryLabel: 'จัดซื้อจัดจ้าง e-GP', summary: 'เทศบาลนครพิษณุโลก มีความประสงค์จะประกวดราคาจ้างก่อสร้างอาคารเรียน 4 ชั้น...', date: '2023-11-20', imageUrl: 'https://placehold.co/600x400/b45309/ffffff?text=e-GP+Announce' },
-        { id: 'n2', title: 'กิจกรรมวันเด็กแห่งชาติ ประจำปี 2567 สวนชมน่าน', category: 'activity', categoryLabel: 'ข่าวกิจกรรม', summary: 'สำนักการศึกษา ขอเชิญเที่ยวงานวันเด็ก มีกิจกรรมซุ้มเกมและการแสดงมากมาย...', date: '2023-11-19', imageUrl: 'https://placehold.co/600x400/047857/ffffff?text=Children+Day' }
-      ],
-      personnel: [
-        { id: 'p0', name: 'นางเปรมฤดี ชามพูนท', position: 'นายกเทศมนตรีนครพิษณุโลก', level: 'นายกเทศมนตรี', levelCode: 0, photoUrl: 'https://placehold.co/400x400/fcd34d/92400e?text=Mayor', parentId: null },
-        { id: 'p01', name: 'นายบุญทรง แทนธานี', position: 'รองนายกเทศมนตรีนครพิษณุโลก', level: 'รองนายกเทศมนตรี', levelCode: 1, photoUrl: 'https://placehold.co/400x400/fef3c7/b45309?text=Deputy+Mayor', parentId: 'p0' },
-        { id: 'p1', name: 'นายสมชาย รักษ์เมือง', position: 'ผู้อำนวยการสำนักการศึกษา', level: 'ผู้บริหารระดับสูง', levelCode: 2, photoUrl: 'https://placehold.co/400x400/e9d5ff/4c1d95?text=Director', parentId: 'p01' },
-        { id: 'p2', name: 'นางสาววิไล เรียนดี', position: 'รองผู้อำนวยการสำนักการศึกษา', level: 'ผู้บริหารส่วน', levelCode: 3, photoUrl: 'https://placehold.co/400x400/f3e8ff/581c87?text=Deputy', parentId: 'p1' },
-        { id: 'p3', name: 'นายรักชาติ ชาญวิทย์', position: 'หัวหน้าฝ่ายส่งเสริมการศึกษา', level: 'ฝ่ายงาน', levelCode: 4, photoUrl: 'https://placehold.co/400x400/faf5ff/6b21a8?text=Head', parentId: 'p2' },
-        { id: 'p6', name: 'นายขยัน หมั่นเพียร', position: 'หัวหน้ากลุ่มงานสารสนเทศ', level: 'กลุ่มงาน', levelCode: 5, photoUrl: 'https://placehold.co/400x400/ffffff/7e22ce?text=Staff', parentId: 'p3' }
-      ],
-      documents: [
-        { id: 'd1', title: 'แบบฟอร์มขออนุญาตลาพักผ่อน', date: '2023-11-20', fileUrl: '#' },
-        { id: 'd2', title: 'คู่มือการปฏิบัติงานธุรการโรงเรียน', date: '2023-11-15', fileUrl: '#' }
-      ],
-      admissions: [],
-      feedback: [
-        { 
-          id: 'FB-256901', topic: 'ขอความอนุเคราะห์ปรับปรุงสนามเด็กเล่น รร.เทศบาล 1', category: 'อาคารสถานที่/สิ่งแวดล้อม', 
-          message: 'เครื่องเล่นบางส่วนเริ่มชำรุด อยากให้เจ้าหน้าที่เข้ามาตรวจสอบเพื่อความปลอดภัยของเด็กนักเรียนครับ', 
-          senderName: 'ผู้ปกครองนักเรียน ป.2', contact: '089-123-4567', status: 'กำลังดำเนินการ', 
-          reply: 'รับเรื่องเรียบร้อยแล้ว ฝ่ายส่งเสริมการศึกษาได้ประสานงานช่างเข้าตรวจสอบในสัปดาห์นี้ครับ', 
-          submittedAt: '2026-11-15 10:30',
-          thread: [
-            { sender: 'ประชาชน', text: 'เครื่องเล่นบางส่วนเริ่มชำรุด อยากให้เจ้าหน้าที่เข้ามาตรวจสอบเพื่อความปลอดภัยของเด็กนักเรียนครับ', time: '2026-11-15 10:30' },
-            { sender: 'เจ้าหน้าที่', text: 'รับเรื่องเรียบร้อยแล้ว ฝ่ายส่งเสริมการศึกษาได้ประสานงานช่างเข้าตรวจสอบในสัปดาห์นี้ครับ', time: '2026-11-16 09:00' }
-          ]
-        }
-      ],
-      staffUsers: [
-        { id: 'u1', name: 'ผู้ดูแลระบบสูงสุด (Super Admin)', username: 'admin', password: '123', role: 'SUPER_ADMIN', roleLabel: 'ผู้ดูแลระบบสูงสุด', permissions: ['sliders', 'news', 'documents', 'schools', 'personnel', 'admissions', 'feedback', 'users', 'database'], active: true },
-        { id: 'u2', name: 'เจ้าหน้าที่ประชาสัมพันธ์', username: 'pr_staff', password: '123', role: 'EDITOR', roleLabel: 'เจ้าหน้าที่ข้อมูล/ข่าวสาร', permissions: ['sliders', 'news', 'documents'], active: true },
-        { id: 'u3', name: 'เจ้าหน้าที่รับเรื่องร้องเรียน & รับสมัคร', username: 'service_staff', password: '123', role: 'SERVICE', roleLabel: 'เจ้าหน้าที่บริการประชาชน', permissions: ['admissions', 'feedback'], active: true }
-      ]
-    };
-
     // Load Data State
-    let DB = DEFAULT_DB;
+    let DB = {
+      sliders: [], schools: [], news: [], personnel: [], documents: [], admissions: [], feedback: [], staffUsers: [],
+      settings: {
+        headline: 'พัฒนาการศึกษา',
+        subHeadline: 'เพื่ออนาคตเมืองสองแคว',
+        description: 'ศูนย์กลางข้อมูล ข่าวสาร และบริการดิจิทัล สำนักการศึกษา เทศบาลนครพิษณุโลก มุ่งมั่นจัดการศึกษาอย่างมีคุณภาพ ทันสมัย บนพื้นฐานคุณธรรม'
+      }
+    };
     let currentStaffUser = JSON.parse(sessionStorage.getItem('phsmun_user')) || null;
 
-    function saveDB() {
-      // หากเชื่อมต่อ Supabase สำเร็จ ให้บันทึกขึ้น Cloud อย่างเดียว
+    async function saveDB() {
       if (isConnected && supabaseClient) {
-        supabaseClient.from('site_settings').upsert({ key: 'full_app_db', value: JSON.stringify(DB) })
-          .then(({error}) => { if(error) console.error("Supabase Save Error:", error); });
-      } else {
-        // Fallback กรณียังไม่ได้ใส่ Key (Mock Mode)
-        localStorage.setItem('phsmun_db', JSON.stringify(DB));
+        await supabaseClient.from('site_settings').upsert({ key: 'full_app_db', value: JSON.stringify(DB) });
       }
     }
 
@@ -738,13 +679,55 @@
     const escapeHtml = (str) => String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     const generateId = (prefix) => prefix + '-' + Math.random().toString(36).substr(2, 9);
     
-    // File to Base64 (For local persistence)
+    // Date Formatter (Thai Format Full)
+    function formatThaiDate(isoString) {
+      if (!isoString) return '-';
+      const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+      const date = new Date(isoString);
+      if (isNaN(date.getTime())) return isoString; // fallback
+      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear() + 543}`;
+    }
+
+    // Date Formatter (Short Thai Format - DD/MM/YYYY พ.ศ.)
+    function formatShortThaiDate(isoString) {
+      if (!isoString) return '-';
+      const date = new Date(isoString);
+      if (isNaN(date.getTime())) return isoString; // fallback
+      const d = String(date.getDate()).padStart(2, '0');
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const y = date.getFullYear() + 543;
+      return `${d}/${m}/${y}`;
+    }
+
+    // Base64 (For Image Fallback ONLY)
     const fileToBase64 = (file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result);
       reader.onerror = error => reject(error);
     });
+
+    // Supabase File Upload Handler
+    async function handleFileUpload(file) {
+      if (isConnected && supabaseClient) {
+        try {
+          const ext = file.name.split('.').pop();
+          const cleanName = file.name.replace(/[^a-zA-Z0-9.\-]/g, '');
+          const fileName = `${Date.now()}_${cleanName}`;
+          
+          const { data, error } = await supabaseClient.storage.from('public_files').upload(fileName, file);
+          if (error) throw error;
+          
+          const { data: urlData } = supabaseClient.storage.from('public_files').getPublicUrl(fileName);
+          return urlData.publicUrl;
+        } catch (err) {
+          console.warn("Storage upload failed, falling back to base64 if image", err);
+          return await fileToBase64(file);
+        }
+      } else {
+        return await fileToBase64(file);
+      }
+    }
 
     // --- Slider Logic ---
     let currentSlide = 0;
@@ -776,9 +759,9 @@
       }
 
       setTimeout(() => {
-        imgEl.src = DB.sliders[currentSlide].url || DB.sliders[currentSlide]; // safe fallback
+        imgEl.src = DB.sliders[currentSlide].url || DB.sliders[currentSlide];
         imgEl.style.opacity = 1;
-      }, 300); // sync with css transition
+      }, 300);
     }
 
     function nextSlide() { showSlide(currentSlide + 1); startSlideTimer(); }
@@ -787,28 +770,6 @@
     function startSlideTimer() {
       clearInterval(slideInterval);
       slideInterval = setInterval(() => nextSlide(), 6000);
-    }
-
-    function updateSupabaseUI() {
-        const badge = document.getElementById('db-badge');
-        const dot = document.getElementById('global-db-dot');
-        const label = document.getElementById('global-db-status-label');
-        
-        if (isConnected) {
-            if(badge) {
-                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Live DB Connected`;
-                badge.className = "hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-700 text-xs font-bold border border-emerald-500/30";
-            }
-            if(label) label.textContent = "เชื่อมต่อฐานข้อมูลออนไลน์แล้ว";
-            if(dot) { dot.classList.remove('bg-rose-500', 'animate-pulse'); dot.classList.add('bg-emerald-400'); }
-        } else {
-            if(badge) {
-                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span> Local Data`;
-                badge.className = "hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-bold border border-rose-500/30";
-            }
-            if(label) label.textContent = "Local Data (Mock)";
-            if(dot) { dot.classList.remove('bg-emerald-400'); dot.classList.add('bg-rose-500', 'animate-pulse'); }
-        }
     }
 
     function showToast(title, message, type = 'success') {
@@ -831,11 +792,7 @@
       
       lucide.createIcons();
       toast.classList.remove('hidden');
-      
-      // Animate in
       setTimeout(() => toast.classList.remove('translate-x-full'), 50);
-      
-      // Animate out
       setTimeout(() => {
         toast.classList.add('translate-x-full');
         setTimeout(() => toast.classList.add('hidden'), 300);
@@ -851,12 +808,10 @@
       const container = document.getElementById('modal-container');
       
       modal.classList.remove('hidden');
-      // Trigger animations
       setTimeout(() => {
         modal.classList.remove('opacity-0');
         container.classList.remove('scale-95');
       }, 10);
-      
       lucide.createIcons();
     }
 
@@ -875,6 +830,14 @@
 
     // --- Frontend Render Logic ---
     function renderFrontend() {
+      // Setup Settings (Headline)
+      if (!DB.settings) {
+        DB.settings = { headline: 'พัฒนาการศึกษา', subHeadline: 'เพื่ออนาคตเมืองสองแคว', description: 'ศูนย์กลางข้อมูล ข่าวสาร และบริการดิจิทัล สำนักการศึกษา เทศบาลนครพิษณุโลก มุ่งมั่นจัดการศึกษาอย่างมีคุณภาพ ทันสมัย บนพื้นฐานคุณธรรม' };
+      }
+      document.getElementById('front-headline').textContent = DB.settings.headline;
+      document.getElementById('front-subheadline').textContent = DB.settings.subHeadline;
+      document.getElementById('front-description').textContent = DB.settings.description;
+
       // Metrics
       document.getElementById('metric-total-schools').textContent = DB.schools.length;
       let totalStd = 0, totalTch = 0;
@@ -890,33 +853,30 @@
         document.getElementById('metric-fb-done').textContent = DB.feedback.filter(f => f.status === 'ดำเนินการเสร็จสิ้น').length.toLocaleString();
       }
 
-      // News Grid (Search & Limit 10)
       filterNewsFront(currentNewsCat);
 
-      // Documents List (Search & Limit 10)
       const dList = document.getElementById('front-documents-list');
       const docTerm = (document.getElementById('front-doc-search')?.value || '').toLowerCase();
       
       let filteredDocs = DB.documents;
       if (docTerm) filteredDocs = filteredDocs.filter(d => d.title.toLowerCase().includes(docTerm));
-      filteredDocs = filteredDocs.slice(0, 10); // Limit 10
+      filteredDocs = filteredDocs.slice(0, 10);
 
       if (dList) {
         dList.innerHTML = filteredDocs.length ? filteredDocs.map((d, index) => `
           <tr class="hover:bg-slate-50 transition-colors">
             <td class="p-4 text-center text-slate-400">${index + 1}</td>
             <td class="p-4 font-medium text-royal-950">${escapeHtml(d.title)}</td>
-            <td class="p-4 text-slate-500"><i data-lucide="calendar" class="w-3 h-3 inline mr-1"></i>${escapeHtml(d.date)}</td>
+            <td class="p-4 text-slate-500 text-center whitespace-nowrap"><i data-lucide="calendar" class="w-3 h-3 inline mr-1"></i>${formatThaiDate(d.date)}</td>
             <td class="p-4 text-center">
-              <a href="${escapeHtml(d.fileUrl)}" target="_blank" class="inline-flex p-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors shadow-sm" title="ดาวน์โหลด">
-                <i data-lucide="download" class="w-4 h-4"></i>
+              <a href="${escapeHtml(d.fileUrl)}" target="_blank" class="inline-flex p-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors shadow-sm" title="เปิด/ดาวน์โหลด">
+                <i data-lucide="external-link" class="w-4 h-4"></i>
               </a>
             </td>
           </tr>
         `).join('') : `<tr><td colspan="4" class="p-8 text-center text-slate-400">ไม่พบเอกสารที่ค้นหา</td></tr>`;
       }
 
-      // Schools Grid
       const sGrid = document.getElementById('front-schools-grid');
       sGrid.innerHTML = DB.schools.map(s => `
         <div class="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-shadow group flex flex-col">
@@ -936,14 +896,18 @@
               <div class="bg-royal-50/50 p-2 rounded-lg text-center"><p class="text-[10px] text-slate-500 uppercase">นักเรียน</p><p class="font-bold text-royal-700">${parseInt(s.students||0).toLocaleString()} คน</p></div>
               <div class="bg-gold-50/50 p-2 rounded-lg text-center"><p class="text-[10px] text-slate-500 uppercase">ครูบุคลากร</p><p class="font-bold text-gold-700">${parseInt(s.teachers||0).toLocaleString()} คน</p></div>
             </div>
+            ${s.externalLink ? `
+            <div class="mt-4 shrink-0 border-t border-slate-100 pt-4">
+              <a href="${escapeHtml(s.externalLink)}" target="_blank" class="flex items-center justify-center gap-1.5 w-full py-2 bg-royal-50 hover:bg-royal-100 text-royal-700 text-center rounded-xl text-xs font-bold transition-colors border border-royal-100">
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i> ดูรายละเอียดเพิ่มเติม
+              </a>
+            </div>
+            ` : ''}
           </div>
         </div>
       `).join('');
 
-      // Personnel Grid (Tree Structure)
       const pGrid = document.getElementById('front-personnel-grid');
-      
-      // Build Hierarchy Tree
       const buildHierarchy = (personnelList) => {
         const root = [];
         const map = {};
@@ -984,7 +948,6 @@
 
       const treeData = buildHierarchy(DB.personnel);
       pGrid.innerHTML = `<div class="org-tree w-full overflow-x-auto hide-scroll pb-10 flex justify-center">${generateTreeHtml(treeData)}</div>`;
-      
       lucide.createIcons();
     }
 
@@ -1005,11 +968,9 @@
       const grid = document.getElementById('front-news-grid');
       if (!grid) return;
       
-      // Filter category & Search
       let filtered = currentNewsCat === 'all' ? DB.news : DB.news.filter(n => n.category === currentNewsCat);
       if (term) filtered = filtered.filter(n => n.title.toLowerCase().includes(term) || n.summary.toLowerCase().includes(term));
       
-      // Limit to 10
       filtered = filtered.slice(0, 10);
       
       grid.innerHTML = filtered.length > 0 ? filtered.map(n => `
@@ -1019,13 +980,12 @@
             <div class="absolute top-3 left-3 px-2 py-1 rounded-md bg-white/90 backdrop-blur text-xs font-bold text-royal-800 shadow-sm">${escapeHtml(n.categoryLabel)}</div>
           </div>
           <div class="p-5 flex flex-col flex-grow">
-            <p class="text-xs text-slate-400 mb-2 flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${n.date}</p>
+            <p class="text-xs text-slate-400 mb-2 flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${formatThaiDate(n.date)}</p>
             <h3 class="font-heading font-bold text-royal-950 text-base mb-2 line-clamp-2 leading-snug group-hover:text-gold-600 transition-colors">${escapeHtml(n.title)}</h3>
             <p class="text-sm text-slate-500 line-clamp-2 mt-auto">${escapeHtml(n.summary)}</p>
           </div>
         </div>
       `).join('') : `<div class="col-span-full py-10 text-center text-slate-400">ไม่พบข่าวสารที่ค้นหา</div>`;
-      
       lucide.createIcons();
     }
 
@@ -1038,15 +998,22 @@
           <img src="${news.imageUrl}" class="w-full h-48 sm:h-72 object-cover rounded-xl mb-4 shadow-sm" onerror="this.src='https://placehold.co/600x400/cbd5e1/ffffff'" />
           <h2 class="font-heading font-bold text-2xl text-royal-950 mb-2">${escapeHtml(news.title)}</h2>
           <div class="flex items-center gap-4 text-xs text-slate-500 mb-6 border-b pb-4">
-            <span class="inline-flex items-center"><i data-lucide="calendar" class="w-4 h-4 mr-1"></i> ประกาศเมื่อ: ${escapeHtml(news.date)}</span>
+            <span class="inline-flex items-center"><i data-lucide="calendar" class="w-4 h-4 mr-1"></i> ประกาศเมื่อ: ${formatThaiDate(news.date)}</span>
           </div>
           <div class="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap">${escapeHtml(news.summary)}</div>
+          
+          ${news.externalLink ? `
+          <div class="mt-6 pt-4 border-t border-slate-100 text-center sm:text-left">
+            <a href="${escapeHtml(news.externalLink)}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-50 text-blue-700 rounded-xl text-sm font-bold hover:bg-blue-100 transition-colors shadow-sm">
+              <i data-lucide="external-link" class="w-4 h-4"></i> อ่านเพิ่มเติม / ดาวน์โหลดเอกสารแนบ
+            </a>
+          </div>` : ''}
         `,
         footerHtml: `<button type="button" onclick="closeModal()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-sm font-heading font-medium transition-colors">ปิดหน้าต่าง</button>`
       });
     }
 
-    // --- E-Services Forms (Frontend -> Backend) ---
+    // --- E-Services Forms ---
     function openAdmissionForm() {
       openModal({
         title: 'ฟอร์มรับสมัครเรียนออนไลน์',
@@ -1083,7 +1050,7 @@
       });
     }
 
-    function submitAdmission(e) {
+    async function submitAdmission(e) {
       e.preventDefault();
       const fd = new FormData(e.target);
       const newAd = {
@@ -1099,7 +1066,7 @@
       };
       
       DB.admissions.unshift(newAd);
-      saveDB(); // Save to localStorage
+      await saveDB();
       
       closeModal();
       showToast('ส่งใบสมัครสำเร็จ', 'ระบบได้รับข้อมูลของท่านแล้ว เจ้าหน้าที่จะดำเนินการตรวจสอบ');
@@ -1112,7 +1079,7 @@
         bodyHtml: `
           <div class="bg-amber-50 text-amber-800 text-xs p-3 rounded-xl mb-4 border border-amber-200 flex items-start gap-2">
             <i data-lucide="shield-alert" class="w-4 h-4 shrink-0 mt-0.5 text-amber-600"></i>
-            <p>ข้อมูลของท่านจะถูกเก็บรักษาเป็นความลับ และส่งตรงถึงผู้บริหารสำนักการศึกษา เทศบาลนครพิษณุโลก</p>
+            <p>ข้อมูลของท่านจะถูกเก็บรักษาเป็นความลับ และส่งตรงถึงผู้บริหารสำนักการศึกษา</p>
           </div>
           <form id="form-feedback" onsubmit="submitFeedback(event)" class="space-y-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1130,10 +1097,10 @@
                 <input type="text" name="topic" required class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="ระบุหัวข้อเรื่องโดยย่อ"/>
               </div>
             </div>
-            <div><label class="block text-xs font-bold mb-1">รายละเอียดเรื่องร้องเรียน / ข้อเสนอแนะ *</label><textarea name="message" rows="4" required class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="ระบุรายละเอียด สถานที่ วันเวลา เพื่อให้เจ้าหน้าที่ตรวจสอบได้อย่างรวดเร็ว..."></textarea></div>
+            <div><label class="block text-xs font-bold mb-1">รายละเอียดเรื่องร้องเรียน / ข้อเสนอแนะ *</label><textarea name="message" rows="4" required class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="ระบุรายละเอียด..."></textarea></div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div><label class="block text-xs font-bold mb-1">ชื่อ-นามสกุล ผู้แจ้ง (ไม่บังคับ)</label><input type="text" name="senderName" class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="ระบุหรือไม่ก็ได้ (ปกปิดชื่อ)"/></div>
-              <div><label class="block text-xs font-bold mb-1">เบอร์โทรศัพท์ / อีเมลติดต่อ *</label><input type="text" name="contact" required class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="สำหรับเจ้าหน้าที่แจ้งผลกลับ"/></div>
+              <div><label class="block text-xs font-bold mb-1">ชื่อ-นามสกุล ผู้แจ้ง (ไม่บังคับ)</label><input type="text" name="senderName" class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="ปกปิดชื่อได้"/></div>
+              <div><label class="block text-xs font-bold mb-1">เบอร์โทรศัพท์ / อีเมลติดต่อ *</label><input type="text" name="contact" required class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="สำหรับเจ้าหน้าที่แจ้งผล"/></div>
             </div>
             <button type="submit" class="w-full mt-4 py-3 bg-gradient-to-r from-blue-700 to-indigo-600 text-white rounded-xl font-heading font-bold shadow-lg hover:shadow-xl transition-all">ส่งเรื่องร้องเรียน / ข้อเสนอแนะ</button>
           </form>
@@ -1142,7 +1109,7 @@
       });
     }
 
-    function submitFeedback(e) {
+    async function submitFeedback(e) {
       e.preventDefault();
       const fd = new FormData(e.target);
       const refCode = 'FB-' + Math.floor(100000 + Math.random() * 900000);
@@ -1160,7 +1127,7 @@
         submittedAt: submittedTime
       };
       DB.feedback.unshift(newFb);
-      saveDB();
+      await saveDB();
       updateBackofficeBadges();
       renderFrontend();
       
@@ -1171,8 +1138,8 @@
             <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
               <i data-lucide="check-circle-2" class="w-10 h-10"></i>
             </div>
-            <h4 class="font-heading font-bold text-xl text-royal-950">ระบบได้รับข้อมูลของท่านเรียบร้อยแล้ว</h4>
-            <p class="text-sm text-slate-600">กรุณาบันทึกรหัสอ้างอิงด้านล่างเพื่อใช้ติดตามสถานะการดำเนินการ</p>
+            <h4 class="font-heading font-bold text-xl text-royal-950">ระบบได้รับข้อมูลเรียบร้อยแล้ว</h4>
+            <p class="text-sm text-slate-600">กรุณาบันทึกรหัสอ้างอิงเพื่อใช้ติดตามสถานะ</p>
             <div class="p-4 bg-slate-100 rounded-2xl border border-slate-200 inline-block">
               <span class="text-xs text-slate-500 block">รหัสติดตามเรื่อง (Tracking ID)</span>
               <span class="font-mono font-bold text-2xl text-royal-800 tracking-wider">${refCode}</span>
@@ -1189,11 +1156,11 @@
         bodyHtml: `
           <div class="space-y-4">
             <div class="flex gap-2">
-              <input type="text" id="track-fb-input" placeholder="กรอกรหัสติดตามเรื่อง เช่น FB-256901" class="flex-grow p-2.5 border rounded-xl bg-white text-sm font-mono uppercase"/>
+              <input type="text" id="track-fb-input" placeholder="กรอกรหัสติดตามเรื่อง เช่น FB-123456" class="flex-grow p-2.5 border rounded-xl bg-white text-sm font-mono uppercase"/>
               <button type="button" onclick="searchFeedbackStatus()" class="px-5 py-2.5 bg-royal-900 text-white rounded-xl font-heading font-bold text-sm hover:bg-royal-800">ค้นหา</button>
             </div>
             <div id="track-fb-result" class="pt-2">
-              <p class="text-xs text-slate-400 text-center py-6">ระบุรหัสอ้างอิงที่ได้รับตอนส่งเรื่องเพื่อตรวจสอบความคืบหน้า</p>
+              <p class="text-xs text-slate-400 text-center py-6">ระบุรหัสอ้างอิงที่ได้รับเพื่อตรวจสอบความคืบหน้า</p>
             </div>
           </div>
         `,
@@ -1207,7 +1174,7 @@
       const item = DB.feedback.find(f => f.id.toUpperCase() === code);
       
       if (!item) {
-        resBox.innerHTML = `<div class="p-4 bg-rose-50 text-rose-700 rounded-xl text-sm text-center border border-rose-100">ไม่พบข้อมูลรหัสอ้างอิง <strong>${escapeHtml(code)}</strong> กรุณาตรวจสอบอีกครั้ง</div>`;
+        resBox.innerHTML = `<div class="p-4 bg-rose-50 text-rose-700 rounded-xl text-sm text-center border border-rose-100">ไม่พบข้อมูลรหัส <strong>${escapeHtml(code)}</strong></div>`;
         return;
       }
 
@@ -1220,13 +1187,13 @@
 
       let threadHtml = (item.thread || []).map(t => {
          if(t.sender === 'เจ้าหน้าที่') {
-           return `<div class="bg-royal-50 p-3 rounded-xl border border-royal-100 mb-2 ml-4 relative">
-             <p class="text-[10px] font-bold text-royal-800 mb-1 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> ตอบกลับโดยเจ้าหน้าที่ <span class="text-slate-400 font-normal ml-auto">${t.time}</span></p>
+           return `<div class="bg-royal-50 p-3 rounded-xl border border-royal-100 mb-2 ml-4">
+             <p class="text-[10px] font-bold text-royal-800 mb-1">ตอบกลับโดยเจ้าหน้าที่ <span class="text-slate-400 font-normal ml-2">${t.time}</span></p>
              <p class="text-sm text-slate-700 whitespace-pre-wrap">${escapeHtml(t.text)}</p>
            </div>`;
          } else {
-           return `<div class="bg-slate-50 p-3 rounded-xl border border-slate-100 mb-2 mr-4 relative">
-             <p class="text-[10px] font-bold text-slate-500 mb-1 flex items-center gap-1.5"><i data-lucide="user" class="w-3.5 h-3.5"></i> ข้อความจากผู้ร้องเรียน <span class="text-slate-400 font-normal ml-auto">${t.time}</span></p>
+           return `<div class="bg-slate-50 p-3 rounded-xl border border-slate-100 mb-2 mr-4">
+             <p class="text-[10px] font-bold text-slate-500 mb-1">ข้อความจากผู้ร้องเรียน <span class="text-slate-400 font-normal ml-2">${t.time}</span></p>
              <p class="text-sm text-slate-700 whitespace-pre-wrap">${escapeHtml(t.text)}</p>
            </div>`;
          }
@@ -1234,65 +1201,52 @@
 
       resBox.innerHTML = `
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm max-h-[60vh] overflow-y-auto flex flex-col">
-          <div class="flex items-center justify-between border-b pb-3 shrink-0 mb-3">
+          <div class="flex items-center justify-between border-b pb-3 mb-3 shrink-0">
             <span class="font-mono font-bold text-royal-800">${escapeHtml(item.id)}</span>
             <span class="px-3 py-1 rounded-full text-xs font-bold border ${badgeClass}">${escapeHtml(item.status)}</span>
           </div>
           <div class="shrink-0 mb-2">
-            <p class="text-[10px] text-slate-400">หัวข้อเรื่อง (${escapeHtml(item.category || 'ทั่วไป')})</p>
+            <p class="text-[10px] text-slate-400">หัวข้อเรื่อง</p>
             <p class="font-heading font-bold text-slate-800 text-sm">${escapeHtml(item.topic)}</p>
           </div>
-          
           <div class="flex-grow space-y-1 mb-4 border-t pt-4 border-slate-100">
              ${threadHtml}
           </div>
-
           ${item.status !== 'ดำเนินการเสร็จสิ้น' ? `
           <div class="mt-4 pt-4 border-t border-slate-100 shrink-0">
-             <label class="block text-[10px] font-bold text-slate-500 mb-2">ส่งข้อความเพิ่มเติม / สอบถามความคืบหน้า</label>
+             <label class="block text-[10px] font-bold text-slate-500 mb-2">ส่งข้อความเพิ่มเติม</label>
              <div class="flex gap-2">
-               <textarea id="citizen-reply-text" rows="2" class="flex-grow p-2.5 border rounded-xl bg-slate-50 text-sm focus:border-royal-500 focus:bg-white outline-none transition-colors" placeholder="พิมพ์ข้อความ..."></textarea>
-               <button type="button" onclick="submitCitizenReply('${item.id}')" class="px-4 py-2 bg-royal-900 text-white rounded-xl font-heading font-bold text-sm hover:bg-royal-800 self-end whitespace-nowrap inline-flex items-center gap-1 shadow-md transition-all"><i data-lucide="send" class="w-4 h-4"></i> ส่ง</button>
+               <textarea id="citizen-reply-text" rows="2" class="flex-grow p-2.5 border rounded-xl bg-slate-50 text-sm focus:border-royal-500 focus:bg-white outline-none" placeholder="พิมพ์ข้อความ..."></textarea>
+               <button type="button" onclick="submitCitizenReply('${item.id}')" class="px-4 py-2 bg-royal-900 text-white rounded-xl font-bold text-sm shadow-md">ส่ง</button>
              </div>
-          </div>` : `<div class="mt-4 pt-3 border-t border-slate-100 shrink-0 text-center text-xs text-slate-400"><i data-lucide="check-circle" class="w-4 h-4 inline mr-1"></i>เรื่องร้องเรียนนี้ดำเนินการเสร็จสิ้นและปิดรับข้อความแล้ว</div>`}
+          </div>` : `<div class="mt-4 pt-3 border-t border-slate-100 text-center text-xs text-slate-400">ปิดรับข้อความแล้ว</div>`}
         </div>
       `;
-      lucide.createIcons();
     }
 
-    function submitCitizenReply(id) {
-       const input = document.getElementById('citizen-reply-text');
-       const text = (input?.value || '').trim();
+    async function submitCitizenReply(id) {
+       const text = (document.getElementById('citizen-reply-text')?.value || '').trim();
        if(!text) return;
 
        const idx = DB.feedback.findIndex(f => f.id === id);
        if(idx > -1) {
-          DB.feedback[idx].thread.push({
-             sender: 'ประชาชน',
-             text: text,
-             time: new Date().toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' })
-          });
-          saveDB();
-          searchFeedbackStatus(); // Re-render the chat window
-          showToast('ส่งข้อความสำเร็จ', 'ส่งข้อความเพิ่มเติมไปยังเจ้าหน้าที่แล้ว');
+          DB.feedback[idx].thread.push({ sender: 'ประชาชน', text: text, time: new Date().toLocaleString('th-TH') });
+          await saveDB();
+          searchFeedbackStatus(); 
+          showToast('ส่งข้อความสำเร็จ', 'ส่งข้อความไปยังเจ้าหน้าที่แล้ว');
        }
     }
 
-    // --- Floating Social & Agency Pop-up ---
+    // --- Floating Pop-up ---
     function toggleSocialPopup() {
       const panel = document.getElementById('social-popup-panel');
       if (panel.classList.contains('hidden')) {
         panel.classList.remove('hidden');
-        setTimeout(() => {
-          panel.classList.remove('scale-95', 'opacity-0');
-        }, 10);
+        setTimeout(() => panel.classList.remove('scale-95', 'opacity-0'), 10);
       } else {
         panel.classList.add('scale-95', 'opacity-0');
-        setTimeout(() => {
-          panel.classList.add('hidden');
-        }, 250);
+        setTimeout(() => panel.classList.add('hidden'), 250);
       }
-      lucide.createIcons();
     }
 
     // --- Back-Office Auth & Permission Logic ---
@@ -1301,7 +1255,6 @@
         enterBackofficeWorkspace();
         return;
       }
-
       openModal({
         title: 'เข้าสู่ระบบหลังบ้าน (สำหรับเจ้าหน้าที่)',
         bodyHtml: `
@@ -1314,7 +1267,7 @@
               <label class="block text-xs font-bold mb-1">รหัสผ่าน (Password) *</label>
               <input type="password" name="password" required class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="••••••" />
             </div>
-            <button type="submit" class="w-full mt-2 py-3 bg-gradient-to-r from-royal-900 to-royal-700 text-white rounded-xl font-heading font-bold shadow-lg hover:shadow-xl transition-all">เข้าสู่ระบบ</button>
+            <button type="submit" class="w-full mt-2 py-3 bg-gradient-to-r from-royal-900 to-royal-700 text-white rounded-xl font-heading font-bold shadow-lg">เข้าสู่ระบบ</button>
           </form>
         `,
         footerHtml: ''
@@ -1333,7 +1286,7 @@
         return;
       }
       if (!user.active) {
-        showToast('บัญชีถูกระงับ', 'บัญชีผู้ใช้งานนี้ถูกปิดการใช้งาน กรุณาติดต่อผู้ดูแลระบบ', 'error');
+        showToast('บัญชีถูกระงับ', 'บัญชีถูกปิดการใช้งาน กรุณาติดต่อผู้ดูแลระบบ', 'error');
         return;
       }
 
@@ -1374,7 +1327,6 @@
           el.classList.add('hidden');
         }
       });
-
       const secSection = document.getElementById('admin-security-section');
       if (currentStaffUser.role === 'SUPER_ADMIN' || perms.includes('users')) {
         secSection.classList.remove('hidden');
@@ -1401,34 +1353,22 @@
       const pCount = DB.admissions.filter(a => a.status === 'รอตรวจสอบ').length;
       const b = document.getElementById('badge-adm-count');
       if (b) {
-        if(pCount > 0) {
-          b.textContent = pCount;
-          b.classList.remove('hidden');
-        } else {
-          b.classList.add('hidden');
-        }
+        if(pCount > 0) { b.textContent = pCount; b.classList.remove('hidden'); } 
+        else { b.classList.add('hidden'); }
       }
-
       const fbCount = DB.feedback.filter(f => f.status === 'รอตรวจสอบ').length;
       const fbBadge = document.getElementById('badge-fb-count');
       if (fbBadge) {
-        if(fbCount > 0) {
-          fbBadge.textContent = fbCount;
-          fbBadge.classList.remove('hidden');
-        } else {
-          fbBadge.classList.add('hidden');
-        }
+        if(fbCount > 0) { fbBadge.textContent = fbCount; fbBadge.classList.remove('hidden'); } 
+        else { fbBadge.classList.add('hidden'); }
       }
     }
 
     function setBackofficeTab(tab) {
-      // Check permission before rendering tab
       if (tab !== 'dashboard' && !hasPermission(tab)) {
         showToast('ไม่มีสิทธิ์เข้าถึง', 'บัญชีของท่านไม่ได้รับอนุญาตให้เข้าถึงเมนูนี้', 'error');
         return;
       }
-
-      // Update UI active state
       document.querySelectorAll('.bo-tab').forEach(el => {
         el.classList.remove('bg-royal-50', 'text-royal-700', 'border-r-4', 'border-royal-600');
       });
@@ -1441,11 +1381,12 @@
       const title = document.getElementById('bo-page-title');
       const sub = document.getElementById('bo-page-subtitle');
       const actions = document.getElementById('bo-page-actions');
-      
-      actions.innerHTML = ''; // reset
+      actions.innerHTML = ''; 
 
       if (tab === 'dashboard') {
         title.textContent = 'Dashboard ภาพรวม'; sub.textContent = 'สถิติข้อมูลภายในระบบ';
+        actions.innerHTML = `<button onclick="editSiteSettingsModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm"><i data-lucide="edit-3" class="w-4 h-4"></i> แก้ไขข้อความต้อนรับหน้าเว็บ</button>`;
+
         content.innerHTML = `
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">สถานศึกษาทั้งหมด</p><p class="text-2xl font-bold font-heading text-royal-900 mt-1">${DB.schools.length}</p></div>
@@ -1457,7 +1398,6 @@
             <canvas id="dashboardChart"></canvas>
           </div>
         `;
-        // Init Chart.js
         setTimeout(() => {
           const ctx = document.getElementById('dashboardChart');
           if(ctx) {
@@ -1476,8 +1416,8 @@
         }, 100);
       } 
       else if (tab === 'sliders') {
-        title.textContent = 'จัดการภาพสไลด์ (Hero Section)'; sub.textContent = 'รูปภาพที่จะหมุนเวียนแสดงที่ส่วนบนสุดของเว็บไซต์';
-        actions.innerHTML = `<button onclick="editSliderModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold shadow-sm flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่มภาพสไลด์</button>`;
+        title.textContent = 'จัดการภาพสไลด์'; sub.textContent = 'รูปภาพที่จะหมุนเวียนแสดง (อัตราส่วน 16:9 แนะนำ)';
+        actions.innerHTML = `<button onclick="editSliderModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่มภาพสไลด์</button>`;
         
         let rows = DB.sliders.map((s, index) => `
           <tr class="border-b hover:bg-slate-50">
@@ -1489,50 +1429,47 @@
             </td>
           </tr>
         `).join('');
-
         content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4 text-center">ลำดับ</th><th class="p-4">รูปภาพ</th><th class="p-4">ชื่อภาพ</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="text-center p-8 text-slate-400">ไม่มีข้อมูล</td></tr>'}</tbody></table></div>`;
       }
       else if (tab === 'documents') {
-        title.textContent = 'เอกสารราชการ'; sub.textContent = 'อัปโหลดและจัดการเอกสารสำหรับให้ประชาชนดาวน์โหลด';
-        actions.innerHTML = `<button onclick="editDocumentModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold shadow-sm flex items-center gap-2"><i data-lucide="upload" class="w-4 h-4"></i> อัปโหลดเอกสาร</button>`;
+        title.textContent = 'เอกสารราชการ'; sub.textContent = 'อัปโหลดหรือแปะลิงก์เอกสารสำหรับให้ประชาชนดาวน์โหลด';
+        actions.innerHTML = `<button onclick="editDocumentModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2"><i data-lucide="upload" class="w-4 h-4"></i> เพิ่มเอกสาร</button>`;
         
         let rows = DB.documents.map(d => `
           <tr class="border-b hover:bg-slate-50">
             <td class="p-3"><i data-lucide="file-text" class="w-6 h-6 text-slate-400"></i></td>
             <td class="p-3 font-bold text-sm text-royal-950">${escapeHtml(d.title)}</td>
-            <td class="p-3 text-sm text-slate-500">${escapeHtml(d.date)}</td>
+            <td class="p-3 text-sm text-slate-500">${formatShortThaiDate(d.date)}</td>
             <td class="p-3 text-right whitespace-nowrap">
-              <button onclick="editDocumentModal('${d.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg" title="แก้ไข"><i data-lucide="edit" class="w-4 h-4"></i></button>
-              <button onclick="deleteRecord('documents', '${d.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg" title="ลบ"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+              <button onclick="editDocumentModal('${d.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg"><i data-lucide="edit" class="w-4 h-4"></i></button>
+              <button onclick="deleteRecord('documents', '${d.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </td>
           </tr>
         `).join('');
-
-        content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4 w-16">ชนิด</th><th class="p-4">ชื่อเอกสาร</th><th class="p-4">วันที่ลง</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="text-center p-8 text-slate-400">ไม่มีข้อมูลเอกสาร</td></tr>'}</tbody></table></div>`;
+        content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4 w-16">ชนิด</th><th class="p-4">ชื่อเอกสาร</th><th class="p-4">วันที่เผยแพร่</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="text-center p-8 text-slate-400">ไม่มีข้อมูลเอกสาร</td></tr>'}</tbody></table></div>`;
       }
       else if (tab === 'news') {
         title.textContent = 'จัดการข่าวสาร'; sub.textContent = 'เพิ่ม ลบ แก้ไข ข่าวและประกาศ';
-        actions.innerHTML = `<button onclick="editNewsModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold shadow-sm flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่มข่าวใหม่</button>`;
+        actions.innerHTML = `<button onclick="editNewsModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่มข่าวใหม่</button>`;
         
         let rows = DB.news.map(n => `
           <tr class="border-b hover:bg-slate-50">
             <td class="p-3"><img src="${n.imageUrl}" class="w-16 h-10 object-cover rounded bg-slate-200"/></td>
             <td class="p-3">
               <p class="font-bold text-sm text-royal-950 line-clamp-1">${escapeHtml(n.title)}</p>
-              <p class="text-xs text-slate-500">${escapeHtml(n.categoryLabel)} | ${n.date}</p>
+              <p class="text-xs text-slate-500">${escapeHtml(n.categoryLabel)} | ${formatShortThaiDate(n.date)}</p>
             </td>
             <td class="p-3 text-right whitespace-nowrap">
-              <button onclick="editNewsModal('${n.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg" title="แก้ไข"><i data-lucide="edit" class="w-4 h-4"></i></button>
-              <button onclick="deleteRecord('news', '${n.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg" title="ลบ"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+              <button onclick="editNewsModal('${n.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg"><i data-lucide="edit" class="w-4 h-4"></i></button>
+              <button onclick="deleteRecord('news', '${n.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </td>
           </tr>
         `).join('');
-
         content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4 w-24">ภาพปก</th><th class="p-4">หัวข้อข่าว</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="3" class="text-center p-8 text-slate-400">ไม่มีข้อมูล</td></tr>'}</tbody></table></div>`;
       }
       else if (tab === 'schools') {
         title.textContent = 'ข้อมูลสถานศึกษา'; sub.textContent = 'จัดการรายชื่อโรงเรียนและศูนย์เด็กเล็ก';
-        actions.innerHTML = `<button onclick="editSchoolModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold shadow-sm flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่มสถานศึกษา</button>`;
+        actions.innerHTML = `<button onclick="editSchoolModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่มสถานศึกษา</button>`;
         
         let rows = DB.schools.map(s => `
           <tr class="border-b hover:bg-slate-50">
@@ -1544,21 +1481,18 @@
             <td class="p-3 text-center text-sm">${(s.students||0).toLocaleString()}</td>
             <td class="p-3 text-center text-sm">${(s.teachers||0).toLocaleString()}</td>
             <td class="p-3 text-right whitespace-nowrap">
-              <button onclick="editSchoolModal('${s.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg" title="แก้ไข"><i data-lucide="edit" class="w-4 h-4"></i></button>
-              <button onclick="deleteRecord('schools', '${s.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg" title="ลบ"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+              <button onclick="editSchoolModal('${s.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg"><i data-lucide="edit" class="w-4 h-4"></i></button>
+              <button onclick="deleteRecord('schools', '${s.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </td>
           </tr>
         `).join('');
-
         content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4 w-20">ภาพ</th><th class="p-4">ชื่อสถานศึกษา</th><th class="p-4 text-center">นร. (คน)</th><th class="p-4 text-center">ครู (คน)</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="text-center p-8 text-slate-400">ไม่มีข้อมูล</td></tr>'}</tbody></table></div>`;
       }
       else if (tab === 'personnel') {
         title.textContent = 'ทำเนียบบุคลากร'; sub.textContent = 'จัดการข้อมูลผู้บริหารและเจ้าหน้าที่ระดับต่างๆ';
-        actions.innerHTML = `<button onclick="editPersonnelModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold shadow-sm flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่มบุคลากร</button>`;
+        actions.innerHTML = `<button onclick="editPersonnelModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่มบุคลากร</button>`;
         
-        // Sort by levelCode
         let sortedPersonnel = [...DB.personnel].sort((a,b) => a.levelCode - b.levelCode);
-        
         let rows = sortedPersonnel.map(p => `
           <tr class="border-b hover:bg-slate-50">
             <td class="p-3"><img src="${p.photoUrl || 'https://placehold.co/400x400/94a3b8/ffffff'}" class="w-10 h-10 object-cover rounded-full bg-slate-200 border"/></td>
@@ -1566,16 +1500,15 @@
             <td class="p-3 text-sm text-slate-600">${escapeHtml(p.position)}</td>
             <td class="p-3"><span class="px-2 py-1 rounded bg-slate-100 text-slate-600 text-[10px] font-bold border">${escapeHtml(p.level)}</span></td>
             <td class="p-3 text-right whitespace-nowrap">
-              <button onclick="editPersonnelModal('${p.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg" title="แก้ไข"><i data-lucide="edit" class="w-4 h-4"></i></button>
-              <button onclick="deleteRecord('personnel', '${p.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg" title="ลบ"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+              <button onclick="editPersonnelModal('${p.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg"><i data-lucide="edit" class="w-4 h-4"></i></button>
+              <button onclick="deleteRecord('personnel', '${p.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </td>
           </tr>
         `).join('');
-
         content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4 w-16">รูป</th><th class="p-4">ชื่อ-สกุล</th><th class="p-4">ตำแหน่ง</th><th class="p-4">ระดับชั้น</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="text-center p-8 text-slate-400">ไม่มีข้อมูล</td></tr>'}</tbody></table></div>`;
       }
       else if (tab === 'admissions') {
-        title.textContent = 'รายชื่อผู้สมัครเรียนออนไลน์'; sub.textContent = 'ตรวจสอบและอัปเดตสถานะการสมัคร';
+        title.textContent = 'รายชื่อผู้สมัครเรียนออนไลน์';
         let rows = DB.admissions.map(a => `
           <tr class="border-b hover:bg-slate-50">
             <td class="p-3 text-sm"><p class="font-bold">${escapeHtml(a.studentName)}</p><p class="text-xs text-slate-500">ปชช. ${escapeHtml(a.citizenId)} | ผู้ปกครอง: ${escapeHtml(a.parentName)} (${escapeHtml(a.parentPhone)})</p></td>
@@ -1590,7 +1523,7 @@
         content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-x-auto"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4">ชื่อนักเรียน</th><th class="p-4">ระดับชั้น</th><th class="p-4">โรงเรียนที่สมัคร</th><th class="p-4">สถานะ</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="text-center p-8 text-slate-400">ยังไม่มีผู้สมัคร</td></tr>'}</tbody></table></div>`;
       }
       else if (tab === 'feedback') {
-        title.textContent = 'ระบบจัดการเรื่องร้องเรียน / ข้อเสนอแนะ'; sub.textContent = 'ตรวจสอบเรื่องร้องเรียน อัปเดตสถานะ และตอบกลับประชาชน';
+        title.textContent = 'ระบบจัดการเรื่องร้องเรียน / ข้อเสนอแนะ';
         let rows = DB.feedback.map(f => {
           const badgeColor = f.status === 'ดำเนินการเสร็จสิ้น' ? 'bg-emerald-100 text-emerald-700' : (f.status === 'กำลังดำเนินการ' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700');
           return `
@@ -1604,7 +1537,7 @@
               <td class="p-3 text-xs text-slate-600">${escapeHtml(f.senderName)}<br/><span class="text-slate-400">${escapeHtml(f.contact)}</span></td>
               <td class="p-3"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${badgeColor}">${escapeHtml(f.status)}</span></td>
               <td class="p-3 text-right whitespace-nowrap">
-                <button onclick="manageFeedbackModal('${f.id}')" class="px-3 py-1.5 bg-royal-900 hover:bg-royal-800 text-white rounded-lg text-xs font-bold inline-flex items-center gap-1"><i data-lucide="message-square-reply" class="w-3.5 h-3.5"></i> ตอบกลับ/จัดการ</button>
+                <button onclick="manageFeedbackModal('${f.id}')" class="px-3 py-1.5 bg-royal-900 hover:bg-royal-800 text-white rounded-lg text-xs font-bold inline-flex items-center gap-1"><i data-lucide="message-square-reply" class="w-3.5 h-3.5"></i> ตอบกลับ</button>
                 <button onclick="deleteRecord('feedback', '${f.id}')" class="text-rose-500 hover:bg-rose-50 p-1.5 rounded-lg ml-1" title="ลบ"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
               </td>
             </tr>
@@ -1613,71 +1546,61 @@
         content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-x-auto"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4">รหัสอ้างอิง</th><th class="p-4">หัวข้อเรื่องร้องเรียน</th><th class="p-4">ผู้แจ้ง / ติดต่อ</th><th class="p-4">สถานะ</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="text-center p-8 text-slate-400">ยังไม่มีเรื่องร้องเรียน</td></tr>'}</tbody></table></div>`;
       }
       else if (tab === 'users') {
-        title.textContent = 'กำหนดสิทธิ์เข้าใช้งานหลังบ้าน'; sub.textContent = 'เพิ่มผู้ใช้งาน กำหนดบทบาท และเลือกเมนูที่อนุญาตให้เข้าถึง';
-        actions.innerHTML = `<button onclick="editStaffUserModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold shadow-sm flex items-center gap-2"><i data-lucide="user-plus" class="w-4 h-4"></i> เพิ่มผู้ใช้งานใหม่</button>`;
-        
+        title.textContent = 'กำหนดสิทธิ์เข้าใช้งานหลังบ้าน';
+        actions.innerHTML = `<button onclick="editStaffUserModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2"><i data-lucide="user-plus" class="w-4 h-4"></i> เพิ่มผู้ใช้งาน</button>`;
         const permNames = {
           sliders: 'สไลด์', news: 'ข่าวสาร', documents: 'เอกสาร', schools: 'สถานศึกษา',
           personnel: 'บุคลากร', admissions: 'รับสมัครเรียน', feedback: 'เรื่องร้องเรียน',
-          users: 'กำหนดสิทธิ์', database: 'ฐานข้อมูล'
+          users: 'กำหนดสิทธิ์'
         };
-
         let rows = DB.staffUsers.map(u => {
-          const permBadges = u.role === 'SUPER_ADMIN'
-            ? `<span class="px-2 py-0.5 rounded bg-royal-100 text-royal-800 text-[10px] font-bold">เข้าถึงได้ทุกเมนู (Full Access)</span>`
+          const permBadges = u.role === 'SUPER_ADMIN' ? `<span class="px-2 py-0.5 rounded bg-royal-100 text-royal-800 text-[10px] font-bold">Full Access</span>`
             : (u.permissions || []).map(p => `<span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] border">${permNames[p] || p}</span>`).join(' ');
-
           return `
             <tr class="border-b hover:bg-slate-50">
-              <td class="p-3">
-                <p class="font-bold text-sm text-royal-950">${escapeHtml(u.name)}</p>
-                <p class="text-xs text-slate-500 font-mono">Username: <strong>${escapeHtml(u.username)}</strong></p>
-              </td>
+              <td class="p-3"><p class="font-bold text-sm text-royal-950">${escapeHtml(u.name)}</p><p class="text-xs text-slate-500 font-mono">Username: <strong>${escapeHtml(u.username)}</strong></p></td>
               <td class="p-3"><span class="px-2.5 py-1 rounded-lg bg-gold-50 text-gold-800 border border-gold-200 text-xs font-bold">${escapeHtml(u.roleLabel)}</span></td>
               <td class="p-3"><div class="flex flex-wrap gap-1 max-w-xs">${permBadges}</div></td>
-              <td class="p-3">
-                <span class="px-2 py-1 rounded-full text-xs font-bold ${u.active ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">${u.active ? 'เปิดใช้งาน' : 'ระงับสิทธิ์'}</span>
-              </td>
+              <td class="p-3"><span class="px-2 py-1 rounded-full text-xs font-bold ${u.active ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">${u.active ? 'เปิดใช้งาน' : 'ระงับสิทธิ์'}</span></td>
               <td class="p-3 text-right whitespace-nowrap">
-                <button onclick="editStaffUserModal('${u.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg" title="แก้ไขสิทธิ์"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                ${u.username !== 'admin' ? `<button onclick="deleteStaffUser('${u.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg" title="ลบผู้ใช้"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+                <button onclick="editStaffUserModal('${u.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                ${u.username !== 'admin' ? `<button onclick="deleteStaffUser('${u.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
               </td>
             </tr>
           `;
         }).join('');
-
-        content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-x-auto"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4">ชื่อเจ้าหน้าที่ / บัญชี</th><th class="p-4">บทบาท (Role)</th><th class="p-4">สิทธิ์การเข้าถึงเมนู</th><th class="p-4">สถานะ</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+        content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-x-auto"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4">บัญชี</th><th class="p-4">บทบาท (Role)</th><th class="p-4">สิทธิ์เข้าถึง</th><th class="p-4">สถานะ</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows}</tbody></table></div>`;
       }
-      else if (tab === 'database') {
-        title.textContent = 'สถานะการเชื่อมต่อฐานข้อมูล (Supabase)'; sub.textContent = 'ตรวจสอบการเชื่อมต่อกับ Cloud Database';
-        content.innerHTML = `
-          <div class="bg-white rounded-2xl border shadow-sm p-6 max-w-xl">
-            <div class="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
-              <div class="w-12 h-12 rounded-full ${isConnected ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'} flex items-center justify-center shrink-0">
-                <i data-lucide="${isConnected ? 'check-circle' : 'x-circle'}" class="w-6 h-6"></i>
-              </div>
-              <div>
-                <h3 class="font-bold text-lg text-slate-800">${isConnected ? 'เชื่อมต่อฐานข้อมูลสำเร็จ' : 'ยังไม่ได้เชื่อมต่อฐานข้อมูล'}</h3>
-                <p class="text-sm text-slate-500">${isConnected ? 'ระบบกำลังใช้งานข้อมูลจริงจาก Supabase' : 'ระบบกำลังใช้งาน Mock Data ในเครื่อง (Local Storage)'}</p>
-              </div>
-            </div>
-            
-            <p class="text-sm text-slate-600 mb-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
-              <strong>ข้อควรทราบ:</strong> การตั้งค่า <code>URL</code> และ <code>Anon Key</code> ถูกฝังไว้ในโค้ด (Hardcoded) ของหน้าเว็บไซต์แล้ว หากต้องการเปลี่ยนฐานข้อมูล กรุณาแก้ไขตัวแปร <code class="text-royal-600">SUPABASE_URL</code> ในไฟล์ <code class="text-royal-600">index.html</code>
-            </p>
-            
-            ${!isConnected ? `
-            <button onclick="retryConnection()" class="w-full py-3 bg-royal-900 hover:bg-royal-800 text-white rounded-xl font-bold transition-colors shadow-md">
-              <i data-lucide="refresh-cw" class="w-4 h-4 inline mr-2"></i> ลองเชื่อมต่อใหม่อีกครั้ง
-            </button>` : ''}
-          </div>
-        `;
-      }
-      else {
-        content.innerHTML = `<div class="p-8 text-center text-slate-400">กำลังพัฒนาระบบส่วนนี้</div>`;
-      }
-
       lucide.createIcons();
+    }
+
+    // Modal Forms for Settings
+    function editSiteSettingsModal() {
+      openModal({
+        title: 'แก้ไขข้อความต้อนรับ (หน้าแรก)',
+        bodyHtml: `
+          <form id="form-settings" onsubmit="saveSiteSettings(event)" class="space-y-4">
+            <div><label class="block text-xs font-bold mb-1">หัวข้อหลัก (สีขาว) *</label><input type="text" name="headline" required class="w-full p-2.5 border rounded-xl bg-white" value="${escapeHtml(DB.settings.headline)}"/></div>
+            <div><label class="block text-xs font-bold mb-1">ข้อความเน้น (สีทอง) *</label><input type="text" name="subHeadline" required class="w-full p-2.5 border rounded-xl bg-white" value="${escapeHtml(DB.settings.subHeadline)}"/></div>
+            <div><label class="block text-xs font-bold mb-1">รายละเอียดบรรทัดล่าง *</label><textarea name="description" rows="3" required class="w-full p-2.5 border rounded-xl bg-white">${escapeHtml(DB.settings.description)}</textarea></div>
+            <button type="submit" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
+          </form>
+        `,
+        footerHtml: ''
+      });
+    }
+
+    async function saveSiteSettings(e) {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      DB.settings.headline = fd.get('headline');
+      DB.settings.subHeadline = fd.get('subHeadline');
+      DB.settings.description = fd.get('description');
+      
+      await saveDB();
+      closeModal();
+      showToast('บันทึกสำเร็จ', 'อัปเดตข้อความต้อนรับเรียบร้อยแล้ว');
+      renderFrontend();
     }
 
     // Modal Forms for CRUD
@@ -1699,12 +1622,19 @@
               <div><label class="block text-xs font-bold mb-1">วันที่ประกาศ *</label><input type="date" name="date" required class="w-full p-2.5 border rounded-xl bg-white" value="${item ? item.date : new Date().toISOString().split('T')[0]}"/></div>
             </div>
             <div><label class="block text-xs font-bold mb-1">รายละเอียดแบบย่อ/เนื้อหาข่าว *</label><textarea name="summary" rows="4" required class="w-full p-2.5 border rounded-xl bg-white">${item ? escapeHtml(item.summary) : ''}</textarea></div>
+            
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+              <p class="text-xs font-bold text-royal-800">เอกสารแนบ / อ่านเพิ่มเติม</p>
+              <div><label class="block text-[10px] font-bold mb-1 text-slate-500">ใส่ลิงก์ภายนอก (Google Drive, โพสต์ Facebook)</label><input type="url" name="externalLink" class="w-full p-2 border rounded-xl bg-white" placeholder="https://..." value="${item && item.externalLink ? item.externalLink : ''}"/></div>
+              <div class="text-center text-[10px] text-slate-400 font-bold">--- หรือ ---</div>
+              <div><label class="block text-[10px] font-bold mb-1 text-slate-500">อัปโหลดไฟล์เอกสารแนบ (PDF, Word) ในระบบ</label><input type="file" id="news-doc-file" accept=".pdf,.doc,.docx" class="w-full p-2 border rounded-xl bg-white text-sm"/></div>
+            </div>
+
             <div>
               <label class="block text-xs font-bold mb-1">${item ? 'เปลี่ยนภาพปก (ปล่อยว่างหากใช้ภาพเดิม)' : 'อัปโหลดภาพปก'}</label>
-              <input type="file" id="news-file" accept="image/*,.pdf" class="w-full p-2 border rounded-xl bg-white text-sm"/>
-              <p class="text-[10px] text-slate-400 mt-1">ขนาดไม่เกิน 5MB</p>
+              <input type="file" id="news-file" accept="image/*" class="w-full p-2 border rounded-xl bg-white text-sm"/>
             </div>
-            <button type="submit" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
+            <button type="submit" id="btn-save-news" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
           </form>
         `,
         footerHtml: ''
@@ -1713,15 +1643,20 @@
 
     async function saveNews(e, editId) {
       e.preventDefault();
+      const btn = document.getElementById('btn-save-news');
+      btn.innerText = 'กำลังอัปโหลด...'; btn.disabled = true;
+
       const fd = new FormData(e.target);
       const cat = fd.get('category');
       
-      let fileData = editId ? DB.news.find(x => x.id === editId).imageUrl : `https://placehold.co/600x400/${cat === 'activity'?'059669':'b45309'}/ffffff?text=New+Post`;
-      const fileInput = document.getElementById('news-file');
-      
-      if(fileInput.files.length > 0) {
-        try { fileData = await fileToBase64(fileInput.files[0]); } catch(err) { console.error(err); }
-      }
+      let coverData = editId ? DB.news.find(x => x.id === editId).imageUrl : `https://placehold.co/600x400/${cat === 'activity'?'059669':'b45309'}/ffffff?text=New+Post`;
+      let finalExternalLink = fd.get('externalLink');
+
+      const coverInput = document.getElementById('news-file');
+      if(coverInput.files.length > 0) coverData = await handleFileUpload(coverInput.files[0]);
+
+      const docInput = document.getElementById('news-doc-file');
+      if(docInput.files.length > 0) finalExternalLink = await handleFileUpload(docInput.files[0]);
 
       if (editId) {
         const idx = DB.news.findIndex(x => x.id === editId);
@@ -1731,97 +1666,40 @@
           DB.news[idx].categoryLabel = cat === 'activity' ? 'ข่าวกิจกรรม' : 'จัดซื้อจัดจ้าง e-GP';
           DB.news[idx].summary = fd.get('summary');
           DB.news[idx].date = fd.get('date');
-          DB.news[idx].imageUrl = fileData;
+          DB.news[idx].imageUrl = coverData;
+          DB.news[idx].externalLink = finalExternalLink;
         }
       } else {
-        const newRec = {
-          id: generateId('news'),
-          title: fd.get('title'),
-          category: cat,
-          categoryLabel: cat === 'activity' ? 'ข่าวกิจกรรม' : 'จัดซื้อจัดจ้าง e-GP',
-          summary: fd.get('summary'),
-          date: fd.get('date'),
-          imageUrl: fileData
-        };
-        DB.news.unshift(newRec); // Prepend locally
+        DB.news.unshift({
+          id: generateId('news'), title: fd.get('title'), category: cat, categoryLabel: cat === 'activity' ? 'ข่าวกิจกรรม' : 'จัดซื้อจัดจ้าง e-GP',
+          summary: fd.get('summary'), date: fd.get('date'), imageUrl: coverData, externalLink: finalExternalLink
+        });
       }
       
-      saveDB();
+      await saveDB();
       closeModal();
       setBackofficeTab('news');
       showToast('บันทึกสำเร็จ', editId ? 'อัปเดตข่าวสารเรียบร้อย' : 'เพิ่มข่าวสารลงในระบบแล้ว');
-    }
-
-    // Modal Form for Sliders
-    function editSliderModal() {
-      openModal({
-        title: 'เพิ่มภาพสไลด์',
-        bodyHtml: `
-          <form id="form-slider" onsubmit="saveSlider(event)" class="space-y-4">
-            <div class="bg-blue-50 text-blue-800 text-xs p-3 rounded-xl mb-2 flex gap-2">
-              <i data-lucide="info" class="w-4 h-4 shrink-0"></i>
-              <p>รองรับการอัปโหลดไฟล์ภาพ หรือ วาง URL รูปภาพ (แนะนำขนาด 1920x1080 px)</p>
-            </div>
-            <div><label class="block text-xs font-bold mb-1">เลือกไฟล์ภาพจากเครื่อง</label><input type="file" id="slider-file" accept="image/*" class="w-full p-2 border rounded-xl bg-white text-sm"/></div>
-            <div class="text-center text-xs text-slate-400 font-bold">--- หรือ ---</div>
-            <div><label class="block text-xs font-bold mb-1">URL รูปภาพ</label><input type="url" name="imageUrl" class="w-full p-2.5 border rounded-xl bg-white" placeholder="https://..."/></div>
-            <button type="submit" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">เพิ่มภาพสไลด์</button>
-          </form>
-        `,
-        footerHtml: ''
-      });
-    }
-
-    async function saveSlider(e) {
-      e.preventDefault();
-      const fd = new FormData(e.target);
-      let finalUrl = fd.get('imageUrl');
-      let finalName = 'ภาพสไลด์จาก URL';
-      
-      const fileInput = document.getElementById('slider-file');
-      if (fileInput.files.length > 0) {
-        try { 
-          finalUrl = await fileToBase64(fileInput.files[0]); 
-          finalName = fileInput.files[0].name;
-        } catch(err) { console.error(err); }
-      }
-      
-      if(finalUrl) {
-        DB.sliders.push({ name: finalName, url: finalUrl });
-        saveDB();
-        closeModal();
-        setBackofficeTab('sliders');
-        showToast('บันทึกสำเร็จ', 'เพิ่มภาพสไลด์แล้ว');
-        initHeroSlider(); // Refresh frontend
-      } else {
-        showToast('ข้อผิดพลาด', 'กรุณาเลือกไฟล์หรือระบุ URL', 'error');
-      }
-    }
-
-    function deleteSlider(index) {
-      if(confirm('ยืนยันการลบภาพสไลด์นี้?')) {
-        DB.sliders.splice(index, 1);
-        saveDB();
-        setBackofficeTab('sliders');
-        showToast('ลบสำเร็จ', 'ลบภาพสไลด์แล้ว');
-        initHeroSlider();
-      }
     }
 
     // Modal Form for Documents
     function editDocumentModal(id = null) {
       const item = id ? DB.documents.find(x => x.id === id) : null;
       openModal({
-        title: item ? 'แก้ไขเอกสารราชการ' : 'อัปโหลดเอกสารราชการ',
+        title: item ? 'แก้ไขเอกสารราชการ' : 'เพิ่มเอกสารราชการ',
         bodyHtml: `
           <form id="form-document" onsubmit="saveDocument(event, '${id || ''}')" class="space-y-4">
             <div><label class="block text-xs font-bold mb-1">ชื่อเอกสาร *</label><input type="text" name="title" required class="w-full p-2.5 border rounded-xl bg-white" placeholder="เช่น แบบฟอร์มขออนุญาต..." value="${item ? escapeHtml(item.title) : ''}"/></div>
             <div><label class="block text-xs font-bold mb-1">วันที่เผยแพร่ *</label><input type="date" name="date" required class="w-full p-2.5 border rounded-xl bg-white" value="${item ? item.date : new Date().toISOString().split('T')[0]}"/></div>
-            <div>
-              <label class="block text-xs font-bold mb-1">${item ? 'เปลี่ยนไฟล์เอกสาร (PDF, DOCX) - ปล่อยว่างหากใช้ไฟล์เดิม' : 'ไฟล์เอกสาร (PDF, DOCX) *'}</label>
-              <input type="file" id="doc-file" accept=".pdf,.doc,.docx" ${item ? '' : 'required'} class="w-full p-2 border rounded-xl bg-white text-sm" />
+            
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+              <p class="text-xs font-bold text-royal-800">แหล่งที่มาของไฟล์</p>
+              <div><label class="block text-[10px] font-bold mb-1 text-slate-500">ลิงก์ภายนอก (เช่น Google Drive)</label><input type="url" name="externalLink" class="w-full p-2 border rounded-xl bg-white" placeholder="https://..." value="${item?.externalLink || ''}"/></div>
+              <div class="text-center text-[10px] text-slate-400 font-bold">--- หรือ ---</div>
+              <div><label class="block text-[10px] font-bold mb-1 text-slate-500">อัปโหลดไฟล์เข้าระบบ (PDF, Word)</label><input type="file" id="doc-file" accept=".pdf,.doc,.docx" class="w-full p-2 border rounded-xl bg-white text-sm" /></div>
             </div>
-            <button type="submit" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
+
+            <button type="submit" id="btn-save-doc" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
           </form>
         `,
         footerHtml: ''
@@ -1830,12 +1708,26 @@
 
     async function saveDocument(e, editId) {
       e.preventDefault();
+      const btn = document.getElementById('btn-save-doc');
+      btn.innerText = 'กำลังอัปโหลด...'; btn.disabled = true;
+
       const fd = new FormData(e.target);
-      
-      let fileData = editId ? DB.documents.find(x => x.id === editId).fileUrl : '#';
+      const extLink = fd.get('externalLink');
       const fileInput = document.getElementById('doc-file');
+      
+      let finalUrl = editId ? DB.documents.find(x => x.id === editId).fileUrl : '';
+      let finalExtLink = editId ? DB.documents.find(x => x.id === editId).externalLink : '';
+
       if (fileInput.files.length > 0) {
-        try { fileData = await fileToBase64(fileInput.files[0]); } catch(err) { console.error(err); }
+        finalUrl = await handleFileUpload(fileInput.files[0]);
+        finalExtLink = ''; // Priority on file upload
+      } else if (extLink) {
+        finalUrl = extLink;
+        finalExtLink = extLink;
+      } else if (!editId) {
+        showToast('ข้อผิดพลาด', 'กรุณาระบุลิงก์หรืออัปโหลดไฟล์', 'error');
+        btn.innerText = 'บันทึกข้อมูล'; btn.disabled = false;
+        return;
       }
       
       if(editId) {
@@ -1843,22 +1735,73 @@
         if(idx > -1) {
            DB.documents[idx].title = fd.get('title');
            DB.documents[idx].date = fd.get('date');
-           DB.documents[idx].fileUrl = fileData;
+           DB.documents[idx].fileUrl = finalUrl;
+           DB.documents[idx].externalLink = finalExtLink;
         }
       } else {
-        const newRec = {
-          id: generateId('doc'),
-          title: fd.get('title'),
-          date: fd.get('date'),
-          fileUrl: fileData
-        };
-        DB.documents.unshift(newRec); // Prepend locally
+        DB.documents.unshift({
+          id: generateId('doc'), title: fd.get('title'), date: fd.get('date'), fileUrl: finalUrl, externalLink: finalExtLink
+        });
       }
       
-      saveDB();
+      await saveDB();
       closeModal();
       setBackofficeTab('documents');
-      showToast('บันทึกสำเร็จ', editId ? 'แก้ไขข้อมูลเอกสารเรียบร้อย' : 'อัปโหลดเอกสารราชการเรียบร้อย');
+      showToast('บันทึกสำเร็จ', editId ? 'แก้ไขข้อมูลเอกสารเรียบร้อย' : 'เพิ่มเอกสารราชการเรียบร้อย');
+    }
+
+    // Modal Form for Sliders
+    function editSliderModal() {
+      openModal({
+        title: 'เพิ่มภาพสไลด์',
+        bodyHtml: `
+          <form id="form-slider" onsubmit="saveSlider(event)" class="space-y-4">
+            <div><label class="block text-xs font-bold mb-1">เลือกไฟล์ภาพจากเครื่อง</label><input type="file" id="slider-file" accept="image/*" class="w-full p-2 border rounded-xl bg-white text-sm"/></div>
+            <div class="text-center text-xs text-slate-400 font-bold">--- หรือ ---</div>
+            <div><label class="block text-xs font-bold mb-1">URL รูปภาพ</label><input type="url" name="imageUrl" class="w-full p-2.5 border rounded-xl bg-white" placeholder="https://..."/></div>
+            <button type="submit" id="btn-save-slider" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">เพิ่มภาพสไลด์</button>
+          </form>
+        `,
+        footerHtml: ''
+      });
+    }
+
+    async function saveSlider(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-save-slider');
+      btn.innerText = 'กำลังอัปโหลด...'; btn.disabled = true;
+
+      const fd = new FormData(e.target);
+      let finalUrl = fd.get('imageUrl');
+      let finalName = 'ภาพสไลด์จาก URL';
+      
+      const fileInput = document.getElementById('slider-file');
+      if (fileInput.files.length > 0) {
+        finalUrl = await handleFileUpload(fileInput.files[0]);
+        finalName = fileInput.files[0].name;
+      }
+      
+      if(finalUrl) {
+        DB.sliders.push({ name: finalName, url: finalUrl });
+        await saveDB();
+        closeModal();
+        setBackofficeTab('sliders');
+        showToast('บันทึกสำเร็จ', 'เพิ่มภาพสไลด์แล้ว');
+        initHeroSlider();
+      } else {
+        showToast('ข้อผิดพลาด', 'กรุณาเลือกไฟล์หรือระบุ URL', 'error');
+        btn.innerText = 'เพิ่มภาพสไลด์'; btn.disabled = false;
+      }
+    }
+
+    async function deleteSlider(index) {
+      if(confirm('ยืนยันการลบภาพสไลด์นี้?')) {
+        DB.sliders.splice(index, 1);
+        await saveDB();
+        setBackofficeTab('sliders');
+        showToast('ลบสำเร็จ', 'ลบภาพสไลด์แล้ว');
+        initHeroSlider();
+      }
     }
 
     // Modal Form for Schools
@@ -1871,17 +1814,25 @@
             <div><label class="block text-xs font-bold mb-1">ชื่อสถานศึกษา *</label><input type="text" name="name" required class="w-full p-2.5 border rounded-xl bg-white" placeholder="เช่น โรงเรียนเทศบาล 1..." value="${item ? escapeHtml(item.name) : ''}"/></div>
             <div class="grid grid-cols-2 gap-4">
               <div><label class="block text-xs font-bold mb-1">ชื่อผู้อำนวยการ</label><input type="text" name="director" class="w-full p-2.5 border rounded-xl bg-white" value="${item ? escapeHtml(item.director) : ''}"/></div>
-              <div><label class="block text-xs font-bold mb-1">ระดับที่เปิดสอน</label><input type="text" name="levels" class="w-full p-2.5 border rounded-xl bg-white" placeholder="เช่น อนุบาล 1 - ป.6" value="${item ? escapeHtml(item.levels) : ''}"/></div>
+              <div><label class="block text-xs font-bold mb-1">ระดับที่เปิดสอน</label><input type="text" name="levels" class="w-full p-2.5 border rounded-xl bg-white" value="${item ? escapeHtml(item.levels) : ''}"/></div>
               <div><label class="block text-xs font-bold mb-1">จำนวนนักเรียน (คน)</label><input type="number" name="students" class="w-full p-2.5 border rounded-xl bg-white" value="${item ? item.students : '0'}"/></div>
               <div><label class="block text-xs font-bold mb-1">จำนวนครู/บุคลากร (คน)</label><input type="number" name="teachers" class="w-full p-2.5 border rounded-xl bg-white" value="${item ? item.teachers : '0'}"/></div>
               <div><label class="block text-xs font-bold mb-1">เบอร์โทรศัพท์</label><input type="text" name="phone" class="w-full p-2.5 border rounded-xl bg-white" value="${item ? escapeHtml(item.phone) : ''}"/></div>
               <div><label class="block text-xs font-bold mb-1">ที่ตั้ง</label><input type="text" name="address" class="w-full p-2.5 border rounded-xl bg-white" value="${item ? escapeHtml(item.address) : ''}"/></div>
             </div>
+            
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 mt-2">
+              <p class="text-xs font-bold text-royal-800">รายละเอียดเพิ่มเติม (ลิงก์ หรือ ไฟล์แนบ)</p>
+              <div><label class="block text-[10px] font-bold mb-1 text-slate-500">ใส่ลิงก์ภายนอก (เช่น เว็บไซต์โรงเรียน หรือ Facebook)</label><input type="url" name="externalLink" class="w-full p-2 border rounded-xl bg-white text-sm" placeholder="https://..." value="${item && item.externalLink ? item.externalLink : ''}"/></div>
+              <div class="text-center text-[10px] text-slate-400 font-bold">--- หรือ ---</div>
+              <div><label class="block text-[10px] font-bold mb-1 text-slate-500">อัปโหลดไฟล์เอกสารในระบบ (PDF, Word)</label><input type="file" id="school-doc-file" accept=".pdf,.doc,.docx" class="w-full p-2 border rounded-xl bg-white text-sm"/></div>
+            </div>
+
             <div>
               <label class="block text-xs font-bold mb-1">${item ? 'เปลี่ยนภาพปก (เว้นว่างหากใช้ภาพเดิม)' : 'อัปโหลดภาพปก'}</label>
               <input type="file" id="school-file" accept="image/*" class="w-full p-2 border rounded-xl bg-white text-sm"/>
             </div>
-            <button type="submit" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
+            <button type="submit" id="btn-save-school" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
           </form>
         `,
         footerHtml: ''
@@ -1890,37 +1841,48 @@
 
     async function saveSchool(e, editId) {
       e.preventDefault();
+      const btn = document.getElementById('btn-save-school');
+      btn.innerText = 'กำลังอัปโหลด...'; btn.disabled = true;
+
       const fd = new FormData(e.target);
       
+      // Handle Cover Image
       let coverData = editId ? DB.schools.find(x => x.id === editId).coverUrl : `https://placehold.co/600x400/4c1d95/ffffff?text=New+School`;
       const fileInput = document.getElementById('school-file');
-      if (fileInput.files.length > 0) {
-        try { coverData = await fileToBase64(fileInput.files[0]); } catch(err) { console.error(err); }
+      if (fileInput.files.length > 0) coverData = await handleFileUpload(fileInput.files[0]);
+
+      // Handle External Link or Document Upload
+      let linkValue = fd.get('externalLink');
+      const docInput = document.getElementById('school-doc-file');
+      if (docInput && docInput.files.length > 0) {
+         linkValue = await handleFileUpload(docInput.files[0]);
+      } else if (editId && !linkValue && !docInput.files.length) {
+         // Keep existing link if not overwritten
+         const existingSchool = DB.schools.find(x => x.id === editId);
+         if(existingSchool.externalLink) linkValue = existingSchool.externalLink;
       }
 
       if (editId) {
         const idx = DB.schools.findIndex(x => x.id === editId);
         if(idx > -1) {
-          DB.schools[idx].name = fd.get('name');
-          DB.schools[idx].director = fd.get('director') || '-';
-          DB.schools[idx].levels = fd.get('levels') || '-';
-          DB.schools[idx].students = parseInt(fd.get('students') || 0);
-          DB.schools[idx].teachers = parseInt(fd.get('teachers') || 0);
-          DB.schools[idx].phone = fd.get('phone') || '-';
-          DB.schools[idx].address = fd.get('address') || '-';
-          DB.schools[idx].coverUrl = coverData;
+          Object.assign(DB.schools[idx], {
+             name: fd.get('name'), director: fd.get('director') || '-', levels: fd.get('levels') || '-',
+             students: parseInt(fd.get('students') || 0), teachers: parseInt(fd.get('teachers') || 0),
+             phone: fd.get('phone') || '-', address: fd.get('address') || '-', 
+             coverUrl: coverData, externalLink: linkValue
+          });
         }
       } else {
-        const newRec = {
+        DB.schools.push({
           id: generateId('sch'), name: fd.get('name'), categoryLabel: 'โรงเรียนสังกัดเทศบาล',
           director: fd.get('director') || '-', levels: fd.get('levels') || '-',
           students: parseInt(fd.get('students') || 0), teachers: parseInt(fd.get('teachers') || 0),
-          phone: fd.get('phone') || '-', address: fd.get('address') || '-', coverUrl: coverData
-        };
-        DB.schools.push(newRec);
+          phone: fd.get('phone') || '-', address: fd.get('address') || '-', 
+          coverUrl: coverData, externalLink: linkValue
+        });
       }
       
-      saveDB();
+      await saveDB();
       closeModal();
       setBackofficeTab('schools');
       showToast('บันทึกสำเร็จ', editId ? 'แก้ไขข้อมูลสถานศึกษาแล้ว' : 'เพิ่มสถานศึกษาลงในระบบแล้ว');
@@ -1929,11 +1891,9 @@
     // Modal Form for Personnel
     function editPersonnelModal(id = null) {
       const item = id ? DB.personnel.find(x => x.id === id) : null;
-      
-      // Generate Parent Options
       let parentOptions = '<option value="">-- ไม่มี (ระดับสูงสุด) --</option>';
       DB.personnel.forEach(p => {
-        if (p.id !== id) { // Cannot be parent of self
+        if (p.id !== id) {
           let selected = (item && item.parentId === p.id) ? 'selected' : '';
           parentOptions += `<option value="${p.id}" ${selected}>${escapeHtml(p.name)} (${escapeHtml(p.position)})</option>`;
         }
@@ -1965,7 +1925,7 @@
               </div>
             </div>
             <div><label class="block text-xs font-bold mb-1">${item ? 'อัปโหลดรูปภาพใหม่ (เว้นว่างหากใช้รูปเดิม)' : 'อัปโหลดรูปภาพ (ไม่บังคับ)'}</label><input type="file" id="person-file" accept="image/*" class="w-full p-2 border rounded-xl bg-white text-sm"/></div>
-            <button type="submit" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
+            <button type="submit" id="btn-save-personnel" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
           </form>
         `,
         footerHtml: ''
@@ -1974,6 +1934,9 @@
 
     async function savePersonnel(e, editId) {
       e.preventDefault();
+      const btn = document.getElementById('btn-save-personnel');
+      btn.innerText = 'กำลังอัปโหลด...'; btn.disabled = true;
+
       const fd = new FormData(e.target);
       const lvlCode = parseInt(fd.get('levelCode'));
       const parentId = fd.get('parentId') || null;
@@ -1981,54 +1944,44 @@
       
       let photoData = editId ? DB.personnel.find(x => x.id === editId).photoUrl : `https://placehold.co/400x400/f8fafc/64748b?text=New+Staff`;
       const fileInput = document.getElementById('person-file');
-      if (fileInput.files.length > 0) {
-        try { photoData = await fileToBase64(fileInput.files[0]); } catch(err) { console.error(err); }
-      }
+      if (fileInput.files.length > 0) photoData = await handleFileUpload(fileInput.files[0]);
 
       if (editId) {
         const idx = DB.personnel.findIndex(x => x.id === editId);
         if (idx > -1) {
-            DB.personnel[idx].name = fd.get('name');
-            DB.personnel[idx].position = fd.get('position');
-            DB.personnel[idx].levelCode = lvlCode;
-            DB.personnel[idx].level = lvlNames[lvlCode];
-            DB.personnel[idx].photoUrl = photoData;
-            DB.personnel[idx].parentId = parentId;
+            Object.assign(DB.personnel[idx], {
+               name: fd.get('name'), position: fd.get('position'), levelCode: lvlCode,
+               level: lvlNames[lvlCode], photoUrl: photoData, parentId: parentId
+            });
         }
       } else {
-        const newRec = {
+        DB.personnel.push({
           id: generateId('per'), name: fd.get('name'), position: fd.get('position'),
           levelCode: lvlCode, level: lvlNames[lvlCode], photoUrl: photoData, parentId: parentId
-        };
-        DB.personnel.push(newRec);
+        });
       }
       
-      saveDB();
+      await saveDB();
       closeModal();
       setBackofficeTab('personnel');
       showToast('บันทึกสำเร็จ', editId ? 'แก้ไขข้อมูลบุคลากรแล้ว' : 'เพิ่มบุคลากรเรียบร้อย');
-      if (!document.getElementById('backoffice-workspace').classList.contains('hidden')) {
-          // Do nothing special if in backend, it already refreshed the table
-      } else {
-          renderFrontend();
-      }
     }
 
-    function deleteRecord(table, id) {
+    async function deleteRecord(table, id) {
       if(confirm('ยืนยันการลบข้อมูลนี้?')) {
         DB[table] = DB[table].filter(item => item.id !== id);
-        saveDB();
+        await saveDB();
         updateBackofficeBadges();
         setBackofficeTab(table);
         showToast('ลบสำเร็จ', 'ข้อมูลถูกลบออกจากระบบแล้ว');
       }
     }
 
-    function approveAdmission(id) {
+    async function approveAdmission(id) {
       const idx = DB.admissions.findIndex(a => a.id === id);
       if (idx > -1) {
         DB.admissions[idx].status = 'อนุมัติแล้ว';
-        saveDB();
+        await saveDB();
         updateBackofficeBadges();
         setBackofficeTab('admissions');
         showToast('อัปเดตสำเร็จ', 'อนุมัติการสมัครเรียนเรียบร้อยแล้ว');
@@ -2090,8 +2043,8 @@
               <div class="bg-royal-50 p-3 rounded-xl border border-royal-100">
                 <label class="block text-xs font-bold mb-2 text-royal-900">เพิ่มข้อความตอบกลับประชาชน</label>
                 <div class="flex gap-2">
-                  <textarea name="replyText" rows="2" class="flex-grow p-2 border rounded-xl bg-white text-sm focus:border-royal-500 outline-none transition-colors" placeholder="พิมพ์ชี้แจงการดำเนินการ..."></textarea>
-                  <button type="button" onclick="submitStaffReply('${item.id}')" class="px-4 py-2 bg-royal-900 text-white rounded-xl font-heading font-bold text-sm hover:bg-royal-800 self-end whitespace-nowrap inline-flex items-center gap-1 shadow-md transition-all"><i data-lucide="send" class="w-4 h-4"></i> ส่งข้อความ</button>
+                  <textarea name="replyText" rows="2" class="flex-grow p-2 border rounded-xl bg-white text-sm outline-none" placeholder="พิมพ์ชี้แจง..."></textarea>
+                  <button type="button" onclick="submitStaffReply('${item.id}')" class="px-4 py-2 bg-royal-900 text-white rounded-xl font-bold text-sm shadow-md">ส่งข้อความ</button>
                 </div>
               </div>
             </div>
@@ -2099,49 +2052,40 @@
         `,
         footerHtml: ''
       });
-      
-      // Delay slightly to ensure elements are in DOM before creating icons
       setTimeout(() => lucide.createIcons(), 50);
     }
 
-    function submitStaffReply(id) {
+    async function submitStaffReply(id) {
        const form = document.querySelector('form');
        const text = (form.querySelector('[name="replyText"]')?.value || '').trim();
        const status = form.querySelector('[name="status"]')?.value;
 
        if(!text) {
-         showToast('ข้อผิดพลาด', 'กรุณาพิมพ์ข้อความก่อนกดส่ง', 'error');
-         return;
+         showToast('ข้อผิดพลาด', 'กรุณาพิมพ์ข้อความก่อนกดส่ง', 'error'); return;
        }
 
        const idx = DB.feedback.findIndex(f => f.id === id);
        if(idx > -1) {
           DB.feedback[idx].status = status;
-          DB.feedback[idx].reply = text; // Keep for legacy access if needed
-          DB.feedback[idx].thread.push({
-             sender: 'เจ้าหน้าที่',
-             text: text,
-             time: new Date().toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' })
-          });
-          saveDB();
+          DB.feedback[idx].thread.push({ sender: 'เจ้าหน้าที่', text: text, time: new Date().toLocaleString('th-TH') });
+          await saveDB();
           updateBackofficeBadges();
-          manageFeedbackModal(id); // Reload modal to show new message
-          setBackofficeTab('feedback'); // Refresh table behind modal
+          manageFeedbackModal(id);
+          setBackofficeTab('feedback');
           showToast('ส่งข้อความสำเร็จ', 'ตอบกลับประชาชนเรียบร้อยแล้ว');
        }
     }
 
-    function saveFeedbackReply(e, id) {
+    async function saveFeedbackReply(e, id) {
       e.preventDefault();
       const fd = new FormData(e.target);
       const idx = DB.feedback.findIndex(f => f.id === id);
       if (idx > -1) {
         DB.feedback[idx].status = fd.get('status');
-        saveDB();
+        await saveDB();
         updateBackofficeBadges();
         closeModal();
         setBackofficeTab('feedback');
-        renderFrontend();
         showToast('บันทึกสำเร็จ', 'อัปเดตสถานะเรียบร้อย');
       }
     }
@@ -2149,17 +2093,11 @@
     function editStaffUserModal(id = null) {
       const user = id ? DB.staffUsers.find(u => u.id === id) : null;
       const allMenus = [
-        { key: 'sliders', label: 'จัดการภาพสไลด์' },
-        { key: 'news', label: 'ข่าวสาร / ประกาศ' },
-        { key: 'documents', label: 'เอกสารราชการ' },
-        { key: 'schools', label: 'ข้อมูลสถานศึกษา' },
-        { key: 'personnel', label: 'ทำเนียบบุคลากร' },
-        { key: 'admissions', label: 'รายชื่อผู้สมัครเรียน' },
-        { key: 'feedback', label: 'ระบบเรื่องร้องเรียน' },
-        { key: 'users', label: 'กำหนดสิทธิ์ผู้ใช้งาน' },
-        { key: 'database', label: 'เชื่อมต่อฐานข้อมูล' }
+        { key: 'sliders', label: 'จัดการภาพสไลด์' }, { key: 'news', label: 'ข่าวสาร / ประกาศ' },
+        { key: 'documents', label: 'เอกสารราชการ' }, { key: 'schools', label: 'ข้อมูลสถานศึกษา' },
+        { key: 'personnel', label: 'ทำเนียบบุคลากร' }, { key: 'admissions', label: 'รายชื่อผู้สมัครเรียน' },
+        { key: 'feedback', label: 'ระบบเรื่องร้องเรียน' }, { key: 'users', label: 'กำหนดสิทธิ์ผู้ใช้งาน' }
       ];
-
       const userPerms = user ? (user.permissions || []) : ['news', 'documents'];
 
       openModal({
@@ -2167,10 +2105,7 @@
         bodyHtml: `
           <form onsubmit="saveStaffUser(event, '${id || ''}')" class="space-y-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-bold mb-1">ชื่อ-นามสกุล เจ้าหน้าที่ *</label>
-                <input type="text" name="name" required class="w-full p-2.5 border rounded-xl bg-white text-sm" value="${user ? escapeHtml(user.name) : ''}" placeholder="เช่น นายสมชาย ใจดี"/>
-              </div>
+              <div><label class="block text-xs font-bold mb-1">ชื่อ-นามสกุล เจ้าหน้าที่ *</label><input type="text" name="name" required class="w-full p-2.5 border rounded-xl bg-white text-sm" value="${user ? escapeHtml(user.name) : ''}"/></div>
               <div>
                 <label class="block text-xs font-bold mb-1">ระดับบทบาท (Role) *</label>
                 <select name="role" class="w-full p-2.5 border rounded-xl bg-white text-sm">
@@ -2179,66 +2114,48 @@
                   <option value="SUPER_ADMIN" ${user && user.role === 'SUPER_ADMIN' ? 'selected' : ''}>ผู้ดูแลระบบสูงสุด (Super Admin)</option>
                 </select>
               </div>
-              <div>
-                <label class="block text-xs font-bold mb-1">ชื่อผู้ใช้งาน (Username) *</label>
-                <input type="text" name="username" required ${user && user.username === 'admin' ? 'readonly' : ''} class="w-full p-2.5 border rounded-xl bg-white text-sm font-mono" value="${user ? escapeHtml(user.username) : ''}" placeholder="ภาษาอังกฤษเท่านั้น"/>
-              </div>
-              <div>
-                <label class="block text-xs font-bold mb-1">รหัสผ่าน (Password) *</label>
-                <input type="text" name="password" required class="w-full p-2.5 border rounded-xl bg-white text-sm font-mono" value="${user ? escapeHtml(user.password) : ''}" placeholder="กำหนดรหัสผ่าน"/>
-              </div>
+              <div><label class="block text-xs font-bold mb-1">ชื่อผู้ใช้งาน (Username) *</label><input type="text" name="username" required ${user && user.username === 'admin' ? 'readonly' : ''} class="w-full p-2.5 border rounded-xl bg-white text-sm font-mono" value="${user ? escapeHtml(user.username) : ''}"/></div>
+              <div><label class="block text-xs font-bold mb-1">รหัสผ่าน (Password) *</label><input type="text" name="password" required class="w-full p-2.5 border rounded-xl bg-white text-sm font-mono" value="${user ? escapeHtml(user.password) : ''}"/></div>
             </div>
-
             <div>
-              <label class="block text-xs font-bold mb-2 text-royal-800">กำหนดเมนูที่อนุญาตให้เข้าถึง (Permissions):</label>
+              <label class="block text-xs font-bold mb-2 text-royal-800">กำหนดเมนูที่อนุญาตให้เข้าถึง:</label>
               <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 bg-white p-3.5 rounded-2xl border border-slate-200">
                 ${allMenus.map(m => `
-                  <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer hover:text-royal-800">
+                  <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
                     <input type="checkbox" name="perms" value="${m.key}" ${userPerms.includes(m.key) ? 'checked' : ''} class="rounded text-royal-600 focus:ring-royal-50 w-4 h-4"/>
                     <span>${m.label}</span>
                   </label>
                 `).join('')}
               </div>
             </div>
-
             <div class="flex items-center justify-between pt-2">
               <label class="flex items-center gap-2 text-sm font-bold text-slate-700 cursor-pointer">
                 <input type="checkbox" name="active" ${!user || user.active ? 'checked' : ''} class="w-4 h-4 rounded text-emerald-600"/>
                 <span>เปิดใช้งานบัญชีนี้ (Active)</span>
               </label>
             </div>
-
-            <button type="submit" class="w-full py-3 bg-royal-900 hover:bg-royal-800 text-white rounded-xl font-heading font-bold shadow-md">บันทึกข้อมูลผู้ใช้งาน</button>
+            <button type="submit" class="w-full py-3 bg-royal-900 text-white rounded-xl font-bold shadow-md">บันทึกข้อมูลผู้ใช้งาน</button>
           </form>
         `,
         footerHtml: ''
       });
     }
 
-    function saveStaffUser(e, editId) {
+    async function saveStaffUser(e, editId) {
       e.preventDefault();
       const fd = new FormData(e.target);
       const role = fd.get('role');
-      const roleLabels = {
-        'SUPER_ADMIN': 'ผู้ดูแลระบบสูงสุด',
-        'EDITOR': 'เจ้าหน้าที่จัดการข้อมูล',
-        'SERVICE': 'เจ้าหน้าที่บริการประชาชน'
-      };
+      const roleLabels = { 'SUPER_ADMIN': 'ผู้ดูแลระบบสูงสุด', 'EDITOR': 'เจ้าหน้าที่จัดการข้อมูล', 'SERVICE': 'เจ้าหน้าที่บริการประชาชน' };
       const selectedPerms = fd.getAll('perms');
       const isActive = fd.get('active') === 'on';
 
       if (editId) {
         const idx = DB.staffUsers.findIndex(u => u.id === editId);
         if (idx > -1) {
-          DB.staffUsers[idx].name = fd.get('name');
-          DB.staffUsers[idx].username = fd.get('username');
-          DB.staffUsers[idx].password = fd.get('password');
-          DB.staffUsers[idx].role = role;
-          DB.staffUsers[idx].roleLabel = roleLabels[role] || role;
-          DB.staffUsers[idx].permissions = selectedPerms;
-          DB.staffUsers[idx].active = isActive;
-
-          // If editing currently logged-in user, refresh session permissions immediately
+          Object.assign(DB.staffUsers[idx], {
+            name: fd.get('name'), username: fd.get('username'), password: fd.get('password'),
+            role: role, roleLabel: roleLabels[role], permissions: selectedPerms, active: isActive
+          });
           if (currentStaffUser && currentStaffUser.id === editId) {
             currentStaffUser = DB.staffUsers[idx];
             sessionStorage.setItem('phsmun_user', JSON.stringify(currentStaffUser));
@@ -2248,88 +2165,59 @@
       } else {
         const uname = fd.get('username').trim();
         if (DB.staffUsers.some(u => u.username === uname)) {
-          showToast('ชื่อผู้ใช้ซ้ำ', 'กรุณาใช้ Username อื่น', 'error');
-          return;
+          showToast('ชื่อผู้ใช้ซ้ำ', 'กรุณาใช้ Username อื่น', 'error'); return;
         }
         DB.staffUsers.push({
-          id: generateId('usr'),
-          name: fd.get('name'),
-          username: uname,
-          password: fd.get('password'),
-          role: role,
-          roleLabel: roleLabels[role] || role,
-          permissions: selectedPerms,
-          active: isActive
+          id: generateId('usr'), name: fd.get('name'), username: uname, password: fd.get('password'),
+          role: role, roleLabel: roleLabels[role], permissions: selectedPerms, active: isActive
         });
       }
 
-      saveDB();
+      await saveDB();
       setBackofficeTab('users');
       showToast('บันทึกสำเร็จ', 'บันทึกข้อมูลและสิทธิ์ผู้ใช้งานเรียบร้อย');
     }
 
-    function deleteStaffUser(id) {
+    async function deleteStaffUser(id) {
       if (confirm('ยืนยันการลบบัญชีผู้ใช้งานนี้?')) {
         DB.staffUsers = DB.staffUsers.filter(u => u.id !== id);
-        saveDB();
+        await saveDB();
         setBackofficeTab('users');
         showToast('ลบสำเร็จ', 'ลบบัญชีผู้ใช้งานเรียบร้อยแล้ว');
       }
-    }
-
-    async function retryConnection() {
-      showToast('กำลังเชื่อมต่อ', 'กำลังเชื่อมต่อกับ Supabase...');
-      await connectSupabaseAuto();
-      setBackofficeTab('database');
     }
 
     async function connectSupabaseAuto() {
       if (SUPABASE_URL && SUPABASE_ANON_KEY && SUPABASE_URL.startsWith('http')) {
           try {
               supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-              // ดึงข้อมูล
               const { data, error } = await supabaseClient.from('site_settings').select('value').eq('key', 'full_app_db').single();
               
               if (!error && data && data.value) {
                   DB = JSON.parse(data.value);
                   isConnected = true;
-                  updateSupabaseUI();
-                  renderFrontend();
-                  showToast('เชื่อมต่อสำเร็จ', 'โหลดข้อมูลจาก Cloud เรียบร้อยแล้ว');
               } else if (error && error.code === 'PGRST116') {
-                  // ไม่พบข้อมูล (ฐานข้อมูลใหม่) ให้ดันค่าเริ่มต้นขึ้นไป
+                  // No data, initialize first time with default admin
+                  DB.staffUsers.push({ id: 'u1', name: 'ผู้ดูแลระบบ', username: 'admin', password: '123', role: 'SUPER_ADMIN', roleLabel: 'ผู้ดูแลระบบสูงสุด', permissions: [], active: true });
                   await supabaseClient.from('site_settings').upsert({ key: 'full_app_db', value: JSON.stringify(DB) });
                   isConnected = true;
-                  updateSupabaseUI();
-                  showToast('เชื่อมต่อสำเร็จ', 'สร้างฐานข้อมูลเริ่มต้นบน Cloud เรียบร้อย');
               } else {
                  throw error;
               }
           } catch(err) {
               console.error("Auto-connect failed:", err);
-              isConnected = false;
-              updateSupabaseUI();
-              showToast('เชื่อมต่อล้มเหลว', 'ไม่สามารถเชื่อมต่อฐานข้อมูลได้ ระบบสลับไปใช้ Local Data', 'error');
           }
       } else {
-          // Fallback to localStorage if no keys provided
-          let localData = JSON.parse(localStorage.getItem('phsmun_db'));
-          if(localData) {
-             DB = localData;
-          } else {
-             saveDB();
-          }
+          console.warn("No valid Supabase keys provided.");
       }
+      renderFrontend();
     }
 
     // --- On Load ---
     window.onload = async () => {
       lucide.createIcons();
-      
       await connectSupabaseAuto();
-      
       initHeroSlider();
-      renderFrontend();
     };
   </script>
 </body>
