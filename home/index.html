@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>สำนักการศึกษา เทศบาลนครพิษณุโลก | Bureau of Education, Phitsanulok City Municipality</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" id="dynamic-favicon" href="https://img1.pic.in.th/images/logo2856b5a35c712c5ef.png" /> 
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Supabase JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Tailwind Custom Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['"Prompt"', 'sans-serif'],
+            body: ['"Sarabun"', 'sans-serif']
+          },
+          colors: {
+            royal: { 50: '#FAF5FF', 100: '#F3E8FF', 200: '#E9D5FF', 300: '#D8B4FE', 400: '#C084FC', 500: '#A855F7', 600: '#9333EA', 700: '#7E22CE', 800: '#6B21A8', 900: '#581C87', 950: '#3B0764' },
+            gold: { 50: '#FFFBEB', 100: '#FEF3C7', 200: '#FDE68A', 300: '#FCD34D', 400: '#FBBF24', 500: '#F59E0B', 600: '#D97706', 700: '#B45309', 800: '#92400E', 900: '#78350F' }
+          },
+          boxShadow: {
+            gov: '0 4px 20px -2px rgba(59, 7, 100, 0.08), 0 2px 6px -1px rgba(59, 7, 100, 0.04)',
+            glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'Sarabun', sans-serif; }
+    h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Prompt', sans-serif; }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #c084fc; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #9333ea; }
+
+    /* Glassmorphism Classes */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    
+    .glass-dark {
+      background: rgba(59, 7, 100, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Org Tree CSS */
+    .org-tree ul {
+      padding-top: 20px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      margin: 0; padding-left: 0;
+    }
+    .org-tree li {
+      float: left; text-align: center;
+      list-style-type: none;
+      position: relative;
+      padding: 20px 5px 0 5px;
+    }
+    .org-tree li::before, .org-tree li::after {
+      content: '';
+      position: absolute; top: 0; right: 50%;
+      border-top: 2px solid #cbd5e1; /* slate-300 */
+      width: 50%; height: 20px;
+    }
+    .org-tree li::after {
+      right: auto; left: 50%;
+      border-left: 2px solid #cbd5e1;
+    }
+    .org-tree li:only-child::after, .org-tree li:only-child::before {
+      display: none;
+    }
+    .org-tree li:only-child {
+      padding-top: 0;
+    }
+    .org-tree li:first-child::before, .org-tree li:last-child::after {
+      border: 0 none;
+    }
+    .org-tree li:last-child::before {
+      border-right: 2px solid #cbd5e1;
+      border-radius: 0 4px 0 0;
+    }
+    .org-tree li:first-child::after {
+      border-radius: 4px 0 0 0;
+    }
+    .org-tree ul ul::before {
+      content: '';
+      position: absolute; top: 0; left: 50%;
+      border-left: 2px solid #cbd5e1;
+      width: 0; height: 20px;
+      transform: translateX(-50%);
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-up { animation: fadeUp 0.6s ease-out forwards; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-royal-900 selection:text-gold-300 flex flex-col min-h-screen">
+
+  <!-- =====================================================================
+       1. TOP BAR (Government Status & Login)
+  ====================================================================== -->
+  <div class="bg-royal-950 text-white border-b border-royal-800 text-xs sm:text-sm relative z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-end gap-2">
+      <div class="flex items-center gap-2">
+        <button type="button" id="btn-backoffice-toggle" onclick="handleBackofficeEntry()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-royal-950 font-heading font-bold text-xs shadow-sm transition-all">
+          <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+          <span>สำหรับเจ้าหน้าที่</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       2. HEADER & NAVIGATION
+  ====================================================================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all duration-300" id="main-header">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 lg:py-4 flex items-center justify-between gap-3 lg:gap-5">
+      
+      <!-- Logo & Title -->
+      <a href="#top" onclick="switchToFrontend()" class="flex items-center gap-3 lg:gap-4 group focus:outline-none shrink-0">
+        <img src="https://img1.pic.in.th/images/logo2856b5a35c712c5ef.png" alt="โลโก้เทศบาล" class="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 object-contain transition-transform group-hover:scale-105" />
+        <div class="flex flex-col min-w-0">
+          <span class="block font-heading font-bold text-sm sm:text-base lg:text-xl text-royal-950 leading-tight truncate tracking-wide">สำนักการศึกษา เทศบาลนครพิษณุโลก</span>
+          <span class="block text-[10px] sm:text-xs lg:text-sm text-royal-600 font-heading mt-0.5 truncate uppercase tracking-widest font-medium">Bureau of Education • Phitsanulok</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden lg:flex items-center gap-1 xl:gap-2 font-heading text-sm xl:text-base font-medium text-slate-700">
+        <a href="#top" class="px-3 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-700 transition-colors">หน้าแรก</a>
+        <a href="#news" class="px-3 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-700 transition-colors">ข่าวสาร</a>
+        <a href="#documents" class="px-3 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-700 transition-colors">เอกสาร</a>
+        <a href="#schools" class="px-3 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-700 transition-colors">สถานศึกษา</a>
+        <a href="#personnel" class="px-3 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-700 transition-colors">บุคลากร</a>
+        <a href="#eservices" class="px-3 py-2 rounded-xl hover:bg-royal-50 hover:text-royal-700 transition-colors">บริการประชาชน</a>
+        
+        <button type="button" onclick="openAdmissionForm()" class="ml-2 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-royal-900 to-royal-700 hover:from-royal-950 hover:to-royal-800 text-white font-semibold shadow-lg shadow-royal-900/20 transition-all hover:-translate-y-0.5">
+          <i data-lucide="graduation-cap" class="w-4 h-4 text-gold-300"></i> สมัครเรียน
+        </button>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button class="lg:hidden p-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 bg-white absolute w-full shadow-xl">
+      <div class="px-4 pt-2 pb-4 space-y-1 font-heading">
+        <a href="#top" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block px-3 py-2.5 rounded-lg text-slate-700 hover:bg-royal-50">หน้าแรก</a>
+        <a href="#news" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block px-3 py-2.5 rounded-lg text-slate-700 hover:bg-royal-50">ข่าวสาร</a>
+        <a href="#documents" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block px-3 py-2.5 rounded-lg text-slate-700 hover:bg-royal-50">เอกสารราชการ</a>
+        <a href="#schools" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block px-3 py-2.5 rounded-lg text-slate-700 hover:bg-royal-50">สถานศึกษา</a>
+        <a href="#personnel" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block px-3 py-2.5 rounded-lg text-slate-700 hover:bg-royal-50">บุคลากร</a>
+        <button onclick="openAdmissionForm(); document.getElementById('mobile-menu').classList.add('hidden')" class="w-full mt-4 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-royal-900 text-white font-semibold shadow-md">
+          <i data-lucide="graduation-cap" class="w-4 h-4 text-gold-300"></i> สมัครเรียนออนไลน์
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       3. FRONT-END PUBLIC PORTAL
+  ====================================================================== -->
+  <main id="main-content" class="flex-grow">
+
+    <!-- HERO SECTION (Welcome Text) -->
+    <section id="top" class="relative overflow-hidden bg-slate-900 text-white py-12 lg:py-20 border-b-4 border-gold-400">
+      <div class="absolute inset-0 bg-gradient-to-r from-royal-950 to-slate-900 z-0"></div>
+
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 w-full animate-fade-up z-10">
+        <div class="max-w-3xl space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-gold-300 text-sm font-heading font-medium">
+            <i data-lucide="award" class="w-4 h-4"></i> ยกระดับการศึกษาท้องถิ่น
+          </div>
+          <h1 class="font-heading font-bold text-4xl sm:text-5xl lg:text-6xl leading-tight text-white drop-shadow-lg">
+            <span id="front-headline">พัฒนาการศึกษา</span> <br/>
+            <span id="front-subheadline" class="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-amber-500">เพื่ออนาคตเมืองสองแคว</span>
+          </h1>
+          <p id="front-description" class="text-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl font-body">
+            ศูนย์กลางข้อมูล ข่าวสาร และบริการดิจิทัล สำนักการศึกษา เทศบาลนครพิษณุโลก มุ่งมั่นจัดการศึกษาอย่างมีคุณภาพ ทันสมัย บนพื้นฐานคุณธรรม
+          </p>
+          <div class="flex flex-wrap gap-4 pt-4">
+            <a href="#news" class="px-6 py-3 rounded-xl bg-gold-500 hover:bg-gold-400 text-royal-950 font-heading font-bold shadow-lg transition-all hover:-translate-y-1">
+              ข่าวสารล่าสุด
+            </a>
+            <a href="#eservices" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white font-heading font-bold shadow-lg transition-all hover:-translate-y-1">
+              บริการประชาชน
+            </a>
+          </div>
+        </div>
+        
+        <!-- Live Key Metric Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pt-10 border-t border-white/10">
+          <div class="glass-dark rounded-2xl p-5 border-l-4 border-l-gold-400">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="p-2 rounded-lg bg-white/10"><i data-lucide="school" class="w-5 h-5 text-gold-300"></i></div>
+              <p class="font-heading text-sm text-slate-300">สถานศึกษาในสังกัด</p>
+            </div>
+            <div class="font-heading font-bold text-3xl text-white"><span id="metric-total-schools">0</span> <span class="text-base text-slate-400 font-normal">แห่ง</span></div>
+          </div>
+          <div class="glass-dark rounded-2xl p-5 border-l-4 border-l-blue-400">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="p-2 rounded-lg bg-white/10"><i data-lucide="users" class="w-5 h-5 text-blue-300"></i></div>
+              <p class="font-heading text-sm text-slate-300">นักเรียนรวม</p>
+            </div>
+            <div class="font-heading font-bold text-3xl text-white"><span id="metric-total-students">0</span> <span class="text-base text-slate-400 font-normal">คน</span></div>
+          </div>
+          <div class="glass-dark rounded-2xl p-5 border-l-4 border-l-emerald-400">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="p-2 rounded-lg bg-white/10"><i data-lucide="graduation-cap" class="w-5 h-5 text-emerald-300"></i></div>
+              <p class="font-heading text-sm text-slate-300">ครูและบุคลากร</p>
+            </div>
+            <div class="font-heading font-bold text-3xl text-white"><span id="metric-total-teachers">0</span> <span class="text-base text-slate-400 font-normal">คน</span></div>
+          </div>
+          <div class="glass-dark rounded-2xl p-5 border-l-4 border-l-rose-400 flex flex-col justify-between h-full">
+            <div>
+              <div class="flex items-center gap-3 mb-2">
+                <div class="p-2 rounded-lg bg-white/10"><i data-lucide="shield-check" class="w-5 h-5 text-rose-300"></i></div>
+                <p class="font-heading text-sm text-slate-300">เรื่องร้องเรียนรวม</p>
+              </div>
+              <div class="font-heading font-bold text-3xl text-white"><span id="metric-total-feedback">0</span> <span class="text-base text-slate-400 font-normal">เรื่อง</span></div>
+            </div>
+            <div class="mt-4 grid grid-cols-3 gap-1.5 pt-3 border-t border-white/10 font-heading">
+              <div class="text-center bg-white/5 rounded-lg py-1.5 border border-white/10 flex flex-col justify-center transition-colors hover:bg-white/10">
+                <span class="text-[9px] xl:text-[10px] text-slate-300 mb-0.5">รอตรวจสอบ</span>
+                <span id="metric-fb-pending" class="font-bold text-amber-400 text-xs sm:text-sm">0</span>
+              </div>
+              <div class="text-center bg-white/5 rounded-lg py-1.5 border border-white/10 flex flex-col justify-center transition-colors hover:bg-white/10">
+                <span class="text-[9px] xl:text-[10px] text-slate-300 mb-0.5">กำลังทำ</span>
+                <span id="metric-fb-progress" class="font-bold text-blue-400 text-xs sm:text-sm">0</span>
+              </div>
+              <div class="text-center bg-white/5 rounded-lg py-1.5 border border-white/10 flex flex-col justify-center transition-colors hover:bg-white/10">
+                <span class="text-[9px] xl:text-[10px] text-slate-300 mb-0.5">เสร็จสิ้น</span>
+                <span id="metric-fb-done" class="font-bold text-emerald-400 text-xs sm:text-sm">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: SLIDER (16:9 Aspect Ratio Before News) -->
+    <section id="slider-wrapper" class="pt-12 bg-white">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative w-full aspect-video bg-[#1a1a2e] overflow-hidden group rounded-2xl shadow-lg border border-slate-100 flex items-center justify-center">
+          <img id="hero-bg-slider" src="https://placehold.co/1920x1080/4c1d95/2e1065?text=Phitsanulok+Education" class="w-full h-full object-contain transition-opacity duration-700 ease-in-out opacity-100" alt="Slider" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#1a1a2e]/40 via-transparent to-transparent pointer-events-none"></div>
+          
+          <!-- Slider Controls -->
+          <button onclick="prevSlide()" class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-black/40 text-white hover:bg-black/70 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 backdrop-blur-sm"><i data-lucide="chevron-left" class="w-5 h-5 sm:w-6 sm:h-6"></i></button>
+          <button onclick="nextSlide()" class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-black/40 text-white hover:bg-black/70 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 backdrop-blur-sm"><i data-lucide="chevron-right" class="w-5 h-5 sm:w-6 sm:h-6"></i></button>
+          
+          <!-- Slider Indicators -->
+          <div id="slider-indicators" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2"></div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- SECTION: NEWS -->
+    <section id="news" class="pt-12 pb-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4">
+          <div>
+            <h2 class="font-heading font-bold text-3xl text-royal-950">ข่าวสาร / ประกาศ</h2>
+            <p class="text-slate-500 mt-1">อัปเดตข้อมูลข่าวสารและกิจกรรมต่างๆ</p>
+          </div>
+          <div class="flex gap-2 w-full sm:w-auto">
+            <input type="text" id="front-news-search" oninput="filterNewsFront()" placeholder="ค้นหาข่าว..." class="px-4 py-2 border rounded-xl text-sm w-full sm:w-64 shadow-sm focus:outline-none focus:border-royal-500 focus:ring-1 focus:ring-royal-500">
+            <button onclick="filterNewsFront('all', this)" class="news-tab active bg-white text-royal-700 shadow-sm px-4 py-2 rounded-xl text-sm font-bold border transition-colors whitespace-nowrap">ทั้งหมด</button>
+            <button onclick="filterNewsFront('activity', this)" class="news-tab text-slate-600 px-4 py-2 rounded-xl text-sm font-bold border transition-colors whitespace-nowrap hover:bg-slate-50">กิจกรรม</button>
+            <button onclick="filterNewsFront('egp', this)" class="news-tab text-slate-600 px-4 py-2 rounded-xl text-sm font-bold border transition-colors whitespace-nowrap hover:bg-slate-50">จัดซื้อจัดจ้าง</button>
+          </div>
+        </div>
+        <div id="front-news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- SECTION: DOCUMENTS -->
+    <section id="documents" class="py-16 bg-slate-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4">
+          <div>
+            <h2 class="font-heading font-bold text-3xl text-royal-950">เอกสารราชการดาวน์โหลด</h2>
+            <p class="text-slate-500 mt-1">แบบฟอร์ม คู่มือ และเอกสารที่เกี่ยวข้อง</p>
+          </div>
+          <div class="w-full sm:w-auto">
+            <input type="text" id="front-doc-search" oninput="renderFrontend()" placeholder="ค้นหาเอกสาร..." class="px-4 py-2 border rounded-xl text-sm w-full sm:w-64 shadow-sm focus:outline-none focus:border-royal-500 focus:ring-1 focus:ring-royal-500">
+          </div>
+        </div>
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-100 text-slate-600 text-xs uppercase border-b border-slate-200">
+              <tr>
+                <th class="p-4 w-16 text-center">ลำดับ</th>
+                <th class="p-4">ชื่อเอกสาร</th>
+                <th class="p-4 w-32 whitespace-nowrap text-center">วันที่เผยแพร่</th>
+                <th class="p-4 w-24 text-center">ดาวน์โหลด</th>
+              </tr>
+            </thead>
+            <tbody id="front-documents-list"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: SCHOOLS -->
+    <section id="schools" class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+          <h2 class="font-heading font-bold text-3xl text-royal-950">สถานศึกษาในสังกัด</h2>
+          <p class="text-slate-500 mt-2">โรงเรียนในสังกัดสำนักการศึกษา เทศบาลนครพิษณุโลก</p>
+        </div>
+        <div id="front-schools-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- SECTION: PERSONNEL -->
+    <section id="personnel" class="py-16 bg-slate-50 overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+          <h2 class="font-heading font-bold text-3xl text-royal-950">ทำเนียบบุคลากร</h2>
+          <p class="text-slate-500 mt-2">โครงสร้างการบริหารงาน สำนักการศึกษา</p>
+        </div>
+        <div id="front-personnel-grid"></div>
+      </div>
+    </section>
+
+    <!-- SECTION: E-SERVICES -->
+    <section id="eservices" class="py-16 bg-gradient-to-b from-white to-royal-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+          <h2 class="font-heading font-bold text-3xl text-royal-950">บริการประชาชน (E-Services)</h2>
+          <p class="text-slate-500 mt-2">ระบบบริการออนไลน์ สะดวก รวดเร็ว ตลอด 24 ชั่วโมง</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <!-- Card 1 -->
+          <div class="bg-white rounded-3xl p-8 text-center shadow-lg border border-royal-100 hover:-translate-y-2 transition-transform cursor-pointer group" onclick="openAdmissionForm()">
+            <div class="w-16 h-16 bg-royal-50 text-royal-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-royal-600 group-hover:text-white transition-colors">
+              <i data-lucide="graduation-cap" class="w-8 h-8"></i>
+            </div>
+            <h3 class="font-heading font-bold text-lg text-royal-900 mb-2">รับสมัครเรียนออนไลน์</h3>
+            <p class="text-sm text-slate-500 mb-4">กรอกแบบฟอร์มเพื่อสมัครเรียนในสถานศึกษาสังกัดเทศบาล</p>
+            <span class="inline-flex items-center text-royal-600 font-bold text-sm group-hover:text-royal-800 transition-colors">เข้าใช้งาน <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i></span>
+          </div>
+          <!-- Card 2 -->
+          <div class="bg-white rounded-3xl p-8 text-center shadow-lg border border-amber-100 hover:-translate-y-2 transition-transform cursor-pointer group" onclick="openFeedbackForm()">
+            <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+              <i data-lucide="message-square" class="w-8 h-8"></i>
+            </div>
+            <h3 class="font-heading font-bold text-lg text-royal-900 mb-2">ร้องเรียน / ข้อเสนอแนะ</h3>
+            <p class="text-sm text-slate-500 mb-4">ส่งเรื่องร้องเรียน แจ้งปัญหา หรือเสนอแนะการทำงาน</p>
+            <span class="inline-flex items-center text-amber-600 font-bold text-sm group-hover:text-amber-800 transition-colors">เข้าใช้งาน <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i></span>
+          </div>
+          <!-- Card 3 -->
+          <div class="bg-white rounded-3xl p-8 text-center shadow-lg border border-emerald-100 hover:-translate-y-2 transition-transform cursor-pointer group" onclick="openTrackFeedbackModal()">
+            <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+              <i data-lucide="search" class="w-8 h-8"></i>
+            </div>
+            <h3 class="font-heading font-bold text-lg text-royal-900 mb-2">ติดตามสถานะเรื่องร้องเรียน</h3>
+            <p class="text-sm text-slate-500 mb-4">ตรวจสอบความคืบหน้าและข้อความตอบกลับจากเจ้าหน้าที่</p>
+            <span class="inline-flex items-center text-emerald-600 font-bold text-sm group-hover:text-emerald-800 transition-colors">เข้าใช้งาน <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-royal-950 text-slate-400 py-12 border-t border-royal-900 text-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <img src="https://img1.pic.in.th/images/logo2856b5a35c712c5ef.png" class="w-12 h-12 object-contain" />
+            <h3 class="font-heading font-bold text-white text-lg">สำนักการศึกษา<br/>เทศบาลนครพิษณุโลก</h3>
+          </div>
+          <p>เลขที่ 458 ถนนสมอแข ตำบลในเมือง อำเภอเมือง จังหวัดพิษณุโลก 65000</p>
+        </div>
+        <div>
+          <h4 class="font-heading font-bold text-white mb-4">ช่องทางการติดต่อ</h4>
+          <ul class="space-y-2">
+            <li><i data-lucide="phone" class="w-4 h-4 inline mr-2"></i> โทรศัพท์: 055-123-4567</li>
+            <li><i data-lucide="mail" class="w-4 h-4 inline mr-2"></i> อีเมล: edu@phsmun.go.th</li>
+            <li><i data-lucide="facebook" class="w-4 h-4 inline mr-2"></i> Facebook: EduPhitsanulok</li>
+          </ul>
+        </div>
+        <div>
+          <p>&copy; 2026 Bureau of Education, Phitsanulok City Municipality. All rights reserved.</p>
+          <p class="mt-2 text-xs">Developed dynamically based on user prompt.</p>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- =====================================================================
+       FLOATING POP-UP: AGENCY LINKS & SOCIAL MEDIA (BOTTOM RIGHT)
+  ====================================================================== -->
+  <div id="floating-social-widget" class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+    <!-- Pop-up Panel -->
+    <div id="social-popup-panel" class="hidden mb-3 w-80 bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden transition-all duration-300 transform origin-bottom-right scale-95 opacity-0">
+      <div class="bg-gradient-to-r from-royal-950 to-royal-800 px-5 py-4 text-white flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="p-1.5 bg-gold-400/20 rounded-lg text-gold-300">
+            <i data-lucide="globe" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="font-heading font-bold text-sm leading-tight">ช่องทางติดต่อ & หน่วยงาน</h4>
+            <p class="text-[11px] text-royal-200">ลิงก์ด่วนและโซเชียลมีเดีย</p>
+          </div>
+        </div>
+        <button type="button" onclick="toggleSocialPopup()" class="text-white/70 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      
+      <div class="p-4 space-y-4 max-h-[65vh] overflow-y-auto bg-slate-50/50">
+        <!-- Social Media Links -->
+        <div>
+          <p class="text-[11px] font-heading font-bold text-slate-400 uppercase tracking-wider mb-2 px-1">โซเชียลมีเดีย (Social Media)</p>
+          <div class="grid grid-cols-2 gap-2">
+            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-all group shadow-sm">
+              <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <i data-lucide="facebook" class="w-4 h-4"></i>
+              </div>
+              <span class="font-heading font-semibold text-xs text-slate-700 group-hover:text-blue-700">Facebook</span>
+            </a>
+            <a href="https://line.me" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 hover:border-emerald-400 hover:bg-emerald-50/50 transition-all group shadow-sm">
+              <div class="w-8 h-8 rounded-lg bg-emerald-500 text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform font-heading font-bold text-[10px]">
+                LINE
+              </div>
+              <span class="font-heading font-semibold text-xs text-slate-700 group-hover:text-emerald-700">Line Official</span>
+            </a>
+            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 hover:border-rose-400 hover:bg-rose-50/50 transition-all group shadow-sm">
+              <div class="w-8 h-8 rounded-lg bg-rose-600 text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <i data-lucide="youtube" class="w-4 h-4"></i>
+              </div>
+              <span class="font-heading font-semibold text-xs text-slate-700 group-hover:text-rose-700">YouTube</span>
+            </a>
+            <a href="tel:0551234567" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 hover:border-amber-400 hover:bg-amber-50/50 transition-all group shadow-sm">
+              <div class="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <i data-lucide="phone-call" class="w-4 h-4"></i>
+              </div>
+              <span class="font-heading font-semibold text-xs text-slate-700 group-hover:text-amber-700">สายด่วน 055</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Government Agency Links -->
+        <div>
+          <p class="text-[11px] font-heading font-bold text-slate-400 uppercase tracking-wider mb-2 px-1">หน่วยงานที่เกี่ยวข้อง</p>
+          <div class="space-y-1.5">
+            <a href="https://www.phsmun.go.th" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200 hover:border-royal-400 hover:bg-royal-50/50 transition-all group shadow-sm">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <i data-lucide="landmark" class="w-4 h-4 text-royal-600 shrink-0"></i>
+                <span class="text-xs font-medium text-slate-700 group-hover:text-royal-900 truncate">เทศบาลนครพิษณุโลก</span>
+              </div>
+              <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-400 group-hover:text-royal-600 shrink-0"></i>
+            </a>
+            <a href="https://www.dla.go.th" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200 hover:border-royal-400 hover:bg-royal-50/50 transition-all group shadow-sm">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <i data-lucide="building-2" class="w-4 h-4 text-royal-600 shrink-0"></i>
+                <span class="text-xs font-medium text-slate-700 group-hover:text-royal-900 truncate">กรมส่งเสริมการปกครองท้องถิ่น</span>
+              </div>
+              <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-400 group-hover:text-royal-600 shrink-0"></i>
+            </a>
+            <a href="https://www.moe.go.th" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200 hover:border-royal-400 hover:bg-royal-50/50 transition-all group shadow-sm">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <i data-lucide="book-open" class="w-4 h-4 text-royal-600 shrink-0"></i>
+                <span class="text-xs font-medium text-slate-700 group-hover:text-royal-900 truncate">กระทรวงศึกษาธิการ</span>
+              </div>
+              <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-400 group-hover:text-royal-600 shrink-0"></i>
+            </a>
+            <a href="http://www.phitsanulok.go.th" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200 hover:border-royal-400 hover:bg-royal-50/50 transition-all group shadow-sm">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <i data-lucide="map-pin" class="w-4 h-4 text-royal-600 shrink-0"></i>
+                <span class="text-xs font-medium text-slate-700 group-hover:text-royal-900 truncate">จังหวัดพิษณุโลก</span>
+              </div>
+              <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-400 group-hover:text-royal-600 shrink-0"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Trigger Button -->
+    <button type="button" onclick="toggleSocialPopup()" id="btn-social-trigger" class="group flex items-center gap-2.5 px-4 py-3.5 rounded-full bg-gradient-to-r from-royal-900 to-royal-700 hover:from-royal-950 hover:to-royal-800 text-white shadow-2xl shadow-royal-950/40 border border-gold-400/40 transition-all hover:scale-105 focus:outline-none">
+      <span class="relative flex h-3 w-3">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-3 w-3 bg-gold-400"></span>
+      </span>
+      <span class="font-heading font-bold text-xs sm:text-sm tracking-wide">หน่วยงาน & โซเชียล</span>
+      <i data-lucide="share-2" class="w-4 h-4 text-gold-300 group-hover:rotate-12 transition-transform"></i>
+    </button>
+  </div>
+
+  <!-- =====================================================================
+       4. BACK-OFFICE CMS (Admin Dashboard)
+  ====================================================================== -->
+  <section id="backoffice-workspace" class="hidden flex flex-col h-screen bg-slate-100 text-slate-800">
+    <!-- Top Nav Backoffice -->
+    <div class="bg-royal-950 text-white border-b border-royal-800 px-6 py-3 flex justify-between items-center shrink-0 shadow-md relative z-20">
+      <div class="flex items-center gap-4">
+        <img src="https://img1.pic.in.th/images/logo2856b5a35c712c5ef.png" class="w-10 h-10 object-contain" />
+        <div>
+          <h1 class="font-heading font-bold text-lg leading-tight">ระบบจัดการหลังบ้าน (Backoffice)</h1>
+          <p class="text-[10px] text-royal-300" id="bo-current-user-label">สำนักการศึกษา เทศบาลนครพิษณุโลก</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="logoutBackoffice()" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-600/80 hover:bg-rose-600 text-white text-xs sm:text-sm font-medium transition-colors" title="ออกจากระบบ">
+          <i data-lucide="power" class="w-4 h-4"></i> <span class="hidden sm:inline">ออกจากระบบ</span>
+        </button>
+        <button type="button" onclick="switchToFrontend()" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-medium transition-colors">
+          <i data-lucide="external-link" class="w-4 h-4"></i> กลับหน้าเว็บ
+        </button>
+      </div>
+    </div>
+
+    <div class="flex flex-1 overflow-hidden">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shadow-sm z-10 shrink-0 hidden md:flex overflow-y-auto">
+        <div class="p-4 border-b border-slate-100">
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">เมนูหลัก</p>
+          <nav class="space-y-1">
+            <button onclick="setBackofficeTab('dashboard')" id="tab-dashboard" class="bo-tab flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-royal-50 hover:text-royal-700 text-left">
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i> ภาพรวม
+            </button>
+            <button onclick="setBackofficeTab('sliders')" id="tab-sliders" data-perm="sliders" class="bo-tab flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-royal-50 hover:text-royal-700 text-left">
+              <i data-lucide="image" class="w-4 h-4"></i> จัดการภาพสไลด์
+            </button>
+            <button onclick="setBackofficeTab('news')" id="tab-news" data-perm="news" class="bo-tab flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-royal-50 hover:text-royal-700 text-left">
+              <i data-lucide="newspaper" class="w-4 h-4"></i> ข่าวสาร/ประกาศ
+            </button>
+            <button onclick="setBackofficeTab('documents')" id="tab-documents" data-perm="documents" class="bo-tab flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-royal-50 hover:text-royal-700 text-left">
+              <i data-lucide="folder-open" class="w-4 h-4"></i> เอกสารราชการ
+            </button>
+            <button onclick="setBackofficeTab('schools')" id="tab-schools" data-perm="schools" class="bo-tab flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-royal-50 hover:text-royal-700 text-left">
+              <i data-lucide="school" class="w-4 h-4"></i> ข้อมูลสถานศึกษา
+            </button>
+            <button onclick="setBackofficeTab('personnel')" id="tab-personnel" data-perm="personnel" class="bo-tab flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-royal-50 hover:text-royal-700 text-left">
+              <i data-lucide="users" class="w-4 h-4"></i> ทำเนียบบุคลากร
+            </button>
+          </nav>
+        </div>
+        <div class="p-4 border-b border-slate-100">
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">บริการ (E-Service)</p>
+          <nav class="space-y-1">
+            <button onclick="setBackofficeTab('admissions')" id="tab-admissions" data-perm="admissions" class="bo-tab flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-royal-50 hover:text-royal-700 text-left">
+              <i data-lucide="file-check" class="w-4 h-4"></i> รายชื่อผู้สมัครเรียน
+              <span id="badge-adm-count" class="ml-auto bg-rose-500 text-white text-[10px] px-2 py-0.5 rounded-full hidden">0</span>
+            </button>
+            <button onclick="setBackofficeTab('feedback')" id="tab-feedback" data-perm="feedback" class="bo-tab flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-royal-50 hover:text-royal-700 text-left">
+              <i data-lucide="message-square" class="w-4 h-4"></i> เรื่องร้องเรียน
+              <span id="badge-fb-count" class="ml-auto bg-amber-500 text-white text-[10px] px-2 py-0.5 rounded-full hidden">0</span>
+            </button>
+          </nav>
+        </div>
+        <div class="p-4 border-b border-slate-100" id="admin-security-section">
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">ความปลอดภัย & สิทธิ์</p>
+          <nav class="space-y-1">
+            <button onclick="setBackofficeTab('users')" id="tab-users" data-perm="users" class="bo-tab flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-royal-50 hover:text-royal-700 text-left">
+              <i data-lucide="shield" class="w-4 h-4 text-royal-600"></i> กำหนดสิทธิ์ผู้ใช้งาน
+            </button>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 p-6 overflow-y-auto bg-slate-50/50">
+        <div class="max-w-6xl mx-auto space-y-6">
+          <!-- Header dynamic text -->
+          <div class="flex justify-between items-end mb-6 border-b border-slate-200 pb-4">
+            <div>
+              <h2 id="bo-page-title" class="text-2xl font-heading font-bold text-royal-950">ภาพรวมระบบ</h2>
+              <p id="bo-page-subtitle" class="text-sm text-slate-500">จัดการข้อมูลและแสดงสถิติ</p>
+            </div>
+            <div id="bo-page-actions"></div>
+          </div>
+
+          <div id="backoffice-panel-content" class="w-full">
+            <!-- Content Injected via JS -->
+          </div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       5. MODALS & TOASTS
+  ====================================================================== -->
+  <!-- Generic Modal -->
+  <div id="global-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="modal-container">
+      <div class="px-6 py-4 bg-gradient-to-r from-royal-950 to-royal-800 text-white flex justify-between items-center shrink-0">
+        <h3 id="modal-title" class="font-heading font-bold text-lg">หัวข้อ</h3>
+        <button type="button" onclick="closeModal()" class="text-white/70 hover:text-white transition-colors bg-white/10 p-1.5 rounded-lg hover:bg-white/20"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div id="modal-body" class="p-6 overflow-y-auto space-y-4 flex-grow bg-slate-50/50 text-slate-700"></div>
+      <div id="modal-footer" class="p-4 bg-white border-t border-slate-100 flex justify-end gap-3 shrink-0"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-banner" class="hidden fixed bottom-5 right-5 z-[60] bg-white border-l-4 border-emerald-500 p-4 rounded-xl shadow-glass flex items-start gap-3 w-80 transform translate-x-full transition-transform duration-300">
+    <div class="p-1.5 bg-emerald-50 text-emerald-500 rounded-lg shrink-0" id="toast-icon-bg">
+      <i data-lucide="check-circle" class="w-5 h-5" id="toast-icon"></i>
+    </div>
+    <div>
+      <h4 id="toast-title" class="font-heading font-bold text-slate-800 text-sm">สำเร็จ</h4>
+      <p id="toast-message" class="text-xs text-slate-500 mt-0.5 leading-tight">ทำรายการเรียบร้อยแล้ว</p>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       6. JAVASCRIPT LOGIC (SUPABASE + APP STATE + RENDERING)
+  ====================================================================== -->
+  <script>
+    // ============================================================================
+    // การตั้งค่าการเชื่อมต่อฐานข้อมูล SUPABASE (ฝังในโค้ด)
+    // ============================================================================
+    const SUPABASE_URL = 'https://mpvpglwnoatjkkyauqvv.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wdnBnbHdub2F0amtreWF1cXZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUwNTk1MjMsImV4cCI6MjExMDYzNTUyM30.7-ohUOOsmbE2hyLVqHcAKEQ8tyAeZWB8pQOEXgkHpn0';
+    
+    let supabaseClient = null;
+    let isConnected = false;
+
+    // Load Data State
+    let DB = {
+      sliders: [], schools: [], news: [], personnel: [], documents: [], admissions: [], feedback: [], staffUsers: [],
+      settings: {
+        headline: 'พัฒนาการศึกษา',
+        subHeadline: 'เพื่ออนาคตเมืองสองแคว',
+        description: 'ศูนย์กลางข้อมูล ข่าวสาร และบริการดิจิทัล สำนักการศึกษา เทศบาลนครพิษณุโลก มุ่งมั่นจัดการศึกษาอย่างมีคุณภาพ ทันสมัย บนพื้นฐานคุณธรรม'
+      }
+    };
+    let currentStaffUser = JSON.parse(sessionStorage.getItem('phsmun_user')) || null;
+
+    async function saveDB() {
+      if (isConnected && supabaseClient) {
+        await supabaseClient.from('site_settings').upsert({ key: 'full_app_db', value: JSON.stringify(DB) });
+      }
+    }
+
+    // --- Core Utilities ---
+    const escapeHtml = (str) => String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    const generateId = (prefix) => prefix + '-' + Math.random().toString(36).substr(2, 9);
+    
+    // Date Formatter (Thai Format Full)
+    function formatThaiDate(isoString) {
+      if (!isoString) return '-';
+      const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+      const date = new Date(isoString);
+      if (isNaN(date.getTime())) return isoString; // fallback
+      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear() + 543}`;
+    }
+
+    // Date Formatter (Short Thai Format - DD/MM/YYYY พ.ศ.)
+    function formatShortThaiDate(isoString) {
+      if (!isoString) return '-';
+      const date = new Date(isoString);
+      if (isNaN(date.getTime())) return isoString; // fallback
+      const d = String(date.getDate()).padStart(2, '0');
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const y = date.getFullYear() + 543;
+      return `${d}/${m}/${y}`;
+    }
+
+    // Base64 (For Image Fallback ONLY)
+    const fileToBase64 = (file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+
+    // Supabase File Upload Handler
+    async function handleFileUpload(file) {
+      if (isConnected && supabaseClient) {
+        try {
+          const ext = file.name.split('.').pop();
+          const cleanName = file.name.replace(/[^a-zA-Z0-9.\-]/g, '');
+          const fileName = `${Date.now()}_${cleanName}`;
+          
+          const { data, error } = await supabaseClient.storage.from('public_files').upload(fileName, file);
+          if (error) throw error;
+          
+          const { data: urlData } = supabaseClient.storage.from('public_files').getPublicUrl(fileName);
+          return urlData.publicUrl;
+        } catch (err) {
+          console.warn("Storage upload failed, falling back to base64 if image", err);
+          return await fileToBase64(file);
+        }
+      } else {
+        return await fileToBase64(file);
+      }
+    }
+
+    // --- Slider Logic ---
+    let currentSlide = 0;
+    let slideInterval;
+    
+    function initHeroSlider() {
+      const imgEl = document.getElementById('hero-bg-slider');
+      const indicators = document.getElementById('slider-indicators');
+      if(!imgEl || DB.sliders.length === 0) return;
+      
+      indicators.innerHTML = DB.sliders.map((_, i) => `<button onclick="showSlide(${i}); startSlideTimer();" class="w-2.5 h-2.5 rounded-full transition-all ${i === 0 ? 'bg-white scale-125' : 'bg-white/50 hover:bg-white/80'}"></button>`).join('');
+      
+      showSlide(0);
+      startSlideTimer();
+    }
+
+    function showSlide(index) {
+      const imgEl = document.getElementById('hero-bg-slider');
+      const dots = document.getElementById('slider-indicators')?.children;
+      if(!imgEl || DB.sliders.length === 0) return;
+      
+      currentSlide = (index + DB.sliders.length) % DB.sliders.length;
+      imgEl.style.opacity = 0;
+      
+      if(dots) {
+        Array.from(dots).forEach((dot, i) => {
+          dot.className = `w-2.5 h-2.5 rounded-full transition-all ${i === currentSlide ? 'bg-white scale-125 shadow-md' : 'bg-white/50 hover:bg-white/80'}`;
+        });
+      }
+
+      setTimeout(() => {
+        imgEl.src = DB.sliders[currentSlide].url || DB.sliders[currentSlide];
+        imgEl.style.opacity = 1;
+      }, 300);
+    }
+
+    function nextSlide() { showSlide(currentSlide + 1); startSlideTimer(); }
+    function prevSlide() { showSlide(currentSlide - 1); startSlideTimer(); }
+    
+    function startSlideTimer() {
+      clearInterval(slideInterval);
+      slideInterval = setInterval(() => nextSlide(), 6000);
+    }
+
+    function showToast(title, message, type = 'success') {
+      const toast = document.getElementById('toast-banner');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-message').textContent = message;
+      
+      const iconBg = document.getElementById('toast-icon-bg');
+      const icon = document.getElementById('toast-icon');
+      
+      if(type === 'error') {
+        toast.className = "fixed bottom-5 right-5 z-[60] bg-white border-l-4 border-rose-500 p-4 rounded-xl shadow-glass flex items-start gap-3 w-80 transform transition-transform duration-300";
+        iconBg.className = "p-1.5 bg-rose-50 text-rose-500 rounded-lg shrink-0";
+        icon.setAttribute('data-lucide', 'x-circle');
+      } else {
+        toast.className = "fixed bottom-5 right-5 z-[60] bg-white border-l-4 border-emerald-500 p-4 rounded-xl shadow-glass flex items-start gap-3 w-80 transform transition-transform duration-300";
+        iconBg.className = "p-1.5 bg-emerald-50 text-emerald-500 rounded-lg shrink-0";
+        icon.setAttribute('data-lucide', 'check-circle');
+      }
+      
+      lucide.createIcons();
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.remove('translate-x-full'), 50);
+      setTimeout(() => {
+        toast.classList.add('translate-x-full');
+        setTimeout(() => toast.classList.add('hidden'), 300);
+      }, 4000);
+    }
+
+    function openModal({ title, bodyHtml, footerHtml }) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-body').innerHTML = bodyHtml;
+      document.getElementById('modal-footer').innerHTML = footerHtml || `<button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-sm font-heading font-medium transition-colors">ปิดหน้าต่าง</button>`;
+      
+      const modal = document.getElementById('global-modal');
+      const container = document.getElementById('modal-container');
+      
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        container.classList.remove('scale-95');
+      }, 10);
+      lucide.createIcons();
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('global-modal');
+      const container = document.getElementById('modal-container');
+      
+      modal.classList.add('opacity-0');
+      container.classList.add('scale-95');
+      
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        document.getElementById('modal-body').innerHTML = '';
+      }, 300);
+    }
+
+    // --- Frontend Render Logic ---
+    function renderFrontend() {
+      // Setup Settings (Headline)
+      if (!DB.settings) {
+        DB.settings = { headline: 'พัฒนาการศึกษา', subHeadline: 'เพื่ออนาคตเมืองสองแคว', description: 'ศูนย์กลางข้อมูล ข่าวสาร และบริการดิจิทัล สำนักการศึกษา เทศบาลนครพิษณุโลก มุ่งมั่นจัดการศึกษาอย่างมีคุณภาพ ทันสมัย บนพื้นฐานคุณธรรม' };
+      }
+      document.getElementById('front-headline').textContent = DB.settings.headline;
+      document.getElementById('front-subheadline').textContent = DB.settings.subHeadline;
+      document.getElementById('front-description').textContent = DB.settings.description;
+
+      // Metrics
+      document.getElementById('metric-total-schools').textContent = DB.schools.length;
+      let totalStd = 0, totalTch = 0;
+      DB.schools.forEach(s => { totalStd += parseInt(s.students || 0); totalTch += parseInt(s.teachers || 0); });
+      document.getElementById('metric-total-students').textContent = totalStd.toLocaleString();
+      document.getElementById('metric-total-teachers').textContent = totalTch.toLocaleString();
+      
+      const metricFeedback = document.getElementById('metric-total-feedback');
+      if(metricFeedback) {
+        metricFeedback.textContent = DB.feedback.length.toLocaleString();
+        document.getElementById('metric-fb-pending').textContent = DB.feedback.filter(f => f.status === 'รอตรวจสอบ').length.toLocaleString();
+        document.getElementById('metric-fb-progress').textContent = DB.feedback.filter(f => f.status === 'กำลังดำเนินการ').length.toLocaleString();
+        document.getElementById('metric-fb-done').textContent = DB.feedback.filter(f => f.status === 'ดำเนินการเสร็จสิ้น').length.toLocaleString();
+      }
+
+      filterNewsFront(currentNewsCat);
+
+      const dList = document.getElementById('front-documents-list');
+      const docTerm = (document.getElementById('front-doc-search')?.value || '').toLowerCase();
+      
+      let filteredDocs = DB.documents;
+      if (docTerm) filteredDocs = filteredDocs.filter(d => d.title.toLowerCase().includes(docTerm));
+      filteredDocs = filteredDocs.slice(0, 10);
+
+      if (dList) {
+        dList.innerHTML = filteredDocs.length ? filteredDocs.map((d, index) => `
+          <tr class="hover:bg-slate-50 transition-colors">
+            <td class="p-4 text-center text-slate-400">${index + 1}</td>
+            <td class="p-4 font-medium text-royal-950">${escapeHtml(d.title)}</td>
+            <td class="p-4 text-slate-500 text-center whitespace-nowrap"><i data-lucide="calendar" class="w-3 h-3 inline mr-1"></i>${formatThaiDate(d.date)}</td>
+            <td class="p-4 text-center">
+              <a href="${escapeHtml(d.fileUrl)}" target="_blank" class="inline-flex p-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors shadow-sm" title="เปิด/ดาวน์โหลด">
+                <i data-lucide="external-link" class="w-4 h-4"></i>
+              </a>
+            </td>
+          </tr>
+        `).join('') : `<tr><td colspan="4" class="p-8 text-center text-slate-400">ไม่พบเอกสารที่ค้นหา</td></tr>`;
+      }
+
+      const sGrid = document.getElementById('front-schools-grid');
+      sGrid.innerHTML = DB.schools.map(s => `
+        <div class="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-shadow group flex flex-col">
+          <div class="h-48 overflow-hidden relative shrink-0">
+            <img src="${s.coverUrl || 'https://placehold.co/600x400/f8fafc/94a3b8?text=No+Image'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2.5 py-1 rounded-md text-xs font-bold text-royal-700 shadow-sm">${escapeHtml(s.categoryLabel)}</div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col">
+            <h3 class="font-heading font-bold text-lg text-royal-950 mb-2">${escapeHtml(s.name)}</h3>
+            <div class="space-y-1 text-sm text-slate-600 mb-4 flex-grow">
+              <p><span class="font-semibold text-slate-800">ผู้อำนวยการ:</span> ${escapeHtml(s.director)}</p>
+              <p><span class="font-semibold text-slate-800">เปิดสอน:</span> ${escapeHtml(s.levels)}</p>
+              <p><span class="font-semibold text-slate-800">ที่ตั้ง:</span> ${escapeHtml(s.address)}</p>
+              <p><span class="font-semibold text-slate-800">เบอร์โทร:</span> ${escapeHtml(s.phone)}</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4 border-t border-slate-100 pt-4 mt-auto">
+              <div class="bg-royal-50/50 p-2 rounded-lg text-center"><p class="text-[10px] text-slate-500 uppercase">นักเรียน</p><p class="font-bold text-royal-700">${parseInt(s.students||0).toLocaleString()} คน</p></div>
+              <div class="bg-gold-50/50 p-2 rounded-lg text-center"><p class="text-[10px] text-slate-500 uppercase">ครูบุคลากร</p><p class="font-bold text-gold-700">${parseInt(s.teachers||0).toLocaleString()} คน</p></div>
+            </div>
+            ${s.externalLink ? `
+            <div class="mt-4 shrink-0 border-t border-slate-100 pt-4">
+              <a href="${escapeHtml(s.externalLink)}" target="_blank" class="flex items-center justify-center gap-1.5 w-full py-2 bg-royal-50 hover:bg-royal-100 text-royal-700 text-center rounded-xl text-xs font-bold transition-colors border border-royal-100">
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i> ดูรายละเอียดเพิ่มเติม
+              </a>
+            </div>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+
+      const pGrid = document.getElementById('front-personnel-grid');
+      const buildHierarchy = (personnelList) => {
+        const root = [];
+        const map = {};
+        personnelList.forEach(p => { map[p.id] = { ...p, children: [] }; });
+        personnelList.forEach(p => {
+          if (p.parentId && map[p.parentId]) {
+            map[p.parentId].children.push(map[p.id]);
+          } else {
+            root.push(map[p.id]);
+          }
+        });
+        return root;
+      };
+
+      const generateTreeHtml = (nodes) => {
+        if (!nodes || nodes.length === 0) return '';
+        let html = '<ul>';
+        nodes.forEach(node => {
+          html += `<li>`;
+          html += `
+            <div class="inline-flex flex-col items-center group w-32 sm:w-40 text-center bg-white p-3 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md hover:border-royal-200 transition-all relative z-10 mx-auto">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-4 border-royal-50 shadow-inner mb-2 group-hover:border-gold-300 transition-colors bg-slate-100 shrink-0">
+                <img src="${node.photoUrl}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x400/94a3b8/ffffff'"/>
+              </div>
+              <h4 class="font-heading font-bold text-royal-950 text-xs sm:text-sm leading-tight">${escapeHtml(node.name)}</h4>
+              <p class="text-[9px] sm:text-[10px] text-slate-500 mt-0.5 line-clamp-2 leading-tight">${escapeHtml(node.position)}</p>
+              <div class="mt-1.5 px-2 py-0.5 bg-slate-50 text-[8px] sm:text-[9px] rounded-md text-slate-400 border border-slate-100">${escapeHtml(node.level)}</div>
+            </div>
+          `;
+          if (node.children.length > 0) {
+            html += generateTreeHtml(node.children);
+          }
+          html += `</li>`;
+        });
+        html += '</ul>';
+        return html;
+      };
+
+      const treeData = buildHierarchy(DB.personnel);
+      pGrid.innerHTML = `<div class="org-tree w-full overflow-x-auto hide-scroll pb-10 flex justify-center">${generateTreeHtml(treeData)}</div>`;
+      lucide.createIcons();
+    }
+
+    let currentNewsCat = 'all';
+    function filterNewsFront(cat, btnElement) {
+      if(cat) currentNewsCat = cat;
+
+      if(btnElement) {
+        document.querySelectorAll('.news-tab').forEach(b => {
+          b.classList.remove('active', 'bg-white', 'text-royal-700', 'shadow-sm');
+          b.classList.add('text-slate-600');
+        });
+        btnElement.classList.add('active', 'bg-white', 'text-royal-700', 'shadow-sm');
+        btnElement.classList.remove('text-slate-600');
+      }
+
+      const term = (document.getElementById('front-news-search')?.value || '').toLowerCase();
+      const grid = document.getElementById('front-news-grid');
+      if (!grid) return;
+      
+      let filtered = currentNewsCat === 'all' ? DB.news : DB.news.filter(n => n.category === currentNewsCat);
+      if (term) filtered = filtered.filter(n => n.title.toLowerCase().includes(term) || n.summary.toLowerCase().includes(term));
+      
+      filtered = filtered.slice(0, 10);
+      
+      grid.innerHTML = filtered.length > 0 ? filtered.map(n => `
+        <div onclick="viewNewsDetail('${n.id}')" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all group border border-slate-100 flex flex-col h-full cursor-pointer">
+          <div class="relative h-48 overflow-hidden shrink-0 bg-slate-100">
+            <img src="${n.imageUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/cbd5e1/ffffff'" />
+            <div class="absolute top-3 left-3 px-2 py-1 rounded-md bg-white/90 backdrop-blur text-xs font-bold text-royal-800 shadow-sm">${escapeHtml(n.categoryLabel)}</div>
+          </div>
+          <div class="p-5 flex flex-col flex-grow">
+            <p class="text-xs text-slate-400 mb-2 flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${formatThaiDate(n.date)}</p>
+            <h3 class="font-heading font-bold text-royal-950 text-base mb-2 line-clamp-2 leading-snug group-hover:text-gold-600 transition-colors">${escapeHtml(n.title)}</h3>
+            <p class="text-sm text-slate-500 line-clamp-2 mt-auto">${escapeHtml(n.summary)}</p>
+          </div>
+        </div>
+      `).join('') : `<div class="col-span-full py-10 text-center text-slate-400">ไม่พบข่าวสารที่ค้นหา</div>`;
+      lucide.createIcons();
+    }
+
+    function viewNewsDetail(id) {
+      const news = DB.news.find(n => n.id === id);
+      if (!news) return;
+      openModal({
+        title: news.categoryLabel,
+        bodyHtml: `
+          <img src="${news.imageUrl}" class="w-full h-48 sm:h-72 object-cover rounded-xl mb-4 shadow-sm" onerror="this.src='https://placehold.co/600x400/cbd5e1/ffffff'" />
+          <h2 class="font-heading font-bold text-2xl text-royal-950 mb-2">${escapeHtml(news.title)}</h2>
+          <div class="flex items-center gap-4 text-xs text-slate-500 mb-6 border-b pb-4">
+            <span class="inline-flex items-center"><i data-lucide="calendar" class="w-4 h-4 mr-1"></i> ประกาศเมื่อ: ${formatThaiDate(news.date)}</span>
+          </div>
+          <div class="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap">${escapeHtml(news.summary)}</div>
+          
+          ${news.externalLink ? `
+          <div class="mt-6 pt-4 border-t border-slate-100 text-center sm:text-left">
+            <a href="${escapeHtml(news.externalLink)}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-50 text-blue-700 rounded-xl text-sm font-bold hover:bg-blue-100 transition-colors shadow-sm">
+              <i data-lucide="external-link" class="w-4 h-4"></i> อ่านเพิ่มเติม / ดาวน์โหลดเอกสารแนบ
+            </a>
+          </div>` : ''}
+        `,
+        footerHtml: `<button type="button" onclick="closeModal()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-sm font-heading font-medium transition-colors">ปิดหน้าต่าง</button>`
+      });
+    }
+
+    // --- E-Services Forms ---
+    function openAdmissionForm() {
+      openModal({
+        title: 'ฟอร์มรับสมัครเรียนออนไลน์',
+        bodyHtml: `
+          <div class="bg-blue-50 text-blue-800 text-sm p-3 rounded-xl mb-4 border border-blue-100 flex items-start gap-2">
+            <i data-lucide="info" class="w-5 h-5 shrink-0 mt-0.5"></i>
+            <p>กรุณากรอกข้อมูลให้ครบถ้วน เจ้าหน้าที่จะติดต่อกลับเพื่อแจ้งกำหนดการมอบตัว</p>
+          </div>
+          <form id="form-admission" onsubmit="submitAdmission(event)" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div><label class="block text-xs font-bold mb-1">ชื่อ-นามสกุล นักเรียน *</label><input type="text" name="studentName" required class="w-full p-2.5 border rounded-xl bg-white" placeholder="ด.ช. / ด.ญ."/></div>
+              <div><label class="block text-xs font-bold mb-1">เลขบัตรประชาชน (13 หลัก) *</label><input type="text" name="citizenId" required pattern="[0-9]{13}" class="w-full p-2.5 border rounded-xl bg-white" placeholder="xxxxxxxxxxxxx"/></div>
+              <div>
+                <label class="block text-xs font-bold mb-1">ระดับชั้นที่ต้องการเข้าศึกษา *</label>
+                <select name="level" required class="w-full p-2.5 border rounded-xl bg-white">
+                  <option value="">-- เลือกระดับชั้น --</option>
+                  <option value="อนุบาล 1">อนุบาล 1</option><option value="ป.1">ประถมศึกษาปีที่ 1</option><option value="ม.1">มัธยมศึกษาปีที่ 1</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold mb-1">สถานศึกษาที่ต้องการ *</label>
+                <select name="schoolName" required class="w-full p-2.5 border rounded-xl bg-white">
+                  <option value="">-- เลือกโรงเรียน --</option>
+                  ${DB.schools.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}
+                </select>
+              </div>
+              <div><label class="block text-xs font-bold mb-1">ชื่อผู้ปกครอง *</label><input type="text" name="parentName" required class="w-full p-2.5 border rounded-xl bg-white"/></div>
+              <div><label class="block text-xs font-bold mb-1">เบอร์โทรศัพท์ติดต่อ *</label><input type="tel" name="parentPhone" required class="w-full p-2.5 border rounded-xl bg-white" placeholder="08xxxxxxxx"/></div>
+            </div>
+            <button type="submit" class="w-full mt-4 py-3 bg-gradient-to-r from-royal-900 to-royal-700 text-white rounded-xl font-heading font-bold shadow-lg hover:shadow-xl transition-all">ส่งใบสมัคร</button>
+          </form>
+        `,
+        footerHtml: ''
+      });
+    }
+
+    async function submitAdmission(e) {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const newAd = {
+        id: generateId('adm'),
+        studentName: fd.get('studentName'),
+        citizenId: fd.get('citizenId'),
+        level: fd.get('level'),
+        schoolName: fd.get('schoolName'),
+        parentName: fd.get('parentName'),
+        parentPhone: fd.get('parentPhone'),
+        submittedAt: new Date().toISOString(),
+        status: 'รอตรวจสอบ'
+      };
+      
+      DB.admissions.unshift(newAd);
+      await saveDB();
+      
+      closeModal();
+      showToast('ส่งใบสมัครสำเร็จ', 'ระบบได้รับข้อมูลของท่านแล้ว เจ้าหน้าที่จะดำเนินการตรวจสอบ');
+      updateBackofficeBadges();
+    }
+
+    function openFeedbackForm() {
+       openModal({
+        title: 'ระบบรับเรื่องร้องเรียน / ข้อเสนอแนะออนไลน์',
+        bodyHtml: `
+          <div class="bg-amber-50 text-amber-800 text-xs p-3 rounded-xl mb-4 border border-amber-200 flex items-start gap-2">
+            <i data-lucide="shield-alert" class="w-4 h-4 shrink-0 mt-0.5 text-amber-600"></i>
+            <p>ข้อมูลของท่านจะถูกเก็บรักษาเป็นความลับ และส่งตรงถึงผู้บริหารสำนักการศึกษา</p>
+          </div>
+          <form id="form-feedback" onsubmit="submitFeedback(event)" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold mb-1">ประเภทเรื่อง *</label>
+                <select name="category" required class="w-full p-2.5 border rounded-xl bg-white text-sm">
+                  <option value="การจัดการเรียนการสอน">การจัดการเรียนการสอน</option>
+                  <option value="อาคารสถานที่/สิ่งแวดล้อม">อาคารสถานที่ / สิ่งแวดล้อม</option>
+                  <option value="พฤติกรรมบุคลากร">พฤติกรรมบุคลากร / การให้บริการ</option>
+                  <option value="ข้อเสนอแนะทั่วไป">ข้อเสนอแนะ / ชื่นชม</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold mb-1">หัวข้อเรื่อง *</label>
+                <input type="text" name="topic" required class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="ระบุหัวข้อเรื่องโดยย่อ"/>
+              </div>
+            </div>
+            <div><label class="block text-xs font-bold mb-1">รายละเอียดเรื่องร้องเรียน / ข้อเสนอแนะ *</label><textarea name="message" rows="4" required class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="ระบุรายละเอียด..."></textarea></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div><label class="block text-xs font-bold mb-1">ชื่อ-นามสกุล ผู้แจ้ง (ไม่บังคับ)</label><input type="text" name="senderName" class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="ปกปิดชื่อได้"/></div>
+              <div><label class="block text-xs font-bold mb-1">เบอร์โทรศัพท์ / อีเมลติดต่อ *</label><input type="text" name="contact" required class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="สำหรับเจ้าหน้าที่แจ้งผล"/></div>
+            </div>
+            <button type="submit" class="w-full mt-4 py-3 bg-gradient-to-r from-blue-700 to-indigo-600 text-white rounded-xl font-heading font-bold shadow-lg hover:shadow-xl transition-all">ส่งเรื่องร้องเรียน / ข้อเสนอแนะ</button>
+          </form>
+        `,
+        footerHtml: ''
+      });
+    }
+
+    async function submitFeedback(e) {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const refCode = 'FB-' + Math.floor(100000 + Math.random() * 900000);
+      const submittedTime = new Date().toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' });
+      const newFb = {
+        id: refCode,
+        category: fd.get('category'),
+        topic: fd.get('topic'),
+        message: fd.get('message'),
+        senderName: fd.get('senderName') || 'ไม่ประสงค์ออกนาม',
+        contact: fd.get('contact') || '-',
+        status: 'รอตรวจสอบ',
+        reply: '',
+        thread: [{ sender: 'ประชาชน', text: fd.get('message'), time: submittedTime }],
+        submittedAt: submittedTime
+      };
+      DB.feedback.unshift(newFb);
+      await saveDB();
+      updateBackofficeBadges();
+      renderFrontend();
+      
+      openModal({
+        title: 'ส่งเรื่องร้องเรียนสำเร็จ',
+        bodyHtml: `
+          <div class="text-center py-6 space-y-4">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+              <i data-lucide="check-circle-2" class="w-10 h-10"></i>
+            </div>
+            <h4 class="font-heading font-bold text-xl text-royal-950">ระบบได้รับข้อมูลเรียบร้อยแล้ว</h4>
+            <p class="text-sm text-slate-600">กรุณาบันทึกรหัสอ้างอิงเพื่อใช้ติดตามสถานะ</p>
+            <div class="p-4 bg-slate-100 rounded-2xl border border-slate-200 inline-block">
+              <span class="text-xs text-slate-500 block">รหัสติดตามเรื่อง (Tracking ID)</span>
+              <span class="font-mono font-bold text-2xl text-royal-800 tracking-wider">${refCode}</span>
+            </div>
+          </div>
+        `,
+        footerHtml: `<button type="button" onclick="closeModal()" class="w-full py-2.5 bg-royal-900 text-white rounded-xl font-heading font-bold">ตกลง</button>`
+      });
+    }
+
+    function openTrackFeedbackModal() {
+      openModal({
+        title: 'ติดตามสถานะเรื่องร้องเรียน',
+        bodyHtml: `
+          <div class="space-y-4">
+            <div class="flex gap-2">
+              <input type="text" id="track-fb-input" placeholder="กรอกรหัสติดตามเรื่อง เช่น FB-123456" class="flex-grow p-2.5 border rounded-xl bg-white text-sm font-mono uppercase"/>
+              <button type="button" onclick="searchFeedbackStatus()" class="px-5 py-2.5 bg-royal-900 text-white rounded-xl font-heading font-bold text-sm hover:bg-royal-800">ค้นหา</button>
+            </div>
+            <div id="track-fb-result" class="pt-2">
+              <p class="text-xs text-slate-400 text-center py-6">ระบุรหัสอ้างอิงที่ได้รับเพื่อตรวจสอบความคืบหน้า</p>
+            </div>
+          </div>
+        `,
+        footerHtml: `<button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-xl text-sm font-heading font-medium">ปิดหน้าต่าง</button>`
+      });
+    }
+
+    function searchFeedbackStatus() {
+      const code = (document.getElementById('track-fb-input')?.value || '').trim().toUpperCase();
+      const resBox = document.getElementById('track-fb-result');
+      const item = DB.feedback.find(f => f.id.toUpperCase() === code);
+      
+      if (!item) {
+        resBox.innerHTML = `<div class="p-4 bg-rose-50 text-rose-700 rounded-xl text-sm text-center border border-rose-100">ไม่พบข้อมูลรหัส <strong>${escapeHtml(code)}</strong></div>`;
+        return;
+      }
+
+      const statusColors = {
+        'รอตรวจสอบ': 'bg-amber-100 text-amber-800 border-amber-200',
+        'กำลังดำเนินการ': 'bg-blue-100 text-blue-800 border-blue-200',
+        'ดำเนินการเสร็จสิ้น': 'bg-emerald-100 text-emerald-800 border-emerald-200'
+      };
+      const badgeClass = statusColors[item.status] || 'bg-slate-100 text-slate-800';
+
+      let threadHtml = (item.thread || []).map(t => {
+         if(t.sender === 'เจ้าหน้าที่') {
+           return `<div class="bg-royal-50 p-3 rounded-xl border border-royal-100 mb-2 ml-4">
+             <p class="text-[10px] font-bold text-royal-800 mb-1">ตอบกลับโดยเจ้าหน้าที่ <span class="text-slate-400 font-normal ml-2">${t.time}</span></p>
+             <p class="text-sm text-slate-700 whitespace-pre-wrap">${escapeHtml(t.text)}</p>
+           </div>`;
+         } else {
+           return `<div class="bg-slate-50 p-3 rounded-xl border border-slate-100 mb-2 mr-4">
+             <p class="text-[10px] font-bold text-slate-500 mb-1">ข้อความจากผู้ร้องเรียน <span class="text-slate-400 font-normal ml-2">${t.time}</span></p>
+             <p class="text-sm text-slate-700 whitespace-pre-wrap">${escapeHtml(t.text)}</p>
+           </div>`;
+         }
+      }).join('');
+
+      resBox.innerHTML = `
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm max-h-[60vh] overflow-y-auto flex flex-col">
+          <div class="flex items-center justify-between border-b pb-3 mb-3 shrink-0">
+            <span class="font-mono font-bold text-royal-800">${escapeHtml(item.id)}</span>
+            <span class="px-3 py-1 rounded-full text-xs font-bold border ${badgeClass}">${escapeHtml(item.status)}</span>
+          </div>
+          <div class="shrink-0 mb-2">
+            <p class="text-[10px] text-slate-400">หัวข้อเรื่อง</p>
+            <p class="font-heading font-bold text-slate-800 text-sm">${escapeHtml(item.topic)}</p>
+          </div>
+          <div class="flex-grow space-y-1 mb-4 border-t pt-4 border-slate-100">
+             ${threadHtml}
+          </div>
+          ${item.status !== 'ดำเนินการเสร็จสิ้น' ? `
+          <div class="mt-4 pt-4 border-t border-slate-100 shrink-0">
+             <label class="block text-[10px] font-bold text-slate-500 mb-2">ส่งข้อความเพิ่มเติม</label>
+             <div class="flex gap-2">
+               <textarea id="citizen-reply-text" rows="2" class="flex-grow p-2.5 border rounded-xl bg-slate-50 text-sm focus:border-royal-500 focus:bg-white outline-none" placeholder="พิมพ์ข้อความ..."></textarea>
+               <button type="button" onclick="submitCitizenReply('${item.id}')" class="px-4 py-2 bg-royal-900 text-white rounded-xl font-bold text-sm shadow-md">ส่ง</button>
+             </div>
+          </div>` : `<div class="mt-4 pt-3 border-t border-slate-100 text-center text-xs text-slate-400">ปิดรับข้อความแล้ว</div>`}
+        </div>
+      `;
+    }
+
+    async function submitCitizenReply(id) {
+       const text = (document.getElementById('citizen-reply-text')?.value || '').trim();
+       if(!text) return;
+
+       const idx = DB.feedback.findIndex(f => f.id === id);
+       if(idx > -1) {
+          DB.feedback[idx].thread.push({ sender: 'ประชาชน', text: text, time: new Date().toLocaleString('th-TH') });
+          await saveDB();
+          searchFeedbackStatus(); 
+          showToast('ส่งข้อความสำเร็จ', 'ส่งข้อความไปยังเจ้าหน้าที่แล้ว');
+       }
+    }
+
+    // --- Floating Pop-up ---
+    function toggleSocialPopup() {
+      const panel = document.getElementById('social-popup-panel');
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        setTimeout(() => panel.classList.remove('scale-95', 'opacity-0'), 10);
+      } else {
+        panel.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => panel.classList.add('hidden'), 250);
+      }
+    }
+
+    // --- Back-Office Auth & Permission Logic ---
+    function handleBackofficeEntry() {
+      if (currentStaffUser) {
+        enterBackofficeWorkspace();
+        return;
+      }
+      openModal({
+        title: 'เข้าสู่ระบบหลังบ้าน (สำหรับเจ้าหน้าที่)',
+        bodyHtml: `
+          <form id="form-staff-login" onsubmit="submitStaffLogin(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold mb-1">ชื่อผู้ใช้งาน (Username) *</label>
+              <input type="text" name="username" required class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="ระบุชื่อผู้ใช้งาน" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">รหัสผ่าน (Password) *</label>
+              <input type="password" name="password" required class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="••••••" />
+            </div>
+            <button type="submit" class="w-full mt-2 py-3 bg-gradient-to-r from-royal-900 to-royal-700 text-white rounded-xl font-heading font-bold shadow-lg">เข้าสู่ระบบ</button>
+          </form>
+        `,
+        footerHtml: ''
+      });
+    }
+
+    function submitStaffLogin(e) {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const uname = (fd.get('username') || '').trim();
+      const pwd = (fd.get('password') || '').trim();
+
+      const user = DB.staffUsers.find(u => u.username === uname && u.password === pwd);
+      if (!user) {
+        showToast('เข้าสู่ระบบไม่สำเร็จ', 'ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง', 'error');
+        return;
+      }
+      if (!user.active) {
+        showToast('บัญชีถูกระงับ', 'บัญชีถูกปิดการใช้งาน กรุณาติดต่อผู้ดูแลระบบ', 'error');
+        return;
+      }
+
+      currentStaffUser = user;
+      sessionStorage.setItem('phsmun_user', JSON.stringify(user));
+      closeModal();
+      showToast('ยินดีต้อนรับ', `เข้าสู่ระบบในชื่อ ${user.name}`);
+      enterBackofficeWorkspace();
+    }
+
+    function enterBackofficeWorkspace() {
+      document.getElementById('main-content').classList.add('hidden');
+      document.getElementById('main-header').classList.add('hidden');
+      document.getElementById('floating-social-widget').classList.add('hidden');
+      document.getElementById('backoffice-workspace').classList.remove('hidden');
+      
+      document.getElementById('bo-current-user-label').textContent = `${currentStaffUser.name} (${currentStaffUser.roleLabel})`;
+      applyRolePermissions();
+      updateBackofficeBadges();
+      setBackofficeTab('dashboard');
+    }
+
+    function logoutBackoffice() {
+      currentStaffUser = null;
+      sessionStorage.removeItem('phsmun_user');
+      switchToFrontend();
+      showToast('ออกจากระบบแล้ว', 'ท่านได้ออกจากระบบจัดการหลังบ้านเรียบร้อย');
+    }
+
+    function applyRolePermissions() {
+      if (!currentStaffUser) return;
+      const perms = currentStaffUser.permissions || [];
+      document.querySelectorAll('[data-perm]').forEach(el => {
+        const reqPerm = el.getAttribute('data-perm');
+        if (currentStaffUser.role === 'SUPER_ADMIN' || perms.includes(reqPerm)) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+      const secSection = document.getElementById('admin-security-section');
+      if (currentStaffUser.role === 'SUPER_ADMIN' || perms.includes('users')) {
+        secSection.classList.remove('hidden');
+      } else {
+        secSection.classList.add('hidden');
+      }
+    }
+
+    function hasPermission(permKey) {
+      if (!currentStaffUser) return false;
+      if (currentStaffUser.role === 'SUPER_ADMIN') return true;
+      return (currentStaffUser.permissions || []).includes(permKey);
+    }
+
+    function switchToFrontend() {
+      document.getElementById('main-content').classList.remove('hidden');
+      document.getElementById('main-header').classList.remove('hidden');
+      document.getElementById('floating-social-widget').classList.remove('hidden');
+      document.getElementById('backoffice-workspace').classList.add('hidden');
+      renderFrontend();
+    }
+
+    function updateBackofficeBadges() {
+      const pCount = DB.admissions.filter(a => a.status === 'รอตรวจสอบ').length;
+      const b = document.getElementById('badge-adm-count');
+      if (b) {
+        if(pCount > 0) { b.textContent = pCount; b.classList.remove('hidden'); } 
+        else { b.classList.add('hidden'); }
+      }
+      const fbCount = DB.feedback.filter(f => f.status === 'รอตรวจสอบ').length;
+      const fbBadge = document.getElementById('badge-fb-count');
+      if (fbBadge) {
+        if(fbCount > 0) { fbBadge.textContent = fbCount; fbBadge.classList.remove('hidden'); } 
+        else { fbBadge.classList.add('hidden'); }
+      }
+    }
+
+    function setBackofficeTab(tab) {
+      if (tab !== 'dashboard' && !hasPermission(tab)) {
+        showToast('ไม่มีสิทธิ์เข้าถึง', 'บัญชีของท่านไม่ได้รับอนุญาตให้เข้าถึงเมนูนี้', 'error');
+        return;
+      }
+      document.querySelectorAll('.bo-tab').forEach(el => {
+        el.classList.remove('bg-royal-50', 'text-royal-700', 'border-r-4', 'border-royal-600');
+      });
+      const activeBtn = document.getElementById(`tab-${tab}`);
+      if(activeBtn) {
+        activeBtn.classList.add('bg-royal-50', 'text-royal-700', 'border-r-4', 'border-royal-600');
+      }
+
+      const content = document.getElementById('backoffice-panel-content');
+      const title = document.getElementById('bo-page-title');
+      const sub = document.getElementById('bo-page-subtitle');
+      const actions = document.getElementById('bo-page-actions');
+      actions.innerHTML = ''; 
+
+      if (tab === 'dashboard') {
+        title.textContent = 'Dashboard ภาพรวม'; sub.textContent = 'สถิติข้อมูลภายในระบบ';
+        actions.innerHTML = `<button onclick="editSiteSettingsModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm"><i data-lucide="edit-3" class="w-4 h-4"></i> แก้ไขข้อความต้อนรับหน้าเว็บ</button>`;
+
+        content.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">สถานศึกษาทั้งหมด</p><p class="text-2xl font-bold font-heading text-royal-900 mt-1">${DB.schools.length}</p></div>
+            <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">ข่าวสารทั้งหมด</p><p class="text-2xl font-bold font-heading text-royal-900 mt-1">${DB.news.length}</p></div>
+            <div class="bg-white p-5 rounded-2xl border shadow-sm border-l-4 border-l-rose-500"><p class="text-sm text-slate-500">ใบสมัครรอตรวจสอบ</p><p class="text-2xl font-bold font-heading text-rose-600 mt-1">${DB.admissions.filter(a => a.status === 'รอตรวจสอบ').length}</p></div>
+            <div class="bg-white p-5 rounded-2xl border shadow-sm border-l-4 border-l-amber-500"><p class="text-sm text-slate-500">เรื่องร้องเรียนรอตรวจสอบ</p><p class="text-2xl font-bold font-heading text-amber-600 mt-1">${DB.feedback.filter(f => f.status === 'รอตรวจสอบ').length}</p></div>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border shadow-sm h-[350px] relative w-full">
+            <canvas id="dashboardChart"></canvas>
+          </div>
+        `;
+        setTimeout(() => {
+          const ctx = document.getElementById('dashboardChart');
+          if(ctx) {
+            new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: DB.schools.map(s => s.name.replace('โรงเรียนเทศบาล ', 'ท.')),
+                datasets: [
+                  { label: 'จำนวนนักเรียน (คน)', data: DB.schools.map(s => parseInt(s.students||0)), backgroundColor: '#A855F7', borderRadius: 6 },
+                  { label: 'จำนวนครู (คน)', data: DB.schools.map(s => parseInt(s.teachers||0)), backgroundColor: '#FCD34D', borderRadius: 6 }
+                ]
+              },
+              options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+            });
+          }
+        }, 100);
+      } 
+      else if (tab === 'sliders') {
+        title.textContent = 'จัดการภาพสไลด์'; sub.textContent = 'รูปภาพที่จะหมุนเวียนแสดง (อัตราส่วน 16:9 แนะนำ)';
+        actions.innerHTML = `<button onclick="editSliderModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่มภาพสไลด์</button>`;
+        
+        let rows = DB.sliders.map((s, index) => `
+          <tr class="border-b hover:bg-slate-50">
+            <td class="p-3 w-12 text-center text-slate-400">${index + 1}</td>
+            <td class="p-3"><img src="${escapeHtml(s.url || s)}" class="w-32 h-16 object-cover rounded border shadow-sm"/></td>
+            <td class="p-3 text-sm text-royal-950 font-bold">${escapeHtml(s.name || 'ไม่มีชื่อ')}</td>
+            <td class="p-3 text-right">
+              <button onclick="deleteSlider(${index})" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+            </td>
+          </tr>
+        `).join('');
+        content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4 text-center">ลำดับ</th><th class="p-4">รูปภาพ</th><th class="p-4">ชื่อภาพ</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="text-center p-8 text-slate-400">ไม่มีข้อมูล</td></tr>'}</tbody></table></div>`;
+      }
+      else if (tab === 'documents') {
+        title.textContent = 'เอกสารราชการ'; sub.textContent = 'อัปโหลดหรือแปะลิงก์เอกสารสำหรับให้ประชาชนดาวน์โหลด';
+        actions.innerHTML = `<button onclick="editDocumentModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2"><i data-lucide="upload" class="w-4 h-4"></i> เพิ่มเอกสาร</button>`;
+        
+        let rows = DB.documents.map(d => `
+          <tr class="border-b hover:bg-slate-50">
+            <td class="p-3"><i data-lucide="file-text" class="w-6 h-6 text-slate-400"></i></td>
+            <td class="p-3 font-bold text-sm text-royal-950">${escapeHtml(d.title)}</td>
+            <td class="p-3 text-sm text-slate-500">${formatShortThaiDate(d.date)}</td>
+            <td class="p-3 text-right whitespace-nowrap">
+              <button onclick="editDocumentModal('${d.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg"><i data-lucide="edit" class="w-4 h-4"></i></button>
+              <button onclick="deleteRecord('documents', '${d.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+            </td>
+          </tr>
+        `).join('');
+        content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4 w-16">ชนิด</th><th class="p-4">ชื่อเอกสาร</th><th class="p-4">วันที่เผยแพร่</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="text-center p-8 text-slate-400">ไม่มีข้อมูลเอกสาร</td></tr>'}</tbody></table></div>`;
+      }
+      else if (tab === 'news') {
+        title.textContent = 'จัดการข่าวสาร'; sub.textContent = 'เพิ่ม ลบ แก้ไข ข่าวและประกาศ';
+        actions.innerHTML = `<button onclick="editNewsModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่มข่าวใหม่</button>`;
+        
+        let rows = DB.news.map(n => `
+          <tr class="border-b hover:bg-slate-50">
+            <td class="p-3"><img src="${n.imageUrl}" class="w-16 h-10 object-cover rounded bg-slate-200"/></td>
+            <td class="p-3">
+              <p class="font-bold text-sm text-royal-950 line-clamp-1">${escapeHtml(n.title)}</p>
+              <p class="text-xs text-slate-500">${escapeHtml(n.categoryLabel)} | ${formatShortThaiDate(n.date)}</p>
+            </td>
+            <td class="p-3 text-right whitespace-nowrap">
+              <button onclick="editNewsModal('${n.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg"><i data-lucide="edit" class="w-4 h-4"></i></button>
+              <button onclick="deleteRecord('news', '${n.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+            </td>
+          </tr>
+        `).join('');
+        content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4 w-24">ภาพปก</th><th class="p-4">หัวข้อข่าว</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="3" class="text-center p-8 text-slate-400">ไม่มีข้อมูล</td></tr>'}</tbody></table></div>`;
+      }
+      else if (tab === 'schools') {
+        title.textContent = 'ข้อมูลสถานศึกษา'; sub.textContent = 'จัดการรายชื่อโรงเรียนและศูนย์เด็กเล็ก';
+        actions.innerHTML = `<button onclick="editSchoolModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่มสถานศึกษา</button>`;
+        
+        let rows = DB.schools.map(s => `
+          <tr class="border-b hover:bg-slate-50">
+            <td class="p-3"><img src="${s.coverUrl || 'https://placehold.co/600x400/94a3b8/ffffff'}" class="w-16 h-10 object-cover rounded bg-slate-200"/></td>
+            <td class="p-3">
+              <p class="font-bold text-sm text-royal-950">${escapeHtml(s.name)}</p>
+              <p class="text-[10px] text-slate-500">ผอ. ${escapeHtml(s.director)} | โทร. ${escapeHtml(s.phone)}</p>
+            </td>
+            <td class="p-3 text-center text-sm">${(s.students||0).toLocaleString()}</td>
+            <td class="p-3 text-center text-sm">${(s.teachers||0).toLocaleString()}</td>
+            <td class="p-3 text-right whitespace-nowrap">
+              <button onclick="editSchoolModal('${s.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg"><i data-lucide="edit" class="w-4 h-4"></i></button>
+              <button onclick="deleteRecord('schools', '${s.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+            </td>
+          </tr>
+        `).join('');
+        content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4 w-20">ภาพ</th><th class="p-4">ชื่อสถานศึกษา</th><th class="p-4 text-center">นร. (คน)</th><th class="p-4 text-center">ครู (คน)</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="text-center p-8 text-slate-400">ไม่มีข้อมูล</td></tr>'}</tbody></table></div>`;
+      }
+      else if (tab === 'personnel') {
+        title.textContent = 'ทำเนียบบุคลากร'; sub.textContent = 'จัดการข้อมูลผู้บริหารและเจ้าหน้าที่ระดับต่างๆ';
+        actions.innerHTML = `<button onclick="editPersonnelModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่มบุคลากร</button>`;
+        
+        let sortedPersonnel = [...DB.personnel].sort((a,b) => a.levelCode - b.levelCode);
+        let rows = sortedPersonnel.map(p => `
+          <tr class="border-b hover:bg-slate-50">
+            <td class="p-3"><img src="${p.photoUrl || 'https://placehold.co/400x400/94a3b8/ffffff'}" class="w-10 h-10 object-cover rounded-full bg-slate-200 border"/></td>
+            <td class="p-3 text-sm font-bold text-royal-950">${escapeHtml(p.name)}</td>
+            <td class="p-3 text-sm text-slate-600">${escapeHtml(p.position)}</td>
+            <td class="p-3"><span class="px-2 py-1 rounded bg-slate-100 text-slate-600 text-[10px] font-bold border">${escapeHtml(p.level)}</span></td>
+            <td class="p-3 text-right whitespace-nowrap">
+              <button onclick="editPersonnelModal('${p.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg"><i data-lucide="edit" class="w-4 h-4"></i></button>
+              <button onclick="deleteRecord('personnel', '${p.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+            </td>
+          </tr>
+        `).join('');
+        content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4 w-16">รูป</th><th class="p-4">ชื่อ-สกุล</th><th class="p-4">ตำแหน่ง</th><th class="p-4">ระดับชั้น</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="text-center p-8 text-slate-400">ไม่มีข้อมูล</td></tr>'}</tbody></table></div>`;
+      }
+      else if (tab === 'admissions') {
+        title.textContent = 'รายชื่อผู้สมัครเรียนออนไลน์';
+        let rows = DB.admissions.map(a => `
+          <tr class="border-b hover:bg-slate-50">
+            <td class="p-3 text-sm"><p class="font-bold">${escapeHtml(a.studentName)}</p><p class="text-xs text-slate-500">ปชช. ${escapeHtml(a.citizenId)} | ผู้ปกครอง: ${escapeHtml(a.parentName)} (${escapeHtml(a.parentPhone)})</p></td>
+            <td class="p-3 text-sm">${escapeHtml(a.level)}</td>
+            <td class="p-3 text-sm">${escapeHtml(a.schoolName)}</td>
+            <td class="p-3"><span class="px-2.5 py-1 rounded-full ${a.status === 'อนุมัติแล้ว' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'} text-xs font-bold">${escapeHtml(a.status)}</span></td>
+            <td class="p-3 text-right">
+              <button onclick="approveAdmission('${a.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors">อนุมัติ</button>
+            </td>
+          </tr>
+        `).join('');
+        content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-x-auto"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4">ชื่อนักเรียน</th><th class="p-4">ระดับชั้น</th><th class="p-4">โรงเรียนที่สมัคร</th><th class="p-4">สถานะ</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="text-center p-8 text-slate-400">ยังไม่มีผู้สมัคร</td></tr>'}</tbody></table></div>`;
+      }
+      else if (tab === 'feedback') {
+        title.textContent = 'ระบบจัดการเรื่องร้องเรียน / ข้อเสนอแนะ';
+        let rows = DB.feedback.map(f => {
+          const badgeColor = f.status === 'ดำเนินการเสร็จสิ้น' ? 'bg-emerald-100 text-emerald-700' : (f.status === 'กำลังดำเนินการ' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700');
+          return `
+            <tr class="border-b hover:bg-slate-50">
+              <td class="p-3 font-mono text-xs font-bold text-royal-800">${escapeHtml(f.id)}<br/><span class="text-[10px] text-slate-400 font-sans font-normal">${escapeHtml(f.submittedAt)}</span></td>
+              <td class="p-3">
+                <span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-bold">${escapeHtml(f.category || 'ทั่วไป')}</span>
+                <p class="font-bold text-sm text-royal-950 mt-1">${escapeHtml(f.topic)}</p>
+                <p class="text-xs text-slate-500 line-clamp-1">${escapeHtml(f.message)}</p>
+              </td>
+              <td class="p-3 text-xs text-slate-600">${escapeHtml(f.senderName)}<br/><span class="text-slate-400">${escapeHtml(f.contact)}</span></td>
+              <td class="p-3"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${badgeColor}">${escapeHtml(f.status)}</span></td>
+              <td class="p-3 text-right whitespace-nowrap">
+                <button onclick="manageFeedbackModal('${f.id}')" class="px-3 py-1.5 bg-royal-900 hover:bg-royal-800 text-white rounded-lg text-xs font-bold inline-flex items-center gap-1"><i data-lucide="message-square-reply" class="w-3.5 h-3.5"></i> ตอบกลับ</button>
+                <button onclick="deleteRecord('feedback', '${f.id}')" class="text-rose-500 hover:bg-rose-50 p-1.5 rounded-lg ml-1" title="ลบ"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+        content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-x-auto"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4">รหัสอ้างอิง</th><th class="p-4">หัวข้อเรื่องร้องเรียน</th><th class="p-4">ผู้แจ้ง / ติดต่อ</th><th class="p-4">สถานะ</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="text-center p-8 text-slate-400">ยังไม่มีเรื่องร้องเรียน</td></tr>'}</tbody></table></div>`;
+      }
+      else if (tab === 'users') {
+        title.textContent = 'กำหนดสิทธิ์เข้าใช้งานหลังบ้าน';
+        actions.innerHTML = `<button onclick="editStaffUserModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2"><i data-lucide="user-plus" class="w-4 h-4"></i> เพิ่มผู้ใช้งาน</button>`;
+        const permNames = {
+          sliders: 'สไลด์', news: 'ข่าวสาร', documents: 'เอกสาร', schools: 'สถานศึกษา',
+          personnel: 'บุคลากร', admissions: 'รับสมัครเรียน', feedback: 'เรื่องร้องเรียน',
+          users: 'กำหนดสิทธิ์'
+        };
+        let rows = DB.staffUsers.map(u => {
+          const permBadges = u.role === 'SUPER_ADMIN' ? `<span class="px-2 py-0.5 rounded bg-royal-100 text-royal-800 text-[10px] font-bold">Full Access</span>`
+            : (u.permissions || []).map(p => `<span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] border">${permNames[p] || p}</span>`).join(' ');
+          return `
+            <tr class="border-b hover:bg-slate-50">
+              <td class="p-3"><p class="font-bold text-sm text-royal-950">${escapeHtml(u.name)}</p><p class="text-xs text-slate-500 font-mono">Username: <strong>${escapeHtml(u.username)}</strong></p></td>
+              <td class="p-3"><span class="px-2.5 py-1 rounded-lg bg-gold-50 text-gold-800 border border-gold-200 text-xs font-bold">${escapeHtml(u.roleLabel)}</span></td>
+              <td class="p-3"><div class="flex flex-wrap gap-1 max-w-xs">${permBadges}</div></td>
+              <td class="p-3"><span class="px-2 py-1 rounded-full text-xs font-bold ${u.active ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">${u.active ? 'เปิดใช้งาน' : 'ระงับสิทธิ์'}</span></td>
+              <td class="p-3 text-right whitespace-nowrap">
+                <button onclick="editStaffUserModal('${u.id}')" class="text-amber-500 hover:bg-amber-50 p-2 rounded-lg"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                ${u.username !== 'admin' ? `<button onclick="deleteStaffUser('${u.id}')" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+              </td>
+            </tr>
+          `;
+        }).join('');
+        content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-x-auto"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4">บัญชี</th><th class="p-4">บทบาท (Role)</th><th class="p-4">สิทธิ์เข้าถึง</th><th class="p-4">สถานะ</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+      }
+      lucide.createIcons();
+    }
+
+    // Modal Forms for Settings
+    function editSiteSettingsModal() {
+      openModal({
+        title: 'แก้ไขข้อความต้อนรับ (หน้าแรก)',
+        bodyHtml: `
+          <form id="form-settings" onsubmit="saveSiteSettings(event)" class="space-y-4">
+            <div><label class="block text-xs font-bold mb-1">หัวข้อหลัก (สีขาว) *</label><input type="text" name="headline" required class="w-full p-2.5 border rounded-xl bg-white" value="${escapeHtml(DB.settings.headline)}"/></div>
+            <div><label class="block text-xs font-bold mb-1">ข้อความเน้น (สีทอง) *</label><input type="text" name="subHeadline" required class="w-full p-2.5 border rounded-xl bg-white" value="${escapeHtml(DB.settings.subHeadline)}"/></div>
+            <div><label class="block text-xs font-bold mb-1">รายละเอียดบรรทัดล่าง *</label><textarea name="description" rows="3" required class="w-full p-2.5 border rounded-xl bg-white">${escapeHtml(DB.settings.description)}</textarea></div>
+            <button type="submit" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
+          </form>
+        `,
+        footerHtml: ''
+      });
+    }
+
+    async function saveSiteSettings(e) {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      DB.settings.headline = fd.get('headline');
+      DB.settings.subHeadline = fd.get('subHeadline');
+      DB.settings.description = fd.get('description');
+      
+      await saveDB();
+      closeModal();
+      showToast('บันทึกสำเร็จ', 'อัปเดตข้อความต้อนรับเรียบร้อยแล้ว');
+      renderFrontend();
+    }
+
+    // Modal Forms for CRUD
+    function editNewsModal(id = null) {
+      const item = id ? DB.news.find(x => x.id === id) : null;
+      openModal({
+        title: item ? 'แก้ไขข่าวสาร' : 'เพิ่มข่าวใหม่',
+        bodyHtml: `
+          <form id="form-news" onsubmit="saveNews(event, '${id || ''}')" class="space-y-4">
+            <div><label class="block text-xs font-bold mb-1">หัวข้อข่าว *</label><input type="text" name="title" required class="w-full p-2.5 border rounded-xl bg-white" value="${item ? escapeHtml(item.title) : ''}"/></div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold mb-1">หมวดหมู่ *</label>
+                <select name="category" class="w-full p-2.5 border rounded-xl bg-white">
+                  <option value="activity" ${item && item.category === 'activity' ? 'selected' : ''}>ข่าวกิจกรรม</option>
+                  <option value="egp" ${item && item.category === 'egp' ? 'selected' : ''}>จัดซื้อจัดจ้าง e-GP</option>
+                </select>
+              </div>
+              <div><label class="block text-xs font-bold mb-1">วันที่ประกาศ *</label><input type="date" name="date" required class="w-full p-2.5 border rounded-xl bg-white" value="${item ? item.date : new Date().toISOString().split('T')[0]}"/></div>
+            </div>
+            <div><label class="block text-xs font-bold mb-1">รายละเอียดแบบย่อ/เนื้อหาข่าว *</label><textarea name="summary" rows="4" required class="w-full p-2.5 border rounded-xl bg-white">${item ? escapeHtml(item.summary) : ''}</textarea></div>
+            
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+              <p class="text-xs font-bold text-royal-800">เอกสารแนบ / อ่านเพิ่มเติม</p>
+              <div><label class="block text-[10px] font-bold mb-1 text-slate-500">ใส่ลิงก์ภายนอก (Google Drive, โพสต์ Facebook)</label><input type="url" name="externalLink" class="w-full p-2 border rounded-xl bg-white" placeholder="https://..." value="${item && item.externalLink ? item.externalLink : ''}"/></div>
+              <div class="text-center text-[10px] text-slate-400 font-bold">--- หรือ ---</div>
+              <div><label class="block text-[10px] font-bold mb-1 text-slate-500">อัปโหลดไฟล์เอกสารแนบ (PDF, Word) ในระบบ</label><input type="file" id="news-doc-file" accept=".pdf,.doc,.docx" class="w-full p-2 border rounded-xl bg-white text-sm"/></div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold mb-1">${item ? 'เปลี่ยนภาพปก (ปล่อยว่างหากใช้ภาพเดิม)' : 'อัปโหลดภาพปก'}</label>
+              <input type="file" id="news-file" accept="image/*" class="w-full p-2 border rounded-xl bg-white text-sm"/>
+            </div>
+            <button type="submit" id="btn-save-news" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
+          </form>
+        `,
+        footerHtml: ''
+      });
+    }
+
+    async function saveNews(e, editId) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-save-news');
+      btn.innerText = 'กำลังอัปโหลด...'; btn.disabled = true;
+
+      const fd = new FormData(e.target);
+      const cat = fd.get('category');
+      
+      let coverData = editId ? DB.news.find(x => x.id === editId).imageUrl : `https://placehold.co/600x400/${cat === 'activity'?'059669':'b45309'}/ffffff?text=New+Post`;
+      let finalExternalLink = fd.get('externalLink');
+
+      const coverInput = document.getElementById('news-file');
+      if(coverInput.files.length > 0) coverData = await handleFileUpload(coverInput.files[0]);
+
+      const docInput = document.getElementById('news-doc-file');
+      if(docInput.files.length > 0) finalExternalLink = await handleFileUpload(docInput.files[0]);
+
+      if (editId) {
+        const idx = DB.news.findIndex(x => x.id === editId);
+        if (idx > -1) {
+          DB.news[idx].title = fd.get('title');
+          DB.news[idx].category = cat;
+          DB.news[idx].categoryLabel = cat === 'activity' ? 'ข่าวกิจกรรม' : 'จัดซื้อจัดจ้าง e-GP';
+          DB.news[idx].summary = fd.get('summary');
+          DB.news[idx].date = fd.get('date');
+          DB.news[idx].imageUrl = coverData;
+          DB.news[idx].externalLink = finalExternalLink;
+        }
+      } else {
+        DB.news.unshift({
+          id: generateId('news'), title: fd.get('title'), category: cat, categoryLabel: cat === 'activity' ? 'ข่าวกิจกรรม' : 'จัดซื้อจัดจ้าง e-GP',
+          summary: fd.get('summary'), date: fd.get('date'), imageUrl: coverData, externalLink: finalExternalLink
+        });
+      }
+      
+      await saveDB();
+      closeModal();
+      setBackofficeTab('news');
+      showToast('บันทึกสำเร็จ', editId ? 'อัปเดตข่าวสารเรียบร้อย' : 'เพิ่มข่าวสารลงในระบบแล้ว');
+    }
+
+    // Modal Form for Documents
+    function editDocumentModal(id = null) {
+      const item = id ? DB.documents.find(x => x.id === id) : null;
+      openModal({
+        title: item ? 'แก้ไขเอกสารราชการ' : 'เพิ่มเอกสารราชการ',
+        bodyHtml: `
+          <form id="form-document" onsubmit="saveDocument(event, '${id || ''}')" class="space-y-4">
+            <div><label class="block text-xs font-bold mb-1">ชื่อเอกสาร *</label><input type="text" name="title" required class="w-full p-2.5 border rounded-xl bg-white" placeholder="เช่น แบบฟอร์มขออนุญาต..." value="${item ? escapeHtml(item.title) : ''}"/></div>
+            <div><label class="block text-xs font-bold mb-1">วันที่เผยแพร่ *</label><input type="date" name="date" required class="w-full p-2.5 border rounded-xl bg-white" value="${item ? item.date : new Date().toISOString().split('T')[0]}"/></div>
+            
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+              <p class="text-xs font-bold text-royal-800">แหล่งที่มาของไฟล์</p>
+              <div><label class="block text-[10px] font-bold mb-1 text-slate-500">ลิงก์ภายนอก (เช่น Google Drive)</label><input type="url" name="externalLink" class="w-full p-2 border rounded-xl bg-white" placeholder="https://..." value="${item?.externalLink || ''}"/></div>
+              <div class="text-center text-[10px] text-slate-400 font-bold">--- หรือ ---</div>
+              <div><label class="block text-[10px] font-bold mb-1 text-slate-500">อัปโหลดไฟล์เข้าระบบ (PDF, Word)</label><input type="file" id="doc-file" accept=".pdf,.doc,.docx" class="w-full p-2 border rounded-xl bg-white text-sm" /></div>
+            </div>
+
+            <button type="submit" id="btn-save-doc" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
+          </form>
+        `,
+        footerHtml: ''
+      });
+    }
+
+    async function saveDocument(e, editId) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-save-doc');
+      btn.innerText = 'กำลังอัปโหลด...'; btn.disabled = true;
+
+      const fd = new FormData(e.target);
+      const extLink = fd.get('externalLink');
+      const fileInput = document.getElementById('doc-file');
+      
+      let finalUrl = editId ? DB.documents.find(x => x.id === editId).fileUrl : '';
+      let finalExtLink = editId ? DB.documents.find(x => x.id === editId).externalLink : '';
+
+      if (fileInput.files.length > 0) {
+        finalUrl = await handleFileUpload(fileInput.files[0]);
+        finalExtLink = ''; // Priority on file upload
+      } else if (extLink) {
+        finalUrl = extLink;
+        finalExtLink = extLink;
+      } else if (!editId) {
+        showToast('ข้อผิดพลาด', 'กรุณาระบุลิงก์หรืออัปโหลดไฟล์', 'error');
+        btn.innerText = 'บันทึกข้อมูล'; btn.disabled = false;
+        return;
+      }
+      
+      if(editId) {
+        const idx = DB.documents.findIndex(x => x.id === editId);
+        if(idx > -1) {
+           DB.documents[idx].title = fd.get('title');
+           DB.documents[idx].date = fd.get('date');
+           DB.documents[idx].fileUrl = finalUrl;
+           DB.documents[idx].externalLink = finalExtLink;
+        }
+      } else {
+        DB.documents.unshift({
+          id: generateId('doc'), title: fd.get('title'), date: fd.get('date'), fileUrl: finalUrl, externalLink: finalExtLink
+        });
+      }
+      
+      await saveDB();
+      closeModal();
+      setBackofficeTab('documents');
+      showToast('บันทึกสำเร็จ', editId ? 'แก้ไขข้อมูลเอกสารเรียบร้อย' : 'เพิ่มเอกสารราชการเรียบร้อย');
+    }
+
+    // Modal Form for Sliders
+    function editSliderModal() {
+      openModal({
+        title: 'เพิ่มภาพสไลด์',
+        bodyHtml: `
+          <form id="form-slider" onsubmit="saveSlider(event)" class="space-y-4">
+            <div><label class="block text-xs font-bold mb-1">เลือกไฟล์ภาพจากเครื่อง</label><input type="file" id="slider-file" accept="image/*" class="w-full p-2 border rounded-xl bg-white text-sm"/></div>
+            <div class="text-center text-xs text-slate-400 font-bold">--- หรือ ---</div>
+            <div><label class="block text-xs font-bold mb-1">URL รูปภาพ</label><input type="url" name="imageUrl" class="w-full p-2.5 border rounded-xl bg-white" placeholder="https://..."/></div>
+            <button type="submit" id="btn-save-slider" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">เพิ่มภาพสไลด์</button>
+          </form>
+        `,
+        footerHtml: ''
+      });
+    }
+
+    async function saveSlider(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-save-slider');
+      btn.innerText = 'กำลังอัปโหลด...'; btn.disabled = true;
+
+      const fd = new FormData(e.target);
+      let finalUrl = fd.get('imageUrl');
+      let finalName = 'ภาพสไลด์จาก URL';
+      
+      const fileInput = document.getElementById('slider-file');
+      if (fileInput.files.length > 0) {
+        finalUrl = await handleFileUpload(fileInput.files[0]);
+        finalName = fileInput.files[0].name;
+      }
+      
+      if(finalUrl) {
+        DB.sliders.push({ name: finalName, url: finalUrl });
+        await saveDB();
+        closeModal();
+        setBackofficeTab('sliders');
+        showToast('บันทึกสำเร็จ', 'เพิ่มภาพสไลด์แล้ว');
+        initHeroSlider();
+      } else {
+        showToast('ข้อผิดพลาด', 'กรุณาเลือกไฟล์หรือระบุ URL', 'error');
+        btn.innerText = 'เพิ่มภาพสไลด์'; btn.disabled = false;
+      }
+    }
+
+    async function deleteSlider(index) {
+      if(confirm('ยืนยันการลบภาพสไลด์นี้?')) {
+        DB.sliders.splice(index, 1);
+        await saveDB();
+        setBackofficeTab('sliders');
+        showToast('ลบสำเร็จ', 'ลบภาพสไลด์แล้ว');
+        initHeroSlider();
+      }
+    }
+
+    // Modal Form for Schools
+    function editSchoolModal(id = null) {
+      const item = id ? DB.schools.find(x => x.id === id) : null;
+      openModal({
+        title: item ? 'แก้ไขข้อมูลสถานศึกษา' : 'เพิ่มสถานศึกษา',
+        bodyHtml: `
+          <form id="form-school" onsubmit="saveSchool(event, '${id || ''}')" class="space-y-4">
+            <div><label class="block text-xs font-bold mb-1">ชื่อสถานศึกษา *</label><input type="text" name="name" required class="w-full p-2.5 border rounded-xl bg-white" placeholder="เช่น โรงเรียนเทศบาล 1..." value="${item ? escapeHtml(item.name) : ''}"/></div>
+            <div class="grid grid-cols-2 gap-4">
+              <div><label class="block text-xs font-bold mb-1">ชื่อผู้อำนวยการ</label><input type="text" name="director" class="w-full p-2.5 border rounded-xl bg-white" value="${item ? escapeHtml(item.director) : ''}"/></div>
+              <div><label class="block text-xs font-bold mb-1">ระดับที่เปิดสอน</label><input type="text" name="levels" class="w-full p-2.5 border rounded-xl bg-white" value="${item ? escapeHtml(item.levels) : ''}"/></div>
+              <div><label class="block text-xs font-bold mb-1">จำนวนนักเรียน (คน)</label><input type="number" name="students" class="w-full p-2.5 border rounded-xl bg-white" value="${item ? item.students : '0'}"/></div>
+              <div><label class="block text-xs font-bold mb-1">จำนวนครู/บุคลากร (คน)</label><input type="number" name="teachers" class="w-full p-2.5 border rounded-xl bg-white" value="${item ? item.teachers : '0'}"/></div>
+              <div><label class="block text-xs font-bold mb-1">เบอร์โทรศัพท์</label><input type="text" name="phone" class="w-full p-2.5 border rounded-xl bg-white" value="${item ? escapeHtml(item.phone) : ''}"/></div>
+              <div><label class="block text-xs font-bold mb-1">ที่ตั้ง</label><input type="text" name="address" class="w-full p-2.5 border rounded-xl bg-white" value="${item ? escapeHtml(item.address) : ''}"/></div>
+            </div>
+            
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 mt-2">
+              <p class="text-xs font-bold text-royal-800">รายละเอียดเพิ่มเติม (ลิงก์ หรือ ไฟล์แนบ)</p>
+              <div><label class="block text-[10px] font-bold mb-1 text-slate-500">ใส่ลิงก์ภายนอก (เช่น เว็บไซต์โรงเรียน หรือ Facebook)</label><input type="url" name="externalLink" class="w-full p-2 border rounded-xl bg-white text-sm" placeholder="https://..." value="${item && item.externalLink ? item.externalLink : ''}"/></div>
+              <div class="text-center text-[10px] text-slate-400 font-bold">--- หรือ ---</div>
+              <div><label class="block text-[10px] font-bold mb-1 text-slate-500">อัปโหลดไฟล์เอกสารในระบบ (PDF, Word)</label><input type="file" id="school-doc-file" accept=".pdf,.doc,.docx" class="w-full p-2 border rounded-xl bg-white text-sm"/></div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold mb-1">${item ? 'เปลี่ยนภาพปก (เว้นว่างหากใช้ภาพเดิม)' : 'อัปโหลดภาพปก'}</label>
+              <input type="file" id="school-file" accept="image/*" class="w-full p-2 border rounded-xl bg-white text-sm"/>
+            </div>
+            <button type="submit" id="btn-save-school" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
+          </form>
+        `,
+        footerHtml: ''
+      });
+    }
+
+    async function saveSchool(e, editId) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-save-school');
+      btn.innerText = 'กำลังอัปโหลด...'; btn.disabled = true;
+
+      const fd = new FormData(e.target);
+      
+      // Handle Cover Image
+      let coverData = editId ? DB.schools.find(x => x.id === editId).coverUrl : `https://placehold.co/600x400/4c1d95/ffffff?text=New+School`;
+      const fileInput = document.getElementById('school-file');
+      if (fileInput.files.length > 0) coverData = await handleFileUpload(fileInput.files[0]);
+
+      // Handle External Link or Document Upload
+      let linkValue = fd.get('externalLink');
+      const docInput = document.getElementById('school-doc-file');
+      if (docInput && docInput.files.length > 0) {
+         linkValue = await handleFileUpload(docInput.files[0]);
+      } else if (editId && !linkValue && !docInput.files.length) {
+         // Keep existing link if not overwritten
+         const existingSchool = DB.schools.find(x => x.id === editId);
+         if(existingSchool.externalLink) linkValue = existingSchool.externalLink;
+      }
+
+      if (editId) {
+        const idx = DB.schools.findIndex(x => x.id === editId);
+        if(idx > -1) {
+          Object.assign(DB.schools[idx], {
+             name: fd.get('name'), director: fd.get('director') || '-', levels: fd.get('levels') || '-',
+             students: parseInt(fd.get('students') || 0), teachers: parseInt(fd.get('teachers') || 0),
+             phone: fd.get('phone') || '-', address: fd.get('address') || '-', 
+             coverUrl: coverData, externalLink: linkValue
+          });
+        }
+      } else {
+        DB.schools.push({
+          id: generateId('sch'), name: fd.get('name'), categoryLabel: 'โรงเรียนสังกัดเทศบาล',
+          director: fd.get('director') || '-', levels: fd.get('levels') || '-',
+          students: parseInt(fd.get('students') || 0), teachers: parseInt(fd.get('teachers') || 0),
+          phone: fd.get('phone') || '-', address: fd.get('address') || '-', 
+          coverUrl: coverData, externalLink: linkValue
+        });
+      }
+      
+      await saveDB();
+      closeModal();
+      setBackofficeTab('schools');
+      showToast('บันทึกสำเร็จ', editId ? 'แก้ไขข้อมูลสถานศึกษาแล้ว' : 'เพิ่มสถานศึกษาลงในระบบแล้ว');
+    }
+
+    // Modal Form for Personnel
+    function editPersonnelModal(id = null) {
+      const item = id ? DB.personnel.find(x => x.id === id) : null;
+      let parentOptions = '<option value="">-- ไม่มี (ระดับสูงสุด) --</option>';
+      DB.personnel.forEach(p => {
+        if (p.id !== id) {
+          let selected = (item && item.parentId === p.id) ? 'selected' : '';
+          parentOptions += `<option value="${p.id}" ${selected}>${escapeHtml(p.name)} (${escapeHtml(p.position)})</option>`;
+        }
+      });
+
+      openModal({
+        title: item ? 'แก้ไขบุคลากร' : 'เพิ่มบุคลากร (โครงสร้างต้นไม้)',
+        bodyHtml: `
+          <form id="form-personnel" onsubmit="savePersonnel(event, '${id || ''}')" class="space-y-4">
+            <div><label class="block text-xs font-bold mb-1">ชื่อ - นามสกุล *</label><input type="text" name="name" required class="w-full p-2.5 border rounded-xl bg-white" value="${item ? escapeHtml(item.name) : ''}"/></div>
+            <div><label class="block text-xs font-bold mb-1">ตำแหน่ง *</label><input type="text" name="position" required class="w-full p-2.5 border rounded-xl bg-white" placeholder="เช่น หัวหน้าฝ่าย..." value="${item ? escapeHtml(item.position) : ''}"/></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold mb-1">ระดับชั้นตำแหน่ง *</label>
+                <select name="levelCode" required class="w-full p-2.5 border rounded-xl bg-white">
+                  <option value="0" ${item && item.levelCode === 0 ? 'selected' : ''}>0 - นายกเทศมนตรี / คณะผู้บริหารเทศบาล</option>
+                  <option value="1" ${item && item.levelCode === 1 ? 'selected' : ''}>1 - รองนายกเทศมนตรี</option>
+                  <option value="2" ${item && item.levelCode === 2 ? 'selected' : ''}>2 - ผู้บริหารระดับสูง (ผู้อำนวยการ)</option>
+                  <option value="3" ${item && item.levelCode === 3 ? 'selected' : ''}>3 - ผู้บริหารส่วน (รองผู้อำนวยการ)</option>
+                  <option value="4" ${item && item.levelCode === 4 ? 'selected' : ''}>4 - ฝ่ายงาน (หัวหน้าฝ่าย)</option>
+                  <option value="5" ${item && item.levelCode === 5 ? 'selected' : ''}>5 - กลุ่มงาน (เจ้าหน้าที่/บุคลากร)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold mb-1 text-royal-700">ภายใต้สายการบังคับบัญชาของ (หัวหน้างาน)</label>
+                <select name="parentId" class="w-full p-2.5 border-royal-200 border rounded-xl bg-royal-50 focus:bg-white transition-colors">
+                  ${parentOptions}
+                </select>
+              </div>
+            </div>
+            <div><label class="block text-xs font-bold mb-1">${item ? 'อัปโหลดรูปภาพใหม่ (เว้นว่างหากใช้รูปเดิม)' : 'อัปโหลดรูปภาพ (ไม่บังคับ)'}</label><input type="file" id="person-file" accept="image/*" class="w-full p-2 border rounded-xl bg-white text-sm"/></div>
+            <button type="submit" id="btn-save-personnel" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
+          </form>
+        `,
+        footerHtml: ''
+      });
+    }
+
+    async function savePersonnel(e, editId) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-save-personnel');
+      btn.innerText = 'กำลังอัปโหลด...'; btn.disabled = true;
+
+      const fd = new FormData(e.target);
+      const lvlCode = parseInt(fd.get('levelCode'));
+      const parentId = fd.get('parentId') || null;
+      const lvlNames = { 0: 'นายกเทศมนตรี', 1: 'รองนายกเทศมนตรี', 2: 'ผู้บริหารระดับสูง', 3: 'ผู้บริหารส่วน', 4: 'ฝ่ายงาน', 5: 'กลุ่มงาน' };
+      
+      let photoData = editId ? DB.personnel.find(x => x.id === editId).photoUrl : `https://placehold.co/400x400/f8fafc/64748b?text=New+Staff`;
+      const fileInput = document.getElementById('person-file');
+      if (fileInput.files.length > 0) photoData = await handleFileUpload(fileInput.files[0]);
+
+      if (editId) {
+        const idx = DB.personnel.findIndex(x => x.id === editId);
+        if (idx > -1) {
+            Object.assign(DB.personnel[idx], {
+               name: fd.get('name'), position: fd.get('position'), levelCode: lvlCode,
+               level: lvlNames[lvlCode], photoUrl: photoData, parentId: parentId
+            });
+        }
+      } else {
+        DB.personnel.push({
+          id: generateId('per'), name: fd.get('name'), position: fd.get('position'),
+          levelCode: lvlCode, level: lvlNames[lvlCode], photoUrl: photoData, parentId: parentId
+        });
+      }
+      
+      await saveDB();
+      closeModal();
+      setBackofficeTab('personnel');
+      showToast('บันทึกสำเร็จ', editId ? 'แก้ไขข้อมูลบุคลากรแล้ว' : 'เพิ่มบุคลากรเรียบร้อย');
+    }
+
+    async function deleteRecord(table, id) {
+      if(confirm('ยืนยันการลบข้อมูลนี้?')) {
+        DB[table] = DB[table].filter(item => item.id !== id);
+        await saveDB();
+        updateBackofficeBadges();
+        setBackofficeTab(table);
+        showToast('ลบสำเร็จ', 'ข้อมูลถูกลบออกจากระบบแล้ว');
+      }
+    }
+
+    async function approveAdmission(id) {
+      const idx = DB.admissions.findIndex(a => a.id === id);
+      if (idx > -1) {
+        DB.admissions[idx].status = 'อนุมัติแล้ว';
+        await saveDB();
+        updateBackofficeBadges();
+        setBackofficeTab('admissions');
+        showToast('อัปเดตสำเร็จ', 'อนุมัติการสมัครเรียนเรียบร้อยแล้ว');
+      }
+    }
+
+    function manageFeedbackModal(id) {
+      const item = DB.feedback.find(f => f.id === id);
+      if (!item) return;
+
+      let threadHtml = (item.thread || []).map(t => {
+         if(t.sender === 'เจ้าหน้าที่') {
+           return `<div class="bg-royal-50 p-2.5 rounded-xl border border-royal-100 mb-2 ml-4">
+             <p class="text-[10px] font-bold text-royal-800 mb-0.5 flex items-center justify-between"><span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> เจ้าหน้าที่</span> <span class="font-normal text-slate-400">${t.time}</span></p>
+             <p class="text-xs text-slate-700 whitespace-pre-wrap">${escapeHtml(t.text)}</p>
+           </div>`;
+         } else {
+           return `<div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 mb-2 mr-4">
+             <p class="text-[10px] font-bold text-slate-500 mb-0.5 flex items-center justify-between"><span class="flex items-center gap-1"><i data-lucide="user" class="w-3.5 h-3.5"></i> ประชาชน</span> <span class="font-normal text-slate-400">${t.time}</span></p>
+             <p class="text-xs text-slate-700 whitespace-pre-wrap">${escapeHtml(t.text)}</p>
+           </div>`;
+         }
+      }).join('');
+
+      openModal({
+        title: `จัดการเรื่องร้องเรียน (${item.id})`,
+        bodyHtml: `
+          <form onsubmit="saveFeedbackReply(event, '${item.id}')" class="space-y-4 flex flex-col h-full">
+            <div class="bg-slate-100 p-3 rounded-2xl space-y-1.5 text-sm shrink-0">
+              <div class="flex justify-between text-[10px] text-slate-500">
+                <span>หมวดหมู่: <strong>${escapeHtml(item.category || 'ทั่วไป')}</strong></span>
+                <span>วันที่แจ้ง: ${escapeHtml(item.submittedAt)}</span>
+              </div>
+              <p class="font-bold text-royal-950 text-sm">${escapeHtml(item.topic)}</p>
+              <p class="text-[10px] text-slate-500 pt-1 border-t border-slate-200 mt-2">ผู้แจ้ง: ${escapeHtml(item.senderName)} | ติดต่อ: ${escapeHtml(item.contact)}</p>
+            </div>
+            
+            <div class="flex-grow border border-slate-200 rounded-xl p-3 bg-white overflow-y-auto max-h-60">
+               <p class="text-[10px] font-bold text-slate-400 mb-3 text-center">--- ประวัติการสนทนา ---</p>
+               ${threadHtml}
+            </div>
+
+            <div class="shrink-0 space-y-3">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[10px] font-bold mb-1 text-slate-600">สถานะปัจจุบัน *</label>
+                  <select name="status" class="w-full p-2 border rounded-xl bg-white text-xs font-bold">
+                    <option value="รอตรวจสอบ" ${item.status === 'รอตรวจสอบ' ? 'selected' : ''}>🟡 รอตรวจสอบ</option>
+                    <option value="กำลังดำเนินการ" ${item.status === 'กำลังดำเนินการ' ? 'selected' : ''}>🔵 กำลังดำเนินการ</option>
+                    <option value="ดำเนินการเสร็จสิ้น" ${item.status === 'ดำเนินการเสร็จสิ้น' ? 'selected' : ''}>🟢 ดำเนินการเสร็จสิ้น</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold mb-1 text-slate-600">อัปเดตสถานะโดยไม่ตอบกลับ</label>
+                  <button type="submit" class="w-full py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-bold transition-colors shadow-sm">บันทึกแค่สถานะ</button>
+                </div>
+              </div>
+              
+              <div class="bg-royal-50 p-3 rounded-xl border border-royal-100">
+                <label class="block text-xs font-bold mb-2 text-royal-900">เพิ่มข้อความตอบกลับประชาชน</label>
+                <div class="flex gap-2">
+                  <textarea name="replyText" rows="2" class="flex-grow p-2 border rounded-xl bg-white text-sm outline-none" placeholder="พิมพ์ชี้แจง..."></textarea>
+                  <button type="button" onclick="submitStaffReply('${item.id}')" class="px-4 py-2 bg-royal-900 text-white rounded-xl font-bold text-sm shadow-md">ส่งข้อความ</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        `,
+        footerHtml: ''
+      });
+      setTimeout(() => lucide.createIcons(), 50);
+    }
+
+    async function submitStaffReply(id) {
+       const form = document.querySelector('form');
+       const text = (form.querySelector('[name="replyText"]')?.value || '').trim();
+       const status = form.querySelector('[name="status"]')?.value;
+
+       if(!text) {
+         showToast('ข้อผิดพลาด', 'กรุณาพิมพ์ข้อความก่อนกดส่ง', 'error'); return;
+       }
+
+       const idx = DB.feedback.findIndex(f => f.id === id);
+       if(idx > -1) {
+          DB.feedback[idx].status = status;
+          DB.feedback[idx].thread.push({ sender: 'เจ้าหน้าที่', text: text, time: new Date().toLocaleString('th-TH') });
+          await saveDB();
+          updateBackofficeBadges();
+          manageFeedbackModal(id);
+          setBackofficeTab('feedback');
+          showToast('ส่งข้อความสำเร็จ', 'ตอบกลับประชาชนเรียบร้อยแล้ว');
+       }
+    }
+
+    async function saveFeedbackReply(e, id) {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const idx = DB.feedback.findIndex(f => f.id === id);
+      if (idx > -1) {
+        DB.feedback[idx].status = fd.get('status');
+        await saveDB();
+        updateBackofficeBadges();
+        closeModal();
+        setBackofficeTab('feedback');
+        showToast('บันทึกสำเร็จ', 'อัปเดตสถานะเรียบร้อย');
+      }
+    }
+
+    function editStaffUserModal(id = null) {
+      const user = id ? DB.staffUsers.find(u => u.id === id) : null;
+      const allMenus = [
+        { key: 'sliders', label: 'จัดการภาพสไลด์' }, { key: 'news', label: 'ข่าวสาร / ประกาศ' },
+        { key: 'documents', label: 'เอกสารราชการ' }, { key: 'schools', label: 'ข้อมูลสถานศึกษา' },
+        { key: 'personnel', label: 'ทำเนียบบุคลากร' }, { key: 'admissions', label: 'รายชื่อผู้สมัครเรียน' },
+        { key: 'feedback', label: 'ระบบเรื่องร้องเรียน' }, { key: 'users', label: 'กำหนดสิทธิ์ผู้ใช้งาน' }
+      ];
+      const userPerms = user ? (user.permissions || []) : ['news', 'documents'];
+
+      openModal({
+        title: user ? 'แก้ไขสิทธิ์ผู้ใช้งาน' : 'เพิ่มผู้ใช้งานหลังบ้านใหม่',
+        bodyHtml: `
+          <form onsubmit="saveStaffUser(event, '${id || ''}')" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div><label class="block text-xs font-bold mb-1">ชื่อ-นามสกุล เจ้าหน้าที่ *</label><input type="text" name="name" required class="w-full p-2.5 border rounded-xl bg-white text-sm" value="${user ? escapeHtml(user.name) : ''}"/></div>
+              <div>
+                <label class="block text-xs font-bold mb-1">ระดับบทบาท (Role) *</label>
+                <select name="role" class="w-full p-2.5 border rounded-xl bg-white text-sm">
+                  <option value="EDITOR" ${user && user.role === 'EDITOR' ? 'selected' : ''}>เจ้าหน้าที่จัดการข้อมูล (Editor)</option>
+                  <option value="SERVICE" ${user && user.role === 'SERVICE' ? 'selected' : ''}>เจ้าหน้าที่บริการประชาชน (Service)</option>
+                  <option value="SUPER_ADMIN" ${user && user.role === 'SUPER_ADMIN' ? 'selected' : ''}>ผู้ดูแลระบบสูงสุด (Super Admin)</option>
+                </select>
+              </div>
+              <div><label class="block text-xs font-bold mb-1">ชื่อผู้ใช้งาน (Username) *</label><input type="text" name="username" required ${user && user.username === 'admin' ? 'readonly' : ''} class="w-full p-2.5 border rounded-xl bg-white text-sm font-mono" value="${user ? escapeHtml(user.username) : ''}"/></div>
+              <div><label class="block text-xs font-bold mb-1">รหัสผ่าน (Password) *</label><input type="text" name="password" required class="w-full p-2.5 border rounded-xl bg-white text-sm font-mono" value="${user ? escapeHtml(user.password) : ''}"/></div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-2 text-royal-800">กำหนดเมนูที่อนุญาตให้เข้าถึง:</label>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 bg-white p-3.5 rounded-2xl border border-slate-200">
+                ${allMenus.map(m => `
+                  <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="checkbox" name="perms" value="${m.key}" ${userPerms.includes(m.key) ? 'checked' : ''} class="rounded text-royal-600 focus:ring-royal-50 w-4 h-4"/>
+                    <span>${m.label}</span>
+                  </label>
+                `).join('')}
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-2">
+              <label class="flex items-center gap-2 text-sm font-bold text-slate-700 cursor-pointer">
+                <input type="checkbox" name="active" ${!user || user.active ? 'checked' : ''} class="w-4 h-4 rounded text-emerald-600"/>
+                <span>เปิดใช้งานบัญชีนี้ (Active)</span>
+              </label>
+            </div>
+            <button type="submit" class="w-full py-3 bg-royal-900 text-white rounded-xl font-bold shadow-md">บันทึกข้อมูลผู้ใช้งาน</button>
+          </form>
+        `,
+        footerHtml: ''
+      });
+    }
+
+    async function saveStaffUser(e, editId) {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const role = fd.get('role');
+      const roleLabels = { 'SUPER_ADMIN': 'ผู้ดูแลระบบสูงสุด', 'EDITOR': 'เจ้าหน้าที่จัดการข้อมูล', 'SERVICE': 'เจ้าหน้าที่บริการประชาชน' };
+      const selectedPerms = fd.getAll('perms');
+      const isActive = fd.get('active') === 'on';
+
+      if (editId) {
+        const idx = DB.staffUsers.findIndex(u => u.id === editId);
+        if (idx > -1) {
+          Object.assign(DB.staffUsers[idx], {
+            name: fd.get('name'), username: fd.get('username'), password: fd.get('password'),
+            role: role, roleLabel: roleLabels[role], permissions: selectedPerms, active: isActive
+          });
+          if (currentStaffUser && currentStaffUser.id === editId) {
+            currentStaffUser = DB.staffUsers[idx];
+            sessionStorage.setItem('phsmun_user', JSON.stringify(currentStaffUser));
+            applyRolePermissions();
+          }
+        }
+      } else {
+        const uname = fd.get('username').trim();
+        if (DB.staffUsers.some(u => u.username === uname)) {
+          showToast('ชื่อผู้ใช้ซ้ำ', 'กรุณาใช้ Username อื่น', 'error'); return;
+        }
+        DB.staffUsers.push({
+          id: generateId('usr'), name: fd.get('name'), username: uname, password: fd.get('password'),
+          role: role, roleLabel: roleLabels[role], permissions: selectedPerms, active: isActive
+        });
+      }
+
+      await saveDB();
+      setBackofficeTab('users');
+      showToast('บันทึกสำเร็จ', 'บันทึกข้อมูลและสิทธิ์ผู้ใช้งานเรียบร้อย');
+    }
+
+    async function deleteStaffUser(id) {
+      if (confirm('ยืนยันการลบบัญชีผู้ใช้งานนี้?')) {
+        DB.staffUsers = DB.staffUsers.filter(u => u.id !== id);
+        await saveDB();
+        setBackofficeTab('users');
+        showToast('ลบสำเร็จ', 'ลบบัญชีผู้ใช้งานเรียบร้อยแล้ว');
+      }
+    }
+
+    async function connectSupabaseAuto() {
+      if (SUPABASE_URL && SUPABASE_ANON_KEY && SUPABASE_URL.startsWith('http')) {
+          try {
+              supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+              const { data, error } = await supabaseClient.from('site_settings').select('value').eq('key', 'full_app_db').single();
+              
+              if (!error && data && data.value) {
+                  DB = JSON.parse(data.value);
+                  isConnected = true;
+              } else if (error && error.code === 'PGRST116') {
+                  // No data, initialize first time with default admin
+                  DB.staffUsers.push({ id: 'u1', name: 'ผู้ดูแลระบบ', username: 'admin', password: '123', role: 'SUPER_ADMIN', roleLabel: 'ผู้ดูแลระบบสูงสุด', permissions: [], active: true });
+                  await supabaseClient.from('site_settings').upsert({ key: 'full_app_db', value: JSON.stringify(DB) });
+                  isConnected = true;
+              } else {
+                 throw error;
+              }
+          } catch(err) {
+              console.error("Auto-connect failed:", err);
+          }
+      } else {
+          console.warn("No valid Supabase keys provided.");
+      }
+      renderFrontend();
+    }
+
+    // --- On Load ---
+    window.onload = async () => {
+      lucide.createIcons();
+      await connectSupabaseAuto();
+      initHeroSlider();
+    };
+  </script>
+</body>
+</html>
