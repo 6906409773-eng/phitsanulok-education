@@ -201,7 +201,10 @@
 
     <!-- HERO SECTION (Welcome Text) -->
     <section id="top" class="relative overflow-hidden bg-slate-900 text-white py-12 lg:py-20 border-b-4 border-gold-400">
-      <div class="absolute inset-0 bg-gradient-to-r from-royal-950 to-slate-900 z-0"></div>
+      <div id="hero-dynamic-bg" class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-gradient-to-r from-royal-950 to-slate-900"></div>
+      </div>
+      <div class="absolute inset-0 bg-royal-950/40 z-0 pointer-events-none"></div>
 
       <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 w-full animate-fade-up z-10">
         <div class="max-w-3xl space-y-6">
@@ -279,15 +282,16 @@
     <section id="slider-wrapper" class="pt-12 bg-white">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="relative w-full aspect-video bg-[#1a1a2e] overflow-hidden group rounded-2xl shadow-lg border border-slate-100 flex items-center justify-center">
-          <img id="hero-bg-slider" src="https://placehold.co/1920x1080/4c1d95/2e1065?text=Phitsanulok+Education" class="w-full h-full object-contain transition-opacity duration-700 ease-in-out opacity-100" alt="Slider" />
-          <div class="absolute inset-0 bg-gradient-to-t from-[#1a1a2e]/40 via-transparent to-transparent pointer-events-none"></div>
+          <div id="hero-slider-container" class="w-full h-full relative z-0"></div>
+          
+          <div class="absolute inset-0 bg-gradient-to-t from-[#1a1a2e]/40 via-transparent to-transparent pointer-events-none z-10"></div>
           
           <!-- Slider Controls -->
-          <button onclick="prevSlide()" class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-black/40 text-white hover:bg-black/70 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 backdrop-blur-sm"><i data-lucide="chevron-left" class="w-5 h-5 sm:w-6 sm:h-6"></i></button>
-          <button onclick="nextSlide()" class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-black/40 text-white hover:bg-black/70 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 backdrop-blur-sm"><i data-lucide="chevron-right" class="w-5 h-5 sm:w-6 sm:h-6"></i></button>
+          <button onclick="prevSlide()" class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-black/40 text-white hover:bg-black/70 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 backdrop-blur-sm z-20"><i data-lucide="chevron-left" class="w-5 h-5 sm:w-6 sm:h-6"></i></button>
+          <button onclick="nextSlide()" class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-black/40 text-white hover:bg-black/70 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 backdrop-blur-sm z-20"><i data-lucide="chevron-right" class="w-5 h-5 sm:w-6 sm:h-6"></i></button>
           
           <!-- Slider Indicators -->
-          <div id="slider-indicators" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2"></div>
+          <div id="slider-indicators" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20"></div>
         </div>
       </div>
     </section>
@@ -353,10 +357,18 @@
     <!-- SECTION: PERSONNEL -->
     <section id="personnel" class="py-16 bg-slate-50 overflow-hidden">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-10">
+        <div class="text-center mb-6">
           <h2 class="font-heading font-bold text-3xl text-royal-950">ทำเนียบบุคลากร</h2>
           <p class="text-slate-500 mt-2">โครงสร้างการบริหารงาน สำนักการศึกษา</p>
         </div>
+        
+        <!-- Org Filter Dropdown -->
+        <div class="flex justify-center mb-10 relative z-20">
+           <select id="personnel-org-filter" onchange="renderPersonnelTreeFront(this.value)" class="px-4 py-2.5 border border-slate-200 rounded-xl text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-royal-500 max-w-sm w-full bg-white text-royal-950 font-medium cursor-pointer">
+              <option value="ALL">-- แสดงโครงสร้างบุคลากรทั้งหมด --</option>
+           </select>
+        </div>
+
         <div id="front-personnel-grid"></div>
       </div>
     </section>
@@ -652,7 +664,7 @@
     // ============================================================================
     // การตั้งค่าการเชื่อมต่อฐานข้อมูล SUPABASE (ฝังในโค้ด)
     // ============================================================================
-    const SUPABASE_URL = 'https://mpvpglwnoatjkkyauqvv.supabase.co';
+   const SUPABASE_URL = 'https://mpvpglwnoatjkkyauqvv.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wdnBnbHdub2F0amtreWF1cXZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUwNTk1MjMsImV4cCI6MjExMDYzNTUyM30.7-ohUOOsmbE2hyLVqHcAKEQ8tyAeZWB8pQOEXgkHpn0';
     
     let supabaseClient = null;
@@ -679,6 +691,36 @@
     const escapeHtml = (str) => String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     const generateId = (prefix) => prefix + '-' + Math.random().toString(36).substr(2, 9);
     
+    // Helper: YouTube ID Extractor
+    window.getYouTubeId = function(url) {
+        // Improved Regex for standard, short, and shorts URLs
+        const match = (url||'').match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|.*&v=))([^"&?\/\s]{11})/i);
+        return (match && match[1]) ? match[1] : null;
+    }
+
+    // Helper: Input Toggles for Media
+    window.toggleHeroBgInput = function() {
+        const type = document.getElementById('heroBgType').value;
+        const wrapper = document.getElementById('heroBgInputWrapper');
+        if(type === 'default') wrapper.classList.add('hidden');
+        else wrapper.classList.remove('hidden');
+    }
+    
+    window.toggleSliderInput = function() {
+        const t = document.getElementById('sliderType').value;
+        document.getElementById('sliderFileWrapper').style.display = t === 'youtube' ? 'none' : 'block';
+    }
+
+    // Image Viewer Modal
+    window.viewFullImage = function(url) {
+        if(!url) return;
+        openModal({
+            title: 'รูปภาพ / ภาพถ่ายบุคลากร',
+            bodyHtml: `<div class="flex justify-center p-2"><img src="${url}" class="max-w-full max-h-[70vh] rounded-xl object-contain shadow-lg" onerror="this.src='https://placehold.co/600x600/94a3b8/ffffff'"/></div>`,
+            footerHtml: ''
+        });
+    }
+
     // Date Formatter (Thai Format Full)
     function formatThaiDate(isoString) {
       if (!isoString) return '-';
@@ -734,10 +776,25 @@
     let slideInterval;
     
     function initHeroSlider() {
-      const imgEl = document.getElementById('hero-bg-slider');
+      const container = document.getElementById('hero-slider-container');
       const indicators = document.getElementById('slider-indicators');
-      if(!imgEl || DB.sliders.length === 0) return;
+      if(!container || DB.sliders.length === 0) return;
       
+      container.innerHTML = DB.sliders.map((s, i) => {
+        let content = '';
+        const t = s.type || 'image';
+        if (t === 'youtube') {
+           const yid = getYouTubeId(s.url);
+           // Updated embed params to prevent errors and ensure smooth loop
+           content = `<iframe src="https://www.youtube.com/embed/${yid}?autoplay=1&mute=1&loop=1&playlist=${yid}&controls=0&rel=0&playsinline=1&modestbranding=1" class="w-full h-full pointer-events-none scale-105" allow="autoplay; encrypted-media"></iframe>`;
+        } else if (t === 'video') {
+           content = `<video src="${s.url}" autoplay loop muted playsinline class="w-full h-full object-contain"></video>`;
+        } else {
+           content = `<img src="${s.url}" class="w-full h-full object-contain" />`;
+        }
+        return `<div id="slide-item-${i}" class="absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 bg-[#1a1a2e] flex items-center justify-center">${content}</div>`;
+      }).join('');
+
       indicators.innerHTML = DB.sliders.map((_, i) => `<button onclick="showSlide(${i}); startSlideTimer();" class="w-2.5 h-2.5 rounded-full transition-all ${i === 0 ? 'bg-white scale-125' : 'bg-white/50 hover:bg-white/80'}"></button>`).join('');
       
       showSlide(0);
@@ -745,23 +802,22 @@
     }
 
     function showSlide(index) {
-      const imgEl = document.getElementById('hero-bg-slider');
+      const container = document.getElementById('hero-slider-container');
       const dots = document.getElementById('slider-indicators')?.children;
-      if(!imgEl || DB.sliders.length === 0) return;
+      if(!container || DB.sliders.length === 0) return;
       
       currentSlide = (index + DB.sliders.length) % DB.sliders.length;
-      imgEl.style.opacity = 0;
+      
+      DB.sliders.forEach((_, i) => {
+         const el = document.getElementById(`slide-item-${i}`);
+         if(el) el.style.opacity = (i === currentSlide) ? '1' : '0';
+      });
       
       if(dots) {
         Array.from(dots).forEach((dot, i) => {
           dot.className = `w-2.5 h-2.5 rounded-full transition-all ${i === currentSlide ? 'bg-white scale-125 shadow-md' : 'bg-white/50 hover:bg-white/80'}`;
         });
       }
-
-      setTimeout(() => {
-        imgEl.src = DB.sliders[currentSlide].url || DB.sliders[currentSlide];
-        imgEl.style.opacity = 1;
-      }, 300);
     }
 
     function nextSlide() { showSlide(currentSlide + 1); startSlideTimer(); }
@@ -830,13 +886,27 @@
 
     // --- Frontend Render Logic ---
     function renderFrontend() {
-      // Setup Settings (Headline)
+      // Setup Settings (Headline & Hero BG)
       if (!DB.settings) {
-        DB.settings = { headline: 'พัฒนาการศึกษา', subHeadline: 'เพื่ออนาคตเมืองสองแคว', description: 'ศูนย์กลางข้อมูล ข่าวสาร และบริการดิจิทัล สำนักการศึกษา เทศบาลนครพิษณุโลก มุ่งมั่นจัดการศึกษาอย่างมีคุณภาพ ทันสมัย บนพื้นฐานคุณธรรม' };
+        DB.settings = { headline: 'พัฒนาการศึกษา', subHeadline: 'เพื่ออนาคตเมืองสองแคว', description: 'ศูนย์กลางข้อมูล ข่าวสาร และบริการดิจิทัล สำนักการศึกษา เทศบาลนครพิษณุโลก มุ่งมั่นจัดการศึกษาอย่างมีคุณภาพ ทันสมัย บนพื้นฐานคุณธรรม', heroBgType: 'default', heroBgUrl: '' };
       }
       document.getElementById('front-headline').textContent = DB.settings.headline;
       document.getElementById('front-subheadline').textContent = DB.settings.subHeadline;
       document.getElementById('front-description').textContent = DB.settings.description;
+
+      const heroBgContainer = document.getElementById('hero-dynamic-bg');
+      if (heroBgContainer) {
+         if (DB.settings.heroBgType === 'youtube' && DB.settings.heroBgUrl) {
+            const yid = getYouTubeId(DB.settings.heroBgUrl);
+            heroBgContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${yid}?autoplay=1&mute=1&loop=1&playlist=${yid}&controls=0&rel=0&playsinline=1&modestbranding=1" class="w-full h-full object-cover scale-[1.3] md:scale-150 pointer-events-none" allow="autoplay; encrypted-media"></iframe>`;
+         } else if (DB.settings.heroBgType === 'video' && DB.settings.heroBgUrl) {
+            heroBgContainer.innerHTML = `<video src="${DB.settings.heroBgUrl}" autoplay loop muted playsinline class="w-full h-full object-cover pointer-events-none"></video>`;
+         } else if (DB.settings.heroBgType === 'image' && DB.settings.heroBgUrl) {
+            heroBgContainer.innerHTML = `<img src="${DB.settings.heroBgUrl}" class="w-full h-full object-cover" />`;
+         } else {
+            heroBgContainer.innerHTML = `<div class="absolute inset-0 bg-gradient-to-r from-royal-950 to-slate-900"></div>`;
+         }
+      }
 
       // Metrics
       document.getElementById('metric-total-schools').textContent = DB.schools.length;
@@ -896,18 +966,45 @@
               <div class="bg-royal-50/50 p-2 rounded-lg text-center"><p class="text-[10px] text-slate-500 uppercase">นักเรียน</p><p class="font-bold text-royal-700">${parseInt(s.students||0).toLocaleString()} คน</p></div>
               <div class="bg-gold-50/50 p-2 rounded-lg text-center"><p class="text-[10px] text-slate-500 uppercase">ครูบุคลากร</p><p class="font-bold text-gold-700">${parseInt(s.teachers||0).toLocaleString()} คน</p></div>
             </div>
-            ${s.externalLink ? `
             <div class="mt-4 shrink-0 border-t border-slate-100 pt-4">
-              <a href="${escapeHtml(s.externalLink)}" target="_blank" class="flex items-center justify-center gap-1.5 w-full py-2 bg-royal-50 hover:bg-royal-100 text-royal-700 text-center rounded-xl text-xs font-bold transition-colors border border-royal-100">
-                <i data-lucide="external-link" class="w-3.5 h-3.5"></i> ดูรายละเอียดเพิ่มเติม
-              </a>
+              <button type="button" onclick="openSchoolModal('${s.id}')" class="flex items-center justify-center gap-1.5 w-full py-2 bg-royal-50 hover:bg-royal-100 text-royal-700 text-center rounded-xl text-xs font-bold transition-colors border border-royal-100">
+                <i data-lucide="info" class="w-3.5 h-3.5"></i> ดูรายละเอียดเพิ่มเติม
+              </button>
             </div>
-            ` : ''}
           </div>
         </div>
       `).join('');
 
+      renderPersonnelTreeFront(document.getElementById('personnel-org-filter')?.value || 'ALL');
+      lucide.createIcons();
+    }
+
+    // New Function to render Personnel Tree specifically with filtering
+    window.renderPersonnelTreeFront = function(filterId = 'ALL') {
       const pGrid = document.getElementById('front-personnel-grid');
+      const pFilter = document.getElementById('personnel-org-filter');
+      if (!pGrid) return;
+      
+      // Populate Dropdown if empty
+      if (pFilter && pFilter.options.length <= 1 && DB.personnel.length > 0) {
+        // Find personnel who have children (Supervisors/Managers)
+        const parents = DB.personnel.filter(p => DB.personnel.some(child => child.parentId === p.id));
+        const options = parents.map(p => `<option value="${p.id}">เฉพาะส่วนงาน: ${escapeHtml(p.name)} (${escapeHtml(p.position)})</option>`).join('');
+        pFilter.innerHTML = `<option value="ALL">-- แสดงโครงสร้างบุคลากรทั้งหมด --</option>${options}`;
+        pFilter.value = filterId;
+      }
+
+      const buildSubTree = (pid) => {
+          const rootNode = { ...DB.personnel.find(p => p.id === pid), children: [] };
+          const getChildren = (node) => {
+              const children = DB.personnel.filter(p => p.parentId === node.id).map(p => ({...p, children: []}));
+              children.forEach(c => getChildren(c));
+              node.children = children;
+          };
+          getChildren(rootNode);
+          return [rootNode];
+      };
+
       const buildHierarchy = (personnelList) => {
         const root = [];
         const map = {};
@@ -922,18 +1019,25 @@
         return root;
       };
 
+      let treeData = [];
+      if (filterId === 'ALL') {
+          treeData = buildHierarchy(DB.personnel);
+      } else {
+          treeData = buildSubTree(filterId);
+      }
+
       const generateTreeHtml = (nodes) => {
         if (!nodes || nodes.length === 0) return '';
         let html = '<ul>';
         nodes.forEach(node => {
           html += `<li>`;
           html += `
-            <div class="inline-flex flex-col items-center group w-32 sm:w-40 text-center bg-white p-3 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md hover:border-royal-200 transition-all relative z-10 mx-auto">
-              <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-4 border-royal-50 shadow-inner mb-2 group-hover:border-gold-300 transition-colors bg-slate-100 shrink-0">
+            <div class="inline-flex flex-col items-center group min-w-[130px] w-max px-4 text-center bg-white p-3 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md hover:border-royal-200 transition-all relative z-10 mx-auto">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-4 border-royal-50 shadow-inner mb-2 group-hover:border-gold-300 transition-colors bg-slate-100 shrink-0 cursor-pointer" onclick="viewFullImage('${node.photoUrl}')" title="คลิกเพื่อดูรูปขยาย">
                 <img src="${node.photoUrl}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x400/94a3b8/ffffff'"/>
               </div>
-              <h4 class="font-heading font-bold text-royal-950 text-xs sm:text-sm leading-tight">${escapeHtml(node.name)}</h4>
-              <p class="text-[9px] sm:text-[10px] text-slate-500 mt-0.5 line-clamp-2 leading-tight">${escapeHtml(node.position)}</p>
+              <h4 class="font-heading font-bold text-royal-950 text-[11px] sm:text-xs leading-tight whitespace-nowrap px-1" title="${escapeHtml(node.name)}">${escapeHtml(node.name)}</h4>
+              <p class="text-[9px] sm:text-[10px] text-slate-500 mt-0.5 line-clamp-2 leading-tight whitespace-normal max-w-[160px]" title="${escapeHtml(node.position)}">${escapeHtml(node.position)}</p>
               <div class="mt-1.5 px-2 py-0.5 bg-slate-50 text-[8px] sm:text-[9px] rounded-md text-slate-400 border border-slate-100">${escapeHtml(node.level)}</div>
             </div>
           `;
@@ -946,8 +1050,16 @@
         return html;
       };
 
-      const treeData = buildHierarchy(DB.personnel);
-      pGrid.innerHTML = `<div class="org-tree w-full overflow-x-auto hide-scroll pb-10 flex justify-center">${generateTreeHtml(treeData)}</div>`;
+      pGrid.innerHTML = `<div id="org-tree-container" class="org-tree w-full overflow-x-auto overflow-y-hidden hide-scroll pb-10 text-center scroll-smooth"><div class="inline-block min-w-max px-4">${generateTreeHtml(treeData)}</div></div>`;
+      
+      // เลื่อน Scrollbar ให้อยู่ตรงกลางอัตโนมัติ (เพื่อให้นายกเทศมนตรีอยู่ตรงกลางตั้งแต่เริ่มต้น)
+      setTimeout(() => {
+        const treeContainer = document.getElementById('org-tree-container');
+        if (treeContainer && treeContainer.scrollWidth > treeContainer.clientWidth) {
+          treeContainer.scrollLeft = (treeContainer.scrollWidth - treeContainer.clientWidth) / 2;
+        }
+      }, 50);
+
       lucide.createIcons();
     }
 
@@ -1011,6 +1123,34 @@
         `,
         footerHtml: `<button type="button" onclick="closeModal()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-sm font-heading font-medium transition-colors">ปิดหน้าต่าง</button>`
       });
+    }
+
+    // Modal Form for School Details
+    window.openSchoolModal = function(id) {
+      const s = DB.schools.find(x => x.id === id);
+      if(!s) return;
+      openModal({
+        title: s.name,
+        bodyHtml: `
+          <img src="${s.coverUrl || 'https://placehold.co/600x400/94a3b8/ffffff'}" class="w-full h-48 sm:h-64 object-cover rounded-xl mb-6 shadow-sm border border-slate-100" />
+          <div class="space-y-4 text-sm text-slate-700 bg-slate-50 p-6 rounded-2xl border border-slate-100">
+            <p class="flex items-start gap-2"><i data-lucide="user" class="w-4 h-4 text-royal-600 mt-0.5 shrink-0"></i> <span class="font-bold min-w-[120px]">ผู้อำนวยการ:</span> ${escapeHtml(s.director)}</p>
+            <p class="flex items-start gap-2"><i data-lucide="book-open" class="w-4 h-4 text-royal-600 mt-0.5 shrink-0"></i> <span class="font-bold min-w-[120px]">ระดับที่เปิดสอน:</span> ${escapeHtml(s.levels)}</p>
+            <p class="flex items-start gap-2"><i data-lucide="users" class="w-4 h-4 text-royal-600 mt-0.5 shrink-0"></i> <span class="font-bold min-w-[120px]">จำนวนนักเรียน:</span> ${(s.students||0).toLocaleString()} คน</p>
+            <p class="flex items-start gap-2"><i data-lucide="graduation-cap" class="w-4 h-4 text-royal-600 mt-0.5 shrink-0"></i> <span class="font-bold min-w-[120px]">ครูและบุคลากร:</span> ${(s.teachers||0).toLocaleString()} คน</p>
+            <p class="flex items-start gap-2"><i data-lucide="phone" class="w-4 h-4 text-royal-600 mt-0.5 shrink-0"></i> <span class="font-bold min-w-[120px]">เบอร์โทรศัพท์:</span> ${escapeHtml(s.phone)}</p>
+            <p class="flex items-start gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-royal-600 mt-0.5 shrink-0"></i> <span class="font-bold min-w-[120px]">ที่ตั้งสถานศึกษา:</span> ${escapeHtml(s.address)}</p>
+          </div>
+          ${s.externalLink ? `
+          <div class="mt-6 pt-4 border-t border-slate-100 text-center">
+            <a href="${escapeHtml(s.externalLink)}" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-50 text-blue-700 rounded-xl text-sm font-bold hover:bg-blue-100 transition-colors shadow-sm w-full sm:w-auto">
+              <i data-lucide="external-link" class="w-4 h-4"></i> เข้าสู่เว็บไซต์ / ดูข้อมูลเพิ่มเติม
+            </a>
+          </div>` : ''}
+        `,
+        footerHtml: `<button type="button" onclick="closeModal()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-sm font-heading font-medium transition-colors">ปิดหน้าต่าง</button>`
+      });
+      lucide.createIcons();
     }
 
     // --- E-Services Forms ---
@@ -1385,7 +1525,7 @@
 
       if (tab === 'dashboard') {
         title.textContent = 'Dashboard ภาพรวม'; sub.textContent = 'สถิติข้อมูลภายในระบบ';
-        actions.innerHTML = `<button onclick="editSiteSettingsModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm"><i data-lucide="edit-3" class="w-4 h-4"></i> แก้ไขข้อความต้อนรับหน้าเว็บ</button>`;
+        actions.innerHTML = `<button onclick="editSiteSettingsModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm"><i data-lucide="edit-3" class="w-4 h-4"></i> ตั้งค่าข้อความและพื้นหลังหน้าเว็บ</button>`;
 
         content.innerHTML = `
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -1416,20 +1556,28 @@
         }, 100);
       } 
       else if (tab === 'sliders') {
-        title.textContent = 'จัดการภาพสไลด์'; sub.textContent = 'รูปภาพที่จะหมุนเวียนแสดง (อัตราส่วน 16:9 แนะนำ)';
-        actions.innerHTML = `<button onclick="editSliderModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่มภาพสไลด์</button>`;
+        title.textContent = 'จัดการภาพสไลด์'; sub.textContent = 'ภาพ/วิดีโอ ที่จะหมุนเวียนแสดง (อัตราส่วน 16:9 แนะนำ)';
+        actions.innerHTML = `<button onclick="editSliderModal()" class="px-4 py-2 bg-royal-900 hover:bg-royal-800 text-white rounded-xl text-sm font-bold flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่มสื่อสไลด์</button>`;
         
-        let rows = DB.sliders.map((s, index) => `
+        let rows = DB.sliders.map((s, index) => {
+          const t = s.type || 'image';
+          let preview = '';
+          if (t === 'youtube') preview = `<div class="w-24 h-14 sm:w-32 sm:h-16 bg-slate-800 flex items-center justify-center rounded border"><i data-lucide="youtube" class="text-rose-500 w-6 h-6"></i></div>`;
+          else if (t === 'video') preview = `<video src="${escapeHtml(s.url)}" class="w-24 h-14 sm:w-32 sm:h-16 object-cover rounded border shadow-sm"></video>`;
+          else preview = `<img src="${escapeHtml(s.url)}" class="w-24 h-14 sm:w-32 sm:h-16 object-cover rounded border shadow-sm"/>`;
+
+          return `
           <tr class="border-b hover:bg-slate-50">
             <td class="p-3 w-12 text-center text-slate-400">${index + 1}</td>
-            <td class="p-3"><img src="${escapeHtml(s.url || s)}" class="w-32 h-16 object-cover rounded border shadow-sm"/></td>
-            <td class="p-3 text-sm text-royal-950 font-bold">${escapeHtml(s.name || 'ไม่มีชื่อ')}</td>
+            <td class="p-3">${preview}</td>
+            <td class="p-3 text-sm text-royal-950 font-bold">${escapeHtml(s.name || 'ไม่มีชื่อ')} <span class="ml-1 px-1.5 py-0.5 rounded text-[9px] text-slate-500 bg-slate-100 font-normal uppercase border">${t}</span></td>
             <td class="p-3 text-right">
               <button onclick="deleteSlider(${index})" class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </td>
           </tr>
-        `).join('');
-        content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4 text-center">ลำดับ</th><th class="p-4">รูปภาพ</th><th class="p-4">ชื่อภาพ</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="text-center p-8 text-slate-400">ไม่มีข้อมูล</td></tr>'}</tbody></table></div>`;
+          `;
+        }).join('');
+        content.innerHTML = `<div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-4 text-center">ลำดับ</th><th class="p-4">รูป/วิดีโอ</th><th class="p-4">ชื่อสื่อ</th><th class="p-4 text-right">จัดการ</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="text-center p-8 text-slate-400">ไม่มีข้อมูล</td></tr>'}</tbody></table></div>`;
       }
       else if (tab === 'documents') {
         title.textContent = 'เอกสารราชการ'; sub.textContent = 'อัปโหลดหรือแปะลิงก์เอกสารสำหรับให้ประชาชนดาวน์โหลด';
@@ -1576,14 +1724,34 @@
 
     // Modal Forms for Settings
     function editSiteSettingsModal() {
+      const bType = DB.settings.heroBgType || 'default';
       openModal({
-        title: 'แก้ไขข้อความต้อนรับ (หน้าแรก)',
+        title: 'ตั้งค่าข้อความและพื้นหลัง (หน้าแรก)',
         bodyHtml: `
           <form id="form-settings" onsubmit="saveSiteSettings(event)" class="space-y-4">
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4 space-y-3">
+               <p class="text-xs font-bold text-royal-800">1. ตั้งค่าพื้นหลังส่วนต้อนรับ (Hero Background)</p>
+               <div>
+                 <select name="heroBgType" id="heroBgType" class="w-full p-2 border rounded-xl text-sm" onchange="toggleHeroBgInput()">
+                   <option value="default" ${bType==='default'?'selected':''}>สีพื้นฐาน (Gradient สีม่วง)</option>
+                   <option value="image" ${bType==='image'?'selected':''}>รูปภาพ (Image)</option>
+                   <option value="video" ${bType==='video'?'selected':''}>วิดีโอ (MP4)</option>
+                   <option value="youtube" ${bType==='youtube'?'selected':''}>ลิงก์ YouTube (เล่นอัตโนมัติ)</option>
+                 </select>
+               </div>
+               <div id="heroBgInputWrapper" class="${bType==='default'?'hidden':''}">
+                 <label class="block text-[10px] font-bold mb-1 text-slate-500">อัปโหลดไฟล์ใหม่ (รูปภาพ/วิดีโอ MP4)</label>
+                 <input type="file" id="heroBgFile" accept="image/*,video/mp4" class="w-full p-2 border rounded-xl bg-white text-sm mb-2"/>
+                 <div class="text-center text-[10px] text-slate-400 font-bold">--- หรือระบุลิงก์ ---</div>
+                 <input type="text" name="heroBgUrl" class="w-full p-2 border rounded-xl mt-2 text-sm" placeholder="URL วิดีโอ หรือ YouTube" value="${DB.settings.heroBgUrl || ''}"/>
+               </div>
+            </div>
+            
+            <p class="text-xs font-bold text-royal-800 mt-4 border-t pt-4 border-slate-100">2. ตั้งค่าข้อความ</p>
             <div><label class="block text-xs font-bold mb-1">หัวข้อหลัก (สีขาว) *</label><input type="text" name="headline" required class="w-full p-2.5 border rounded-xl bg-white" value="${escapeHtml(DB.settings.headline)}"/></div>
             <div><label class="block text-xs font-bold mb-1">ข้อความเน้น (สีทอง) *</label><input type="text" name="subHeadline" required class="w-full p-2.5 border rounded-xl bg-white" value="${escapeHtml(DB.settings.subHeadline)}"/></div>
             <div><label class="block text-xs font-bold mb-1">รายละเอียดบรรทัดล่าง *</label><textarea name="description" rows="3" required class="w-full p-2.5 border rounded-xl bg-white">${escapeHtml(DB.settings.description)}</textarea></div>
-            <button type="submit" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
+            <button type="submit" id="btn-save-settings" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">บันทึกข้อมูล</button>
           </form>
         `,
         footerHtml: ''
@@ -1592,14 +1760,25 @@
 
     async function saveSiteSettings(e) {
       e.preventDefault();
+      const btn = document.getElementById('btn-save-settings');
+      btn.innerText = 'กำลังอัปโหลด...'; btn.disabled = true;
+
       const fd = new FormData(e.target);
       DB.settings.headline = fd.get('headline');
       DB.settings.subHeadline = fd.get('subHeadline');
       DB.settings.description = fd.get('description');
+      DB.settings.heroBgType = fd.get('heroBgType');
+      
+      let finalBgUrl = fd.get('heroBgUrl');
+      const bgFile = document.getElementById('heroBgFile');
+      if (DB.settings.heroBgType !== 'default' && DB.settings.heroBgType !== 'youtube' && bgFile && bgFile.files.length > 0) {
+          finalBgUrl = await handleFileUpload(bgFile.files[0]);
+      }
+      DB.settings.heroBgUrl = finalBgUrl;
       
       await saveDB();
       closeModal();
-      showToast('บันทึกสำเร็จ', 'อัปเดตข้อความต้อนรับเรียบร้อยแล้ว');
+      showToast('บันทึกสำเร็จ', 'อัปเดตการตั้งค่าหน้าแรกเรียบร้อยแล้ว');
       renderFrontend();
     }
 
@@ -1753,13 +1932,27 @@
     // Modal Form for Sliders
     function editSliderModal() {
       openModal({
-        title: 'เพิ่มภาพสไลด์',
+        title: 'เพิ่มสื่อสไลด์ (ภาพ/วิดีโอ/YouTube)',
         bodyHtml: `
           <form id="form-slider" onsubmit="saveSlider(event)" class="space-y-4">
-            <div><label class="block text-xs font-bold mb-1">เลือกไฟล์ภาพจากเครื่อง</label><input type="file" id="slider-file" accept="image/*" class="w-full p-2 border rounded-xl bg-white text-sm"/></div>
-            <div class="text-center text-xs text-slate-400 font-bold">--- หรือ ---</div>
-            <div><label class="block text-xs font-bold mb-1">URL รูปภาพ</label><input type="url" name="imageUrl" class="w-full p-2.5 border rounded-xl bg-white" placeholder="https://..."/></div>
-            <button type="submit" id="btn-save-slider" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">เพิ่มภาพสไลด์</button>
+            <div>
+               <label class="block text-xs font-bold mb-1">ประเภทสื่อ *</label>
+               <select name="type" id="sliderType" class="w-full p-2 border rounded-xl text-sm" onchange="toggleSliderInput()">
+                  <option value="image">รูปภาพ (Image)</option>
+                  <option value="video">วิดีโอ (MP4)</option>
+                  <option value="youtube">ลิงก์ YouTube</option>
+               </select>
+            </div>
+            <div id="sliderFileWrapper">
+               <label class="block text-[10px] font-bold mb-1 text-slate-500">อัปโหลดไฟล์จากเครื่อง (รองรับภาพ/วิดีโอ)</label>
+               <input type="file" id="slider-file" accept="image/*,video/mp4" class="w-full p-2 border rounded-xl bg-white text-sm"/>
+               <div class="text-center text-[10px] text-slate-400 font-bold my-2">--- หรือ ---</div>
+            </div>
+            <div>
+               <label class="block text-[10px] font-bold mb-1 text-slate-500">ระบุลิงก์ URL หรือลิงก์ YouTube (หากไม่ได้อัปโหลดไฟล์)</label>
+               <input type="text" name="imageUrl" class="w-full p-2.5 border rounded-xl bg-white text-sm" placeholder="https://..."/>
+            </div>
+            <button type="submit" id="btn-save-slider" class="w-full mt-4 py-3 bg-royal-900 text-white rounded-xl font-heading font-bold shadow-md hover:bg-royal-800">เพิ่มสื่อสไลด์</button>
           </form>
         `,
         footerHtml: ''
@@ -1772,25 +1965,26 @@
       btn.innerText = 'กำลังอัปโหลด...'; btn.disabled = true;
 
       const fd = new FormData(e.target);
+      const type = fd.get('type');
       let finalUrl = fd.get('imageUrl');
-      let finalName = 'ภาพสไลด์จาก URL';
+      let finalName = type === 'youtube' ? 'วิดีโอ YouTube' : 'สื่อจาก URL';
       
       const fileInput = document.getElementById('slider-file');
-      if (fileInput.files.length > 0) {
+      if (type !== 'youtube' && fileInput.files.length > 0) {
         finalUrl = await handleFileUpload(fileInput.files[0]);
         finalName = fileInput.files[0].name;
       }
       
       if(finalUrl) {
-        DB.sliders.push({ name: finalName, url: finalUrl });
+        DB.sliders.push({ name: finalName, url: finalUrl, type: type });
         await saveDB();
         closeModal();
         setBackofficeTab('sliders');
-        showToast('บันทึกสำเร็จ', 'เพิ่มภาพสไลด์แล้ว');
+        showToast('บันทึกสำเร็จ', 'เพิ่มสื่อสไลด์แล้ว');
         initHeroSlider();
       } else {
         showToast('ข้อผิดพลาด', 'กรุณาเลือกไฟล์หรือระบุ URL', 'error');
-        btn.innerText = 'เพิ่มภาพสไลด์'; btn.disabled = false;
+        btn.innerText = 'เพิ่มสื่อสไลด์'; btn.disabled = false;
       }
     }
 
